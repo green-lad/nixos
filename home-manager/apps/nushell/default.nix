@@ -12,8 +12,6 @@
 
   # config info: config nu --doc | nu-highlight | less -R
   programs.nushell = let
-    # TODO: fix fzf preview for nested nushell (eg "nix-shell -p git" -> "nu")
-
     # the preview is complicated because:
     # - preview value has to be a string -> --preview=""
     # - {} gets replaced by fzf with sh escapes (' -> '\'')
@@ -31,7 +29,7 @@
         preview = "${change_escape_command "{}"} | nu-highlight";
         bind = "ctrl-y:execute-silent(${
             change_escape_command "{}"
-          } | xsel -b)+abort";
+          } | wl-copy)+abort";
       in ''
         let choice = (
           history
@@ -100,7 +98,7 @@
           mode = [ "emacs" "vi_normal" "vi_insert" ];
           event = {
             send = "executehostcommand";
-            cmd = ''$env.PWD | xsel -b'';
+            cmd = ''$env.PWD | wl-copy'';
           };
         }
         {
@@ -110,7 +108,7 @@
           mode = [ "emacs" "vi_normal" "vi_insert" ];
           event = {
             send = "executehostcommand";
-            cmd = ''commandline | xsel -b'';
+            cmd = ''commandline | wl-copy'';
           };
         }
         {
@@ -136,14 +134,14 @@
         {
           name = "fuzzy_history_replace";
           modifier = "control";
-          keycode = "char_j";
+          keycode = "char_k";
           mode = [ "emacs" "vi_normal" "vi_insert" ];
           event = fzf_search_history "replace";
         }
         {
           name = "fuzzy_history_add";
           modifier = "control";
-          keycode = "char_k";
+          keycode = "char_j";
           mode = [ "emacs" "vi_normal" "vi_insert" ];
           event = fzf_search_history "insert";
         }
@@ -190,6 +188,129 @@
           '~',
           ]]: [string -> string, list<string> -> list<string>] {
           each { split chars | each {let c = $in; if ($to_escape | any {|el| $el == $c}) {$'\($c)'} else {$c}} | str join }
+      }
+
+      def "to nix" [indent_level = 2]: any -> string  {
+        mut i = ""
+        for _ in 1..$indent_level {$i = $i + " "}
+        let indent = $i
+
+        let identifier = ["assert","else","if","in","inherit","let","or","rec","then","with", ]
+        let input = $in
+
+        return (match ($input | describe | str replace --regex '<.*' "") {
+          "string" => { $'"($input)"' }
+          "int" | "float" | "bool" => { $"($input)" }
+          "record" => {
+            let entry = $input
+              | each { transpose key value }
+              | update key {
+                  if not ($in in $identifier) and $in =~ "^[A-Za-z_][A-Za-z0-9_'-]*$" {
+                    $in
+                  } else {
+                    $'"($in)"'
+                  }
+                }
+              | update value { $in | to nix }
+              | each { $"($in.key) = ($in.value);" }
+              | to text
+              | lines
+              | each { $"($indent)($in)" }
+              | to text
+            $"{\n($entry)}"
+          }
+          "table" | "list" => {
+            let entry = $input
+              | each { to nix }
+              | lines
+              | each { $"($indent)($in)" }
+              | to text
+            $"[\n($entry)]"
+          }
+          _ => { $'"($input)"' }
+        })
+      }
+
+      def test_to_nix [--fail_fast] {
+        # use std/assert; assert (('{"a":1,"b":{"c":2,"d":3}}' | from json | to nix) == "a = 1;\nb = {\n  c = 2;\n  d = 3;\n};")
+        let test_sets = [
+          {
+            name: "test_bool",
+            input: false,
+            expected: "false"
+          }
+          {
+            name: "test_int",
+            input: 1,
+            expected: "1"
+          }
+          {
+            name: "test_string_escape",
+            input: 'a/b',
+            expected: '"a/b"'
+          }
+          {
+            name: "test_nested_record",
+            input: {a:1,b:{c:2,d:3}},
+            expected: "{
+  a = 1;
+  b = {
+    c = 2;
+    d = 3;
+  };
+}"
+          }
+          {
+            name: "test_nested_list_string",
+            input: [a,[b,[c]]],
+            expected: '[
+  "a"
+  [
+    "b"
+    [
+      "c"
+    ]
+  ]
+]'
+          }
+          {
+            name: "test_nested_list_number",
+            input: [1,[2,[3]]],
+            expected: '[
+  1
+  [
+    2
+    [
+      3
+    ]
+  ]
+]'
+          }
+          {
+            name: "test_nested_mixed",
+            input: {a:1,b:[2,{c:3}]},
+            expected: "{
+  a = 1;
+  b = [
+    2
+    {
+      c = 3;
+    }
+  ];
+}"
+          }
+        ]
+
+        mut result = []
+        for $test in $test_sets {
+          let actual = $test | get input | to nix
+          let is_equal = $actual == $test.expected;
+          $result = $result | append ($test | insert actual $actual | insert is_equal $is_equal)
+          if not $is_equal and $fail_fast {
+            break
+          }
+        }
+        return {num_passed: ($result | where is_equal | length), num_failed: ($result | where not is_equal | length), detail: $result}
       }
 
       def rd [name: string, n_remote = 100: int] {

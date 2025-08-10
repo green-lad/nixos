@@ -1,4 +1,12 @@
-{ config, pkgs, inputs, user, hostname, ... }: {
+{
+  config,
+  pkgs,
+  inputs,
+  user,
+  hostname,
+  ...
+}:
+{
   imports = [
     ./harware-configuration.nix
     # ${hostname}
@@ -8,24 +16,22 @@
   environment = {
     # Remove unecessary preinstalled packages
     defaultPackages = [ ];
-    systemPackages = with pkgs; [ age home-manager sops xf86_input_wacom ];
-    sessionVariables = { };
-    variables = {
-      ANKI_WAYLAND = "1";
+    systemPackages = with pkgs; [
+      age
+      home-manager
+      nodejs
+      sops
+      xf86_input_wacom
+    ];
+    sessionVariables = {
       BROWSER = "librewolf";
       DIRENV_LOG_FORMAT = "";
       DISABLE_QT5_COMPAT = "0";
       EDITOR = "hx";
-      GTK2_RC_FILES = "$HOME/.local/share/gtk-2.0/gtkrc";
-      GTK_RC_FILES = "$HOME/.local/share/gtk-1.0/gtkrc";
       HOST = "${hostname}";
-      MOZ_ENABLE_WAYLAND = "1";
-      NIXOS_CONFIG = "$NIXOS_CONFIG_DIR/configuration.nix";
-      NIXOS_CONFIG_DIR = "$NIX_CONFIG_DIR/nixos";
-      NIX_CONFIG_DIR = "$HOME/config";
-      PASSWORD_STORE_DIR = "$HOME/.local/share/password-store";
       TERMINAL = "wezterm";
-      XDG_DATA_HOME = "$HOME/.local/share";
+    };
+    variables = {
     };
   };
 
@@ -52,12 +58,11 @@
       xdg-desktop-portal-gtk
       xdg-desktop-portal-termfilechooser
     ];
-    config = { common = { default = "termfilechooser"; }; };
-  };
-
-  # Add the Kanata service user to necessary groups
-  systemd.services.kanata-internalKeyboard.serviceConfig = {
-    SupplementaryGroups = [ "input" "uinput" ];
+    config = {
+      common = {
+        default = "termfilechooser";
+      };
+    };
   };
 
   programs = {
@@ -72,12 +77,20 @@
       enable = true;
       enableSSHSupport = true;
     };
+    niri.enable = true;
   };
 
   # TODO: for miniflux use separte config file and OAUTH2 (see: https://github.com/felschr/nixos-config/blob/41307308527cdf7a352e87e2ff36d91546eb29a4/services/miniflux.nix#L12)
   users.groups.miniflux_secrets = { };
-  systemd.services.miniflux.serviceConfig.SupplementaryGroups =
-    [ "miniflux_secrets" ];
+
+  systemd = {
+    services = {
+      mpd.environment = {
+        XDG_RUNTIME_DIR = "/run/user/1000";
+      };
+      miniflux.serviceConfig.SupplementaryGroups = [ "miniflux_secrets" ];
+    };
+  };
 
   # security.acme = {
   #   acceptTerms = true;
@@ -87,22 +100,49 @@
   # };
   # };
   services = {
+    mpd = {
+      enable = true;
+      musicDirectory = "/home/${user}/music/songs";
+      user = "${user}";
+      extraConfig = ''
+        audio_output {
+          type "pipewire"
+          name "Pipewire Output"
+        }
+      '';
+    };
+    greetd = {
+      enable = true;
+      settings = {
+        default_session = {
+          command = "${pkgs.greetd.greetd}/bin/agreety";
+        };
+        initial_session = {
+          user = user;
+          command = "niri-session wezterm";
+        };
+      };
+    };
     jellyfin = {
       enable = true;
       openFirewall = true;
     };
     ollama = {
       enable = true;
-      loadModels = [ "deepseek-r1:latest" "codellama:latest" ];
+      loadModels = [
+        "deepseek-r1:latest"
+        "codellama:latest"
+      ];
     };
     nginx = {
       enable = true;
       virtualHosts."papis.${hostname}" = {
-        locations."/" = { proxyPass = "http://127.0.0.1:8888"; };
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:8888";
+        };
       };
       virtualHosts."${hostname}".locations."/" = {
-        root = pkgs.writeTextDir "index.html"
-          (builtins.readFile ../home-manager/apps/librewolf/index.html);
+        root = pkgs.writeTextDir "index.html" (builtins.readFile ../home-manager/apps/librewolf/index.html);
         extraConfig = "try_files /index.html =404;";
       };
       virtualHosts."jellyfin.${hostname}.link" = {
@@ -164,18 +204,30 @@
       # in it even if I have another microphone.
       wireplumber.extraConfig = {
         "50-bluez" = {
-          "monitor.bluez.rules" = [{
-            matches = [{ "device.name" = "~bluez_card.*"; }];
-            actions = {
-              update-props = {
-                "bluez5.auto-connect" = [ "a2dp_sink" "a2dp_source" ];
-                "bluez5.hw-volume" = [ "a2dp_sink" "a2dp_source" ];
+          "monitor.bluez.rules" = [
+            {
+              matches = [ { "device.name" = "~bluez_card.*"; } ];
+              actions = {
+                update-props = {
+                  "bluez5.auto-connect" = [
+                    "a2dp_sink"
+                    "a2dp_source"
+                  ];
+                  "bluez5.hw-volume" = [
+                    "a2dp_sink"
+                    "a2dp_source"
+                  ];
+                };
               };
-            };
-          }];
+            }
+          ];
           "monitor.bluez.properties" = {
-            "bluez5.roles" =
-              [ "a2dp_sink" "a2dp_source" "bap_sink" "bap_source" ];
+            "bluez5.roles" = [
+              "a2dp_sink"
+              "a2dp_source"
+              "bap_sink"
+              "bap_source"
+            ];
 
             "bluez5.codecs" = [
               "ldac"
@@ -199,27 +251,27 @@
       };
     };
 
-    xserver = {
-      enable = true;
-      xkb = {
-        layout = "de(us)";
-        options = "eurosign:e,caps:swapescape";
-      };
-      desktopManager = { xterm.enable = false; };
-      modules = [ pkgs.xf86_input_wacom ];
-      windowManager.i3 = { enable = true; };
-      # displayManager = {
-      #   startx.enable = true;
-      # };
-    };
+    # xserver = {
+    #   enable = true;
+    #   # xkb = {
+    #   #   layout = "de(us)";
+    #   #   options = "eurosign:e,caps:swapescape";
+    #   # };
+    #   desktopManager = { xterm.enable = false; };
+    #   modules = [ pkgs.xf86_input_wacom ];
+    #   windowManager.i3 = { enable = true; };
+    #   # displayManager = {
+    #   #   startx.enable = true;
+    #   # };
+    # };
 
-    displayManager = {
-      defaultSession = "none+i3";
-      autoLogin = {
-        enable = true;
-        user = user;
-      };
-    };
+    # displayManager = {
+    #   defaultSession = "none+i3";
+    #   autoLogin = {
+    #     enable = true;
+    #     user = user;
+    #   };
+    # };
 
     # only used for wayland
     # kanata = {
@@ -277,14 +329,19 @@
 
     fontconfig = {
       hinting.autohint = true;
-      defaultFonts = { emoji = [ "OpenMoji Color" ]; };
+      defaultFonts = {
+        emoji = [ "OpenMoji Color" ];
+      };
     };
   };
 
   nix = {
     settings.auto-optimise-store = true;
     settings.allowed-users = [ user ];
-    settings.experimental-features = [ "nix-command" "flakes" ];
+    settings.experimental-features = [
+      "nix-command"
+      "flakes"
+    ];
     gc = {
       automatic = true;
       dates = "weekly";
@@ -306,11 +363,11 @@
   };
 
   networking = {
+    modemmanager.enable = true;
     hostName = hostname;
     networkmanager = {
       enable = true;
-      ensureProfiles =
-        import ./network_profiles.nix config.sops.secrets.home_wlan.path;
+      ensureProfiles = import ./network_profiles.nix config.sops.secrets.home_wlan.path;
     };
     # needed for zfs
     hostId = "8425e349";
@@ -367,26 +424,32 @@
   };
 
   users.groups.uinput = { };
-  users.users = let
-    authorizedKeys = [
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAP46k4CU/BnDnnrXA4NZKUXm00Exc3yEyZ4J4dIFPIf markus.schoetz@fau.de" # x230
-      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINFEIGdKfvmy7cfhjnE6RAi2fw0qaUApBTRgTuLCI5Ji markus.schoetz@fau.de" # nuc
-    ];
-  in {
-    "${user}" = {
-      shell = pkgs.nushell;
-      isNormalUser = true;
-      hashedPassword =
-        "$6$igRbgm5cDL1ZG0Zc$tmrJZPcQtk7sul2Zumk7XidoVta8xE4sSZvPCCmRIbyDmw7b9bx5BG6XlXUfcOVVPh/wor.YirIZ3Sw5zB.tN0";
-      home = "/home/${user}";
-      extraGroups = [ "wheel" "networkmanager" "adbusers" ];
-      packages = [ ];
-      openssh.authorizedKeys.keys = authorizedKeys;
+  users.users =
+    let
+      authorizedKeys = [
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAP46k4CU/BnDnnrXA4NZKUXm00Exc3yEyZ4J4dIFPIf markus.schoetz@fau.de" # x230
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINFEIGdKfvmy7cfhjnE6RAi2fw0qaUApBTRgTuLCI5Ji markus.schoetz@fau.de" # nuc
+      ];
+    in
+    {
+      "${user}" = {
+        shell = pkgs.nushell;
+        isNormalUser = true;
+        hashedPassword = "$6$igRbgm5cDL1ZG0Zc$tmrJZPcQtk7sul2Zumk7XidoVta8xE4sSZvPCCmRIbyDmw7b9bx5BG6XlXUfcOVVPh/wor.YirIZ3Sw5zB.tN0";
+        home = "/home/${user}";
+        extraGroups = [
+          "wheel"
+          "networkmanager"
+          "adbusers"
+        ];
+        packages = [ ];
+        openssh.authorizedKeys.keys = authorizedKeys;
+      };
+      root = {
+        openssh.authorizedKeys.keys = authorizedKeys;
+      };
     };
-    root = { openssh.authorizedKeys.keys = authorizedKeys; };
-  };
 
   # don't touch
   system.stateVersion = "24.11"; # Did you read the comment?
 }
-

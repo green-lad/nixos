@@ -46,17 +46,33 @@
     helix.url = "github:helix-editor/helix/master";
 
     wezterm.url = "github:wez/wezterm?dir=nix";
+
+    stylix = {
+      url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    niri.url = "github:sodiboo/niri-flake";
+
+    uwu-colors.url = "github:q60/uwu_colors";
   };
 
-  outputs = { nixpkgs, home-manager, disko, sops-nix, ... }@inputs:
+  outputs =
+    {
+      nixpkgs,
+      home-manager,
+      disko,
+      sops-nix,
+      ...
+    }@inputs:
     let
-      pkgsWithUnfree = unfreePackages: system:
+      pkgsWithUnfree =
+        unfreePackages: system:
         (import nixpkgs {
           inherit system;
           config = {
             allowUnfree = true;
-            allowUnfreePredicate = pkg:
-              builtins.elem (nixpkgs.lib.getName pkg) unfreePackages;
+            allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) unfreePackages;
           };
         });
 
@@ -65,13 +81,19 @@
           hostname = "nuc";
           system = "x86_64-linux";
           users = [ "markus" ];
-          unfreePackages = [ "lightburn" "steam" ];
+          unfreePackages = [
+            "lightburn"
+            "steam"
+          ];
         };
         x13 = {
           hostname = "x13";
           system = "x86_64-linux";
           users = [ "markus" ];
-          unfreePackages = [ "lightburn" "steam" ];
+          unfreePackages = [
+            "lightburn"
+            "steam"
+          ];
         };
         x230 = {
           hostname = "x230";
@@ -81,18 +103,25 @@
         };
       };
 
-    in {
-      nixosConfigurations = builtins.mapAttrs (n: v:
+    in
+    {
+      nixosConfigurations = builtins.mapAttrs (
+        n: v:
         nixpkgs.lib.nixosSystem {
           system = v.system;
-          specialArgs = inputs // {
-            pkgs = pkgsWithUnfree v.unfreePackages v.system;
-          } // {
-            user = builtins.head v.users;
-          } // {
-            hostname = v.hostname;
-          };
+          specialArgs =
+            inputs
+            // {
+              pkgs = pkgsWithUnfree v.unfreePackages v.system;
+            }
+            // {
+              user = builtins.head v.users;
+            }
+            // {
+              hostname = v.hostname;
+            };
           modules = [
+            # inputs.stylix.nixosModules.stylix
             disko.nixosModules.disko
             sops-nix.nixosModules.sops
             ./nixos/configuration.nix
@@ -113,18 +142,24 @@
               };
             }
           ];
-        }) systems;
+        }
+      ) systems;
 
-      homeConfigurations = builtins.mapAttrs (n: v:
+      homeConfigurations = builtins.mapAttrs (
+        n: v:
         home-manager.lib.homeManagerConfiguration {
           pkgs = pkgsWithUnfree v.unfreePackages v.system;
-          modules = [ ./home-manager/home.nix ];
+          modules = [
+            # stylix.homeModules.stylix
+            ./home-manager/home.nix
+          ];
           extraSpecialArgs = {
             inherit inputs;
             user = builtins.head v.users;
             hostname = v.hostname;
             system = v.system;
           };
-        }) systems;
+        }
+      ) systems;
     };
 }

@@ -1,4 +1,10 @@
-{ config, pkgs, inputs, ... }: {
+{
+  config,
+  pkgs,
+  inputs,
+  ...
+}:
+{
   programs.helix = {
     extraPackages = with pkgs; [
       codebook
@@ -7,9 +13,14 @@
       lazygit
       nil
       nixfmt-rfc-style
-      (python3.withPackages (p: (with p; [
-        python-lsp-server
-      ])))
+      # sadly nufmt is unusable in its current state
+      # nufmt
+      (python3.withPackages (
+        p:
+        (with p; [
+          python-lsp-server
+        ])
+      ))
       rust-analyzer
       rustfmt
       # snippet and used? word completion
@@ -20,64 +31,21 @@
     enable = true;
     package = inputs.helix.packages.${pkgs.system}.helix;
     languages = {
-      language = [
-        {
-          name = "csv";
-          language-servers = [ "scls" ];
-        }
-        {
-          name = "json";
-          formatter.command = "${pkgs.jq}/bin/jq";
-          language-servers = [ "scls" ];
-        }
-        {
-          name = "latex";
-          language-servers = [ "texlab" "codebook" "scls" ];
-        }
-        {
-          name = "markdown";
-          language-servers = [ "codebook" "scls" ];
-        }
-        {
-          name = "nix";
-          formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
-          language-servers = [ "scls" ];
-        }
-        {
-          name = "python";
-          language-servers = [ "pylsp" "gpt" "scls" ];
-        }
-        {
-          name = "rust";
-          formatter = { command = "rustfmt"; };
-          language-servers = [ "rust-analyzer" "codebook" "gpt" "scls" ];
-        }
-        {
-          name = "text";
-
-          # not sure why those are needed according to helix
-          file-types = [ "text" "txt" ];
-          scope = "source.text";
-
-          indent = {
-            tab-width = 4;
-            unit = "    ";
-          };
-          language-servers = [ "codebook" "scls" ];
-        }
-      ];
       language-server = {
+        uwu-colors = {
+          command = "${inputs.uwu-colors.packages.${pkgs.system}.default}/bin/uwu_colors";
+        };
         scls = {
           command = "simple-completion-language-server";
           config = {
-            max_completion_items = 100;           # set max completion results len for each group: words, snippets, unicode-input
-            feature_words = true;                 # enable completion by word
-            feature_snippets = true;              # enable snippets
-            snippets_first = true;                # completions will return before snippets by default
+            max_completion_items = 100; # set max completion results len for each group: words, snippets, unicode-input
+            feature_words = true; # enable completion by word
+            feature_snippets = true; # enable snippets
+            snippets_first = true; # completions will return before snippets by default
             snippets_inline_by_word_tail = false; # suggest snippets by WORD tail, for example text `xsq|` become `x^2|` when snippet `sq` has body `^2`
-            feature_unicode_input = false;        # enable "unicode input"
-            feature_paths = false;                # enable path completion
-            feature_citations = false;            # enable citation completion (only on `citation` feature enabled)
+            feature_unicode_input = false; # enable "unicode input"
+            feature_paths = false; # enable path completion
+            feature_citations = false; # enable citation completion (only on `citation` feature enabled)
           };
           environment = {
             RUST_LOG = "info,simple-completion-language-server=info";
@@ -86,8 +54,12 @@
         };
         rust-analyzer = {
           config = {
-            checkOnSave = { enable = true; };
-            diagnostics = { enable = true; };
+            checkOnSave = {
+              enable = true;
+            };
+            diagnostics = {
+              enable = true;
+            };
           };
         };
         gpt = {
@@ -114,11 +86,93 @@
           args = [ "serve" ];
         };
       };
+      language = [
+        {
+          name = "csv";
+          language-servers = [ "scls" ];
+        }
+        {
+          name = "json";
+          formatter.command = "${pkgs.jq}/bin/jq";
+          language-servers = [ "scls" ];
+        }
+        {
+          name = "latex";
+          language-servers = [
+            "texlab"
+            "codebook"
+            "scls"
+          ];
+        }
+        {
+          name = "markdown";
+          language-servers = [
+            "codebook"
+            "scls"
+          ];
+        }
+        {
+          name = "nix";
+          formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
+          language-servers = [ "scls" "uwu-colors" ];
+        }
+        {
+          name = "nu";
+          # sadly nufmt is unusable in its current state
+          # formatter = {
+          #   command = "${pkgs.nufmt}/bin/nufmt";
+          #   args = ["--stdin"];
+          # };
+          language-servers = [ "scls" ];
+        }
+        {
+          name = "python";
+          language-servers = [
+            "pylsp"
+            "gpt"
+            "scls"
+          ];
+        }
+        {
+          name = "rust";
+          formatter = {
+            command = "rustfmt";
+          };
+          language-servers = [
+            "rust-analyzer"
+            "codebook"
+            "gpt"
+            "scls"
+          ];
+        }
+        {
+          name = "text";
+
+          # not sure why those are needed according to helix
+          file-types = [
+            "text"
+            "txt"
+          ];
+          scope = "source.text";
+
+          indent = {
+            tab-width = 4;
+            unit = "    ";
+          };
+          language-servers = [
+            "codebook"
+            "scls"
+          ];
+        }
+      ];
+
     };
     settings = {
-      theme = "iceberg-dark";
+      # theme = "iceberg-dark";
 
       editor = {
+        mouse = false;
+        continue-comments = false;
         auto-pairs = false;
         scrolloff = 0;
         line-number = "relative";
@@ -130,7 +184,13 @@
           enable = true;
           max-wrap = 0;
         };
-        shell = [ "nu" "--stdin" "-c" ];
+        shell = [
+          "nu"
+          "--config"
+          "${config.xdg.configHome}/nushell/config.nu"
+          "--stdin"
+          "-c"
+        ];
 
         cursor-shape = {
           normal = "block";
@@ -138,11 +198,17 @@
           select = "underline";
         };
 
-        file-picker = { hidden = false; };
+        file-picker = {
+          hidden = false;
+        };
 
-        lsp = { auto-signature-help = false; };
+        lsp = {
+          auto-signature-help = false;
+        };
 
-        whitespace = { render = "all"; };
+        whitespace = {
+          render = "all";
+        };
 
         indent-guides = {
           render = false;
@@ -165,35 +231,19 @@
 
       keys = {
         normal = {
-          "\\" = ":pipe 'nu -c $in'";
-          "*" = [ "search_selection" "search_next" ];
-          "A-*" = [ "search_selection_detect_word_boundaries" "search_next" ];
+          "*" = [
+            "search_selection"
+            "search_next"
+          ];
+          "A-*" = [
+            "search_selection_detect_word_boundaries"
+            "search_next"
+          ];
           C-space = "completion";
-          C-p = "signature_help";
-          C-q = [
-            '':pipe-to save "%{buffer_name}.tmp.a"''
-            ":clipboard-paste-after"
-            '':pipe-to save "%{buffer_name}.tmp.b"''
-            "undo"
-            '':hs "%{buffer_name}.tmp"''
-            ''
-              :insert-output diff --tabsize=4 -y "%{buffer_name}.a" "%{buffer_name}.b" | str replace -ra "(<|>) " "''${1}" | str replace -a ' ' '·' ''
-            ":write"
-            '':sh rm "%{buffer_name}.a" "%{buffer_name}.b" "%{buffer_name}"''
-            "goto_file_start"
-          ];
-          C-e = [
-            '':pipe-to save "%{buffer_name}.tmp.a"''
-            ":clipboard-paste-after"
-            '':pipe-to save "%{buffer_name}.tmp.b"''
-            "undo"
-            '':hs "%{buffer_name}.tmp"''
-            ''
-              :insert-output diff "%{buffer_name}.a" "%{buffer_name}.b" | str replace -ra "(<|>) " "''${1}" | str replace -a ' ' '·' ''
-            ":write"
-            '':sh rm "%{buffer_name}.a" "%{buffer_name}.b" "%{buffer_name}"''
-            "goto_file_start"
-          ];
+          C-s = "signature_help";
+          "A-/" = "search_selection";
+          "C-?" = ''@"+p<A-/><A-d> /<ret>'';
+          "C-/" = "@<A-/> /<ret>";
           C-g = [
             ":write-all"
             ":new"
@@ -202,8 +252,14 @@
             ":redraw"
             ":reload-all"
           ];
-          H = [ "jump_backward" "align_view_center" ];
-          L = [ "jump_forward" "align_view_center" ];
+          H = [
+            "jump_backward"
+            "align_view_center"
+          ];
+          L = [
+            "jump_forward"
+            "align_view_center"
+          ];
           X = "extend_line_above";
           W = "@glGs";
           C-h = "jump_view_left";
@@ -246,19 +302,20 @@
             ];
             E = [
               ":sh rm -f /tmp/unique-file-u41ae15"
-              ":insert-output yazi '%{buffer_name}' --chooser-file=/tmp/unique-file-u41ae15"
+              ":insert-output yazi --chooser-file=/tmp/unique-file-u41ae15"
               '':insert-output echo "x1b[?1049h" > /dev/tty''
-              ":cd %sh{cat /tmp/unique-file-u41ae14}"
+              ":cd %sh{cat /tmp/unique-file-u41ae15}"
             ];
+            "+" = {
+              n = [
+                "goto_line_end_newline"
+                ":append-output 'wl-paste | from json | to nix'"
+              ];
+            };
             "|" = {
+              c = ":pipe 'nu -c $in'";
               s = ":pipe 'lines | sort | to text --no-newline'";
               u = ":pipe 'lines | uniq | to text --no-newline'";
-              a = [
-                "save_selection"
-                "select_all"
-                ":sh %{selection}"
-                "jump_backward"
-              ];
             };
           };
         };
@@ -266,7 +323,12 @@
           C-p = "signature_help";
           C-space = "completion";
         };
-        select = { X = [ "extend_line_up" "extend_to_line_bounds" ]; };
+        select = {
+          X = [
+            "extend_line_up"
+            "extend_to_line_bounds"
+          ];
+        };
       };
     };
   };

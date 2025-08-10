@@ -3,6 +3,10 @@ let
   newTabPage = "http://${hostname}/";
   profile = "default";
 in {
+  config.home.sessionVariables = {
+    MOZ_ENABLE_WAYLAND = 1;
+  };
+
   # TODO: try to get sidebery configured too
   config.home.file.".librewolf/librewolf.overrides.cfg".text = ''
     // sets the new tab page to our local newtab.
@@ -19,7 +23,7 @@ in {
     permissions = {
       "https://github.com" = { "cookie" = "allow"; };
       "https://kleinanzeigen.de" = { "cookie" = "allow"; };
-      "http://nuc" = { "https-only-load-insecure" = "allow"; };
+      "http://${hostname}" = { "https-only-load-insecure" = "allow"; };
     };
 
     permissionValue = {
