@@ -4,6 +4,40 @@ environmentFile:
 {
   environmentFiles = [ environmentFile ];
   profiles = {
+    wwan_1 = {
+      connection = {
+        id = "wwan_1";
+        type = "gsm";
+      };
+      gsm = {
+        apn = "internet";
+        pin = "$wwan_1_pin";
+      };
+      ipv4 = {
+        method = "auto";
+      };
+      ipv6 = {
+        addr-gen-mode = "default";
+        method = "auto";
+      };
+    };
+    wwan_2 = {
+      connection = {
+        id = "wwan_2";
+        type = "gsm";
+      };
+      gsm = {
+        apn = "internet";
+        pin = "$wwan_2_pin";
+      };
+      ipv4 = {
+        method = "auto";
+      };
+      ipv6 = {
+        addr-gen-mode = "default";
+        method = "auto";
+      };
+    };
     home_wlan = {
       connection = {
         id = "home_wlan";
@@ -53,37 +87,6 @@ environmentFile:
         ca-cert = "/home/markus/.config/cat_installer/ca.pem";
         eap = "peap;";
         identity = "$eduroam_user";
-        password = "$fau_password";
-        phase2-auth = "mschapv2";
-      };
-    };
-    fau_fm = {
-      connection = {
-        id = "fau";
-        type = "wifi";
-        permissions = "user:markus:;";
-      };
-      ipv4 = {
-        method = "auto";
-      };
-      ipv6 = {
-        addr-gen-mode = "default";
-        method = "auto";
-      };
-      wifi = {
-        ssid = "FAU.fm";
-      };
-      wifi-security = {
-        group = "ccmp;tkip;";
-        key-mgmt = "wpa-eap";
-        pairwise = "ccmp;";
-        proto = "rsn;";
-      };
-      "802-1x" = {
-        anonymous-identity = "$fau_user";
-        ca-cert = "/home/markus/.config/cat_installer/comodo.pem";
-        eap = "peap;";
-        identity = "$fau_user";
         password = "$fau_password";
         phase2-auth = "mschapv2";
       };

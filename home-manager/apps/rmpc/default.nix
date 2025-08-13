@@ -2,6 +2,13 @@
 {
   programs.rmpc = {
     enable = true;
-    config = '''';
+    config = ''
+      (
+        cache_dir: Some("~/.cache/rmpc/"),
+        album_art: (
+          method: Sixel,
+        ),
+      )
+    '';
   };
 }

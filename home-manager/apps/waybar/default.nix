@@ -105,12 +105,12 @@ in
           on-click = "wezterm -e htop";
         };
         "custom/apps_placeholder" = {
-          format = " 󰵆 ";
+          format = "<span color='#ffcc66'><b> 󰵆 </b></span>";
           interval = "once";
           tooltip = false;
         };
         "custom/connect_placeholder" = {
-          format = " 󰀂 ";
+          format = "<span color='#ffcc66'> 󰀂 </span>";
           interval = "once";
           tooltip = false;
         };
@@ -130,8 +130,25 @@ in
           tooltip-format = "lock";
           on-click = "swaylock";
         };
+        "custom/mail" = {
+          exec = "${./get_mail_count.nu}";
+          # exec = "/home/markus/config/home-manager/apps/waybar/get_mail_count.nu";
+          format = "{icon} {}";
+          return-type = "json";
+          format-icons = {
+            opened = " ";
+            opened_failed = "<span color='#e27878'> </span>";
+            new = " ";
+            new_failed = "<span color='#e27878'> </span>";
+          };
+          on-click = "wezterm -e neomutt";
+        };
+        "custom/opener_music" = {
+          format = "<span color='#ffcc66'>  </span>";
+          tooltip-format = "musicmenu";
+        };
         "custom/opener_power" = {
-          format = "<span color='#ffcc66'><b>    </b></span>";
+          format = "<span color='#ffcc66'>    </span>";
           tooltip-format = "powermenu";
         };
         "custom/power" = {
@@ -217,10 +234,13 @@ in
         "group/music" = {
           drawer = {
             transition-left-to-right = false;
+            click-to-reveal = true;
           };
           modules = [
-            "pulseaudio"
+            "custom/opener_music"
             "mpd"
+            "custom/separator_minor"
+            "pulseaudio"
             "custom/separator_minor"
           ];
           orientation = "horizontal";
@@ -261,7 +281,9 @@ in
           on-click = "wezterm -e htop";
         };
         modules-center = [
+          "custom/separator"
           "clock"
+          "custom/separator"
         ];
         modules-left = [
           "niri/workspaces"
@@ -271,6 +293,8 @@ in
           "niri/window"
         ];
         modules-right = [
+          "custom/mail"
+          "custom/separator"
           "custom/gammastep"
           "custom/separator"
           "systemd-failed-units"
@@ -289,7 +313,7 @@ in
         ];
         mpd = {
           on-click = "wezterm -e rmpc";
-          format = "󰎇: {stateIcon} {title} ({elapsedTime:%M:%S}/{totalTime:%M:%S})";
+          format = "󰎇: ({elapsedTime:%M:%S}/{totalTime:%M:%S})";
           format-disconnected = "󰎇:  ";
           format-stopped = "󰎇:  ";
           interval = 10;
@@ -318,8 +342,8 @@ in
             "alsa_output.pci-0000_00_1f.3.analog-stereo" = "";
             "alsa_output.pci-0000_00_1f.3.analog-stereo-muted" = "";
             headphone = "";
-            hands-free = "";
-            headset = "";
+            hands-free = "";
+            headset = "󰋎";
             phone = "";
             phone-muted = "";
             portable = "";
@@ -331,7 +355,8 @@ in
           };
           reverse-scrolling = true;
           scroll-step = 1;
-          on-click = "wayland -e pulsemixer";
+          on-click = "wezterm -e pulsemixer";
+          on-click-middle = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
           ignored-sinks = [
             "Easy Effects Sink"
           ];

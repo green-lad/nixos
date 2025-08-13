@@ -31,6 +31,8 @@ export def download_one [outdir = $default_outdir, audio_format = "mp3"]: [
       --restrict-filenames
       --output '($output)'
       --format 'bestaudio'
+      --embed-thumbnail
+      --convert-thumbnails jpg
       '($link)'\)
     | complete"
 
@@ -71,8 +73,8 @@ export def download_n [outdir = $default_outdir]: [
   mkdir $outdir
   let r = $input | par-each { download_one $outdir }
   return ({
-    downloads: ($r | filter { |e| not $e.duplicate and not $e.download_failed }),
-    duplicates: ($r | filter { |e| $e.duplicate and not $e.mismatch }),
+    downloads: ($r | where { |e| not $e.duplicate and not $e.download_failed }),
+    duplicates: ($r | where { |e| $e.duplicate and not $e.mismatch }),
     mismatches: ($r | where mismatch),
     download_fails: ($r | where download_failed)
   })

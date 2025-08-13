@@ -1,9 +1,10 @@
 {
   config,
-  pkgs,
-  inputs,
-  user,
   hostname,
+  inputs,
+  lib,
+  pkgs,
+  user,
   ...
 }:
 {
@@ -89,6 +90,11 @@
         XDG_RUNTIME_DIR = "/run/user/1000";
       };
       miniflux.serviceConfig.SupplementaryGroups = [ "miniflux_secrets" ];
+      ModemManager = {
+        enable = lib.mkForce true;
+        path = [ pkgs.libqmi ];
+        wantedBy = [ "multi-user.target" "network.target" ];
+      };
     };
   };
 
@@ -115,7 +121,7 @@
       enable = true;
       settings = {
         default_session = {
-          command = "${pkgs.greetd.greetd}/bin/agreety";
+          command = "${pkgs.greetd}/bin/agreety";
         };
         initial_session = {
           user = user;
@@ -363,11 +369,41 @@
   };
 
   networking = {
-    modemmanager.enable = true;
+    modemmanager = {
+      enable = true;
+      fccUnlockScripts = [
+        rec {
+          id = "2c7c:030a";
+          path = "${pkgs.modemmanager}/share/ModemManager/fcc-unlock.available.d/${id}";
+        }
+      ];
+    };
     hostName = hostname;
     networkmanager = {
       enable = true;
-      ensureProfiles = import ./network_profiles.nix config.sops.secrets.home_wlan.path;
+      ensureProfiles = import ./network_profiles.nix config.sops.secrets.network_keys.path;
+      dispatcherScripts = [
+        {
+          source = pkgs.writeText "write_network_info" ''
+            #!/usr/bin/env -S ${pkgs.nushell}/bin/nu
+
+            def main [interface, action] {
+              let file = "/var/network.json"
+              let old = if ($file | path exists) {
+                open $file
+              } else {
+                {}
+              }
+              if ($old | get -o $interface | is-empty) {
+                $old | insert $interface $action | save -f $file
+              } else {
+                $old | update $interface $action | save -f $file
+              }
+            }
+          '';
+          type = "basic";
+        }
+      ];
     };
     # needed for zfs
     hostId = "8425e349";

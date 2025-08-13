@@ -12,7 +12,7 @@ in {
     };
 
     secrets = {
-      home_wlan = { };
+      network_keys = { };
       "miniflux/password" = {
         restartUnits = [ "miniflux.service" ];
         group = "miniflux_secrets";

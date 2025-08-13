@@ -245,6 +245,46 @@
               "toggle"
             ];
           };
+          "XF86Display" = {
+            action = spawn [
+              "wdisplays"
+            ];
+          };
+          "XF86WLAN" = {
+            action = spawn [
+              "rfkill"
+              "toggle"
+              "wwan"
+            ];
+          };
+          "XF86NotificationCenter" = {
+            action = spawn [
+              "wezterm"
+              "-e"
+              "rmpc"
+            ];
+          };
+          "XF86PickupPhone" = {
+            allow-when-locked = true;
+            action = spawn [
+              "rmpc"
+              "prev"
+            ];
+          };
+          "XF86HangupPhone" = {
+            allow-when-locked = true;
+            action = spawn [
+              "rmpc"
+              "togglepause"
+            ];
+          };
+          "XF86Favorites" = {
+            allow-when-locked = true;
+            action = spawn [
+              "rmpc"
+              "next"
+            ];
+          };
           "XF86MonBrightnessUp" = {
             allow-when-locked = true;
             action = spawn ["brightnessctl" "set" "5%+"];
@@ -430,6 +470,7 @@
 
   config.home.packages = with pkgs; [
     chafa
+    wdisplays
     wev
   ];
 

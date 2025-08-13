@@ -4,11 +4,6 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
 
-    nixvim = {
-      url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -45,10 +40,10 @@
 
     helix.url = "github:helix-editor/helix/master";
 
-    wezterm.url = "github:wez/wezterm?dir=nix";
+    # wezterm.url = "github:wez/wezterm?dir=nix";
 
     stylix = {
-      url = "github:danth/stylix";
+      url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -121,7 +116,6 @@
               hostname = v.hostname;
             };
           modules = [
-            # inputs.stylix.nixosModules.stylix
             disko.nixosModules.disko
             sops-nix.nixosModules.sops
             ./nixos/configuration.nix
@@ -150,7 +144,6 @@
         home-manager.lib.homeManagerConfiguration {
           pkgs = pkgsWithUnfree v.unfreePackages v.system;
           modules = [
-            # stylix.homeModules.stylix
             ./home-manager/home.nix
           ];
           extraSpecialArgs = {
