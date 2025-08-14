@@ -58,6 +58,7 @@
       home-manager,
       disko,
       sops-nix,
+      stylix,
       ...
     }@inputs:
     let
@@ -116,6 +117,7 @@
               hostname = v.hostname;
             };
           modules = [
+            stylix.nixosModules.stylix
             disko.nixosModules.disko
             sops-nix.nixosModules.sops
             ./nixos/configuration.nix
@@ -144,6 +146,7 @@
         home-manager.lib.homeManagerConfiguration {
           pkgs = pkgsWithUnfree v.unfreePackages v.system;
           modules = [
+            stylix.homeModules.stylix
             ./home-manager/home.nix
           ];
           extraSpecialArgs = {

@@ -97,10 +97,12 @@ in {
         id = 0;
         name = "${profile}";
         isDefault = true;
-        extensions.packages =
-          with inputs.firefox-addons.packages.${pkgs.system}; [
+        extensions.force = true;
+        extensions = {
+          packages = with inputs.firefox-addons.packages.${pkgs.system}; [
             darkreader
             don-t-fuck-with-paste
+            firefox-color
             istilldontcareaboutcookies
             return-youtube-dislikes
             sidebery
@@ -111,6 +113,7 @@ in {
             videospeed
             violentmonkey
           ];
+        };
         userChrome = (builtins.readFile ./userChrome.css);
         userContent = (builtins.readFile ./userContent.css);
         bookmarks = {

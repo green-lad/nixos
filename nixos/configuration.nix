@@ -4,6 +4,7 @@
   inputs,
   lib,
   pkgs,
+  stylix,
   user,
   ...
 }:
@@ -12,6 +13,10 @@
     ./harware-configuration.nix
     # ${hostname}
   ];
+
+  # some modules only support stylix in nixos (for example chromium)
+  stylix = (import ../stylix.nix) pkgs;
+
   nixpkgs.overlays = [ inputs.nix-your-shell.overlays.default ];
 
   environment = {

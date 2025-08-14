@@ -15,6 +15,7 @@
       nixfmt-rfc-style
       # sadly nufmt is unusable in its current state
       # nufmt
+      prettier
       (python3.withPackages (
         p:
         (with p; [
@@ -110,6 +111,14 @@
             "codebook"
             "scls"
           ];
+        }
+        {
+          name = "css";
+          formatter = {
+            command = "prettier";
+            args = ["--parser" "css"];
+          };
+          language-servers = [ "uwu-colors" ];
         }
         {
           name = "nix";
