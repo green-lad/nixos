@@ -99,11 +99,13 @@ in {
         isDefault = true;
         extensions.force = true;
         extensions = {
+          # see: https://nur.nix-community.org/repos/rycee/
           packages = with inputs.firefox-addons.packages.${pkgs.system}; [
             darkreader
             don-t-fuck-with-paste
             firefox-color
             istilldontcareaboutcookies
+            refined-github
             return-youtube-dislikes
             sidebery
             sponsorblock

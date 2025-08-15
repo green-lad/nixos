@@ -194,7 +194,6 @@
           "Mod+C" = {
             hotkey-overlay.title = "Open clipboard manager";
             action = spawn_with_transition "wezterm start --class float_wezterm ${./cliphist_fzf_sixel.nu}" "200";
-            # action = spawn "wezterm" "start" "--class" "float_wezterm" "${./cliphist_fzf_sixel.nu}";
           };
           "Mod+Shift+C" = {
             hotkey-overlay.title = "Pick color";
@@ -312,6 +311,18 @@
           "Mod+M" = {
             repeat = false;
             action = spawn ["nu" "-c" ''if (systemctl --user is-active waybar | to text) == "active" {systemctl --user stop waybar} else {systemctl --user start waybar}''];
+          };
+          "Mod+Z" = {
+            repeat = false;
+            action = spawn "${./otp.nu}";
+          };
+          "Mod+Space" = {
+            repeat = false;
+            action = spawn ["nu" "-c" ''
+              librewolf --new-tab $'https://duckduckgo.com/?q=(fuzzel -d -l 0 --placeholder "Type your search")'
+              let id = niri msg -j windows | from json | where title =~ 'LibreWolf$' | get id | get 0
+              niri msg action focus-window --id $id
+            ''];
           };
           "Mod+Left".action = focus-column-left;
           "Mod+Down".action = focus-window-down;
@@ -445,8 +456,8 @@
 
           "Mod+W".action = toggle-column-tabbed-display;
 
-          "Mod+Space".action.switch-layout = "next";
-          "Mod+Ctrl+Space".action.switch-layout = "prev";
+          "Mod+S".action.switch-layout = "next";
+          "Mod+Ctrl+S".action.switch-layout = "prev";
 
           "Print" = {
             action = spawn "nu" "-c" "niri msg action screenshot-window --id=$'(niri msg --json pick-window | from json | get id)'";
