@@ -37,6 +37,7 @@ let
     "text/markdown" = editor;
     "text/plain" = editor;
     "text/x-bibtex" = editor;
+    "text/x-dbus-service" = editor;
     "text/xml" = editor;
     "video/*" = [ "mpv.dekstop" ];
     "x-directory/normal" = filechooser;

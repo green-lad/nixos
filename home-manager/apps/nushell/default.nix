@@ -1,4 +1,4 @@
-{ ... }: {
+{ config, ... }: {
   services.lorri.enable = true;
   programs.direnv = {
     enable = true;
@@ -77,6 +77,9 @@
       '';
     }];
   in {
+    # see: https://github.com/nix-community/home-manager/issues/4313
+    shellAliases = config.home.shellAliases;
+    environmentVariables = config.home.sessionVariables;
     enable = true;
     settings = {
       history = {

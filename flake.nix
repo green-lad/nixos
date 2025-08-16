@@ -50,6 +50,11 @@
     niri.url = "github:sodiboo/niri-flake";
 
     uwu-colors.url = "github:q60/uwu_colors";
+
+    additional-fonts = {
+      url = "github:green-lad/fonts";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -59,6 +64,7 @@
       disko,
       sops-nix,
       stylix,
+      additional-fonts,
       ...
     }@inputs:
     let

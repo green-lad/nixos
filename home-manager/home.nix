@@ -1,9 +1,10 @@
 {
-  pkgs,
-  inputs,
-  user,
-  hostname,
   config,
+  hostname,
+  inputs,
+  pkgs,
+  system,
+  user,
   ...
 }:
 {
@@ -26,6 +27,7 @@
     ./apps/rmpc
     ./apps/rnote
     ./apps/ssh
+    ./apps/st
     ./apps/taskwarrior
     ./apps/wezterm
     ./apps/xdg
@@ -46,6 +48,9 @@
 
   stylix = (import ../stylix.nix) pkgs // {
     targets = {
+      gtk.enable = true;
+      qt.enable = true;
+      blender.enable = true;
       librewolf = {
         profileNames = [ "default" ];
         colorTheme.enable = true;
@@ -63,8 +68,17 @@
     homeDirectory = "/home/${user}";
     stateVersion = "24.11";
     sessionVariables = {
+      BROWSER = "librewolf";
+      DISPLAY = ":0";
+      DIRENV_LOG_FORMAT = "";
+      DISABLE_QT5_COMPAT = "0";
+      EDITOR = "hx";
+      HOST = "${hostname}";
+      TERMINAL = "wezterm";
     };
     packages = with pkgs; [
+      inputs.additional-fonts.packages.${system}.astetica
+      inputs.additional-fonts.packages.${system}.leafery
       blender
       brightnessctl
       cura-appimage
@@ -81,6 +95,7 @@
       libreoffice
       lightburn
       mplayer
+      nautilus
       obs-cmd
       obs-studio
       openscad
@@ -102,6 +117,8 @@
       zathura
     ];
   };
+
+  fonts.fontconfig.enable = true;
 
   # src: https://github.com/gepbird/dotfiles/blob/82902d8e5681c42411ed6125f8e9a9322ac3c6c1/modules/gtk-qt.nix#L10 (there the colortheme also gets set, but lets use the default)
   gtk = let extraConfig = {

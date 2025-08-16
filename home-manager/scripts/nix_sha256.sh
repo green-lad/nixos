@@ -1,5 +1,8 @@
 #!/bin/sh
 
+# for zips:
+# nix-prefetch-url --unpack <zip_url>
+
 if [ "$#" -ne 1 ]; then
   echo "Usage: $0 <github link> [<revision>]" >&2
   exit 1

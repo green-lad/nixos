@@ -139,6 +139,7 @@
             ];
           }
           { command = [ "waybar" ]; }
+          { command = [ "xwayland-satellite" ]; }
           {
             command = [
               "swayidle"
@@ -483,6 +484,7 @@
     chafa
     wdisplays
     wev
+    xwayland-satellite
   ];
 
   config.services = {

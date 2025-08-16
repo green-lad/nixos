@@ -23,12 +23,6 @@ in
           reverse-scrolling = true;
           smooth-scrolling-threshold = 1;
         };
-        "backlight/slider" = {
-          device = "intel_backlight";
-          max = 100;
-          min = 0;
-          orientation = "horizontal";
-        };
         battery = {
           format = "{icon} {capacity}%";
           format-icons = {
@@ -151,6 +145,10 @@ in
           format = "<span color='#ffcc66'>    </span>";
           tooltip-format = "powermenu";
         };
+        "custom/opener_hardware" = {
+          format = "<span color='#ffcc66'>  </span>";
+          tooltip-format = "powermenu";
+        };
         "custom/power" = {
           format = "   ";
           tooltip-format = "power off";
@@ -219,7 +217,9 @@ in
             click-to-reveal = true;
           };
           modules = [
+            "custom/opener_hardware"
             "battery"
+            "custom/separator_minor"
             "cpu"
             "custom/separator_minor"
             "temperature"
@@ -386,10 +386,6 @@ in
           format = "{temperatureC}°C ";
         };
 
-        output = [
-          "eDP-1"
-          "HDMI-A-1"
-        ];
         position = "top";
       };
     };
