@@ -31,6 +31,7 @@
     ];
     sessionVariables = {
       BROWSER = "librewolf";
+      DISPLAY = ":0";
       DIRENV_LOG_FORMAT = "";
       DISABLE_QT5_COMPAT = "0";
       EDITOR = "hx";
@@ -67,6 +68,7 @@
     config = {
       common = {
         default = "termfilechooser";
+        # default = "gtk";
       };
     };
   };
@@ -75,10 +77,6 @@
     adb.enable = true;
     dconf.enable = true;
     steam.enable = true;
-    # hyprland = {
-    #   enable = true;
-    #   xwayland.enable = true;
-    # };
     gnupg.agent = {
       enable = true;
       enableSSHSupport = true;

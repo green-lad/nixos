@@ -85,3 +85,8 @@ xrandr --output LVDS-1 --scale 1x1 --output DP-3 --right-of LVDS-1 --scale 1x1
 about:config
 layout.css.devPixelsPerPx
 ```
+
+- develop on package in nixpkgs
+```
+nix develop nixpkgs#<pkgs_name>
+```
