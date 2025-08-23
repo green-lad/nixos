@@ -18,5 +18,7 @@ def main [sops_otp_file = "~/sops_secrets/otp.yaml"] {
       | decode hex
       | encode base32
   )
-  $otp_base32_secret | oathtool --totp | wl-copy
+  let c = $otp_base32_secret | oathtool --totp
+  print $c
+  $c | wl-copy
 }
