@@ -61,14 +61,18 @@ in
           };
         };
         bluetooth = {
-          format = " {status}";
-          format-connected = " {num_connections}";
-          on-click = "wezterm -e bluetoothctl";
+          format = "<span>  </span>";
+          format-off = "<span color='#CCCCCC'> 󰂳 </span>";
+          format-disabled = "<span color='#CCCCCC'> 󰂲 </span>";
+          on-click = "rfkill toggle bluetooth";
+          on-click-right = "wezterm -e bluetoothctl";
           tooltip-format = "{controller_alias}	{controller_address}";
           tooltip-format-connected = "{controller_alias}	{controller_address}
       
               {device_enumerate}";
           tooltip-format-enumerate-connected = "{device_alias}	{device_address}";
+          tooltip-format-off = "powered off";
+          tooltip-format-disabled = "disabled";
         };
         clock = {
           actions = {
@@ -102,31 +106,40 @@ in
           format = "<span color='#ffcc66'><b> 󰵆 </b></span>";
           interval = "once";
           tooltip = false;
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
         "custom/connect_placeholder" = {
           format = "<span color='#ffcc66'> 󰀂 </span>";
           interval = "once";
           tooltip = false;
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
         "custom/disk" = {
           exec = "${./read_zfs.nu}";
           format = " {}%";
           interval = 60;
           return-type = "json";
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
         "custom/gammastep" = {
           exec = ''gammastep -p 2>&1 >/dev/null | grep -o -e '[0-9]\+K' '';
           format = "󱄄 {}";
           interval = 60;
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
         "custom/lock" = {
           format = " 󰍁 ";
           tooltip-format = "lock";
           on-click = "swaylock";
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
         "custom/mail" = {
           exec = "${./get_mail_count.nu}";
-          # exec = "/home/markus/config/home-manager/apps/waybar/get_mail_count.nu";
           format = "{icon} {}";
           return-type = "json";
           format-icons = {
@@ -136,53 +149,81 @@ in
             new_failed = "<span color='#e27878'> </span>";
           };
           on-click = "wezterm -e neomutt";
-        };
-        "custom/opener_music" = {
-          format = "<span color='#ffcc66'>  </span>";
-          tooltip-format = "musicmenu";
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
         "custom/opener_power" = {
           format = "<span color='#ffcc66'>    </span>";
           tooltip-format = "powermenu";
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
         "custom/opener_hardware" = {
           format = "<span color='#ffcc66'>  </span>";
           tooltip-format = "powermenu";
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
         "custom/power" = {
           format = "   ";
           tooltip-format = "power off";
           on-click = "shutdown now";
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
         "custom/quit" = {
           format = " 󰗼 ";
           tooltip-format = "quit niri";
           on-click = "niri msg action quit";
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
         "custom/reboot" = {
           format = " 󰜉 ";
           tooltip-format = "reboot";
           on-click = "reboot";
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
         "custom/rebuild-home-manager" = {
           format = "  ";
           tooltip-format = "rebuild home-manager";
           on-click = "wezterm -e -- ${./repl.nu} 'home-manager switch --flake ${local_flake}'";
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
         "custom/rebuild-nixos" = {
           format = "  ";
           tooltip-format = "rebuild nixos";
           on-click = "wezterm -e -- ${./repl.nu} 'sudo nixos-rebuild switch --flake ${local_flake}'";
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
         "custom/separator" = {
           format = "<span color='#ffcc66'><b> | </b></span>";
           interval = "once";
           tooltip = false;
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
         "custom/separator_minor" = {
           format = "<span color='#AAAAAA'> | </span>";
           interval = "once";
           tooltip = false;
+          on-scroll-up = "";
+          on-scroll-down = "";
+        };
+        "custom/rfkill_wwan" = {
+          exec = "${./rfkill.nu} wwan";
+          format = "{icon}";
+          return-type = "json";
+          format-icons = {
+            open = "<span> 󰑔 </span>";
+            blocked = "<span color='#CCCCCC'> 󰻄 </span>";
+          };
+          on-click = "rfkill toggle wwan";
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
 
         "group/connections" = {
@@ -194,7 +235,11 @@ in
             "custom/connect_placeholder"
             "bluetooth"
             "custom/separator_minor"
-            "network"
+            "network#wlan"
+            "custom/separator_minor"
+            "custom/rfkill_wwan"
+            "custom/separator_minor"
+            "network#eth"
             "custom/separator_minor"
           ];
           orientation = "horizontal";
@@ -218,8 +263,6 @@ in
           };
           modules = [
             "custom/opener_hardware"
-            "battery"
-            "custom/separator_minor"
             "cpu"
             "custom/separator_minor"
             "temperature"
@@ -228,19 +271,9 @@ in
             "custom/separator_minor"
             "custom/disk"
             "custom/separator_minor"
-          ];
-          orientation = "horizontal";
-        };
-        "group/music" = {
-          drawer = {
-            transition-left-to-right = false;
-            click-to-reveal = true;
-          };
-          modules = [
-            "custom/opener_music"
-            "mpd"
+            "custom/gammastep"
             "custom/separator_minor"
-            "pulseaudio"
+            "systemd-failed-units"
             "custom/separator_minor"
           ];
           orientation = "horizontal";
@@ -295,15 +328,13 @@ in
         modules-right = [
           "custom/mail"
           "custom/separator"
-          "custom/gammastep"
-          "custom/separator"
-          "systemd-failed-units"
-          "custom/separator"
-          "group/music"
+          "pulseaudio"
           "custom/separator"
           "group/connections"
           "custom/separator"
           "group/hardware"
+          "custom/separator"
+          "battery"
           "custom/separator"
           "backlight"
           "custom/separator"
@@ -311,33 +342,33 @@ in
           "custom/separator"
           "group/power"
         ];
-        mpd = {
-          on-click = "wezterm -e rmpc";
-          format = "󰎇: ({elapsedTime:%M:%S}/{totalTime:%M:%S})";
-          format-disconnected = "󰎇:  ";
-          format-stopped = "󰎇:  ";
-          interval = 10;
-          tooltip-format = "MPD (connected)";
-          tooltip-format-disconnected = "MPD (disconnected)";
+
+        "network#wlan" = {
+          interface = "wlan*";
+          format-wifi = " 󰖩 ";
+          format-disconnected = "<span color='#CCCCCC'> 󱛆 </span>";
+          format-disabled = "<span color='#CCCCCC'> 󰖪 </span>";
+          tooltip-format-wifi = "{ifname} {ipaddr} {essid} ({signalStrength}%)";
+          tooltip-format-disconnected = "disconnected";
+          tooltip-format-disabled = "disabled";
+          on-click = "rfkill toggle wlan";
         };
 
-        network = {
-          interface = "wlan0";
-          format = "{ifname}";
-          format-wifi = "{essid} ({signalStrength}%) ";
-          format-ethernet = "{ipaddr}/{cidr} 󰊗";
-          format-disconnected = "";
-          tooltip-format = "{ifname} via {gwaddr} 󰊗";
-          tooltip-format-wifi = "{essid} ({signalStrength}%) ";
-          tooltip-format-ethernet = "{ifname} ";
-          tooltip-format-disconnected = "Disconnected";
-          max-length = 50;
+        "network#eth" = {
+          interface = "en*";
+          format-ethernet = " 󰈁 ";
+          format-linked = "<span color='#CCCCCC'> 󰈂 </span>";
+          format-disabled = "<span color='#CCCCCC'> 󰈂 </span>";
+          tooltip-format-ethernet = "{ifname} {ipaddr}";
+          tooltip-format-disabled = "disabled";
+          tooltip-format = "disconnected";
+          on-click = "${./toggle_ethernet.nu}";
         };
 
         pulseaudio = {
           format = "{icon}  {volume}%";
           format-bluetooth = "{volume}% {icon}";
-          format-muted = "";
+          format-muted = "     ";
           format-icons = {
             "alsa_output.pci-0000_00_1f.3.analog-stereo" = "";
             "alsa_output.pci-0000_00_1f.3.analog-stereo-muted" = "";
@@ -354,8 +385,9 @@ in
             ];
           };
           reverse-scrolling = true;
-          scroll-step = 1;
-          on-click = "wezterm -e pulsemixer";
+          scroll-step = 0.5;
+          on-click = "wezterm -e rmpc";
+          on-click-right = "wezterm -e pulsemixer";
           on-click-middle = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
           ignored-sinks = [
             "Easy Effects Sink"

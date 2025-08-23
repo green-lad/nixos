@@ -39,15 +39,15 @@
     };
 
     helix.url = "github:helix-editor/helix/master";
-
     # wezterm.url = "github:wez/wezterm?dir=nix";
+    # niri.url = "github:yalter/niri";
 
     stylix = {
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    niri.url = "github:sodiboo/niri-flake";
+    niri-flake.url = "github:sodiboo/niri-flake";
 
     uwu-colors.url = "github:q60/uwu_colors";
 

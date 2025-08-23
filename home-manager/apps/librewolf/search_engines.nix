@@ -36,6 +36,17 @@ in
     definedAliases = [ "@hw" ];
   };
 
+  "nix old version" = {
+    urls = [
+      {
+        template = "https://lazamar.co.uk/nix-versions/?channel=nixpkgs-unstable&package={searchTerms}";
+      }
+    ];
+    icon = "https://wiki.nixos.org/nixos.png";
+    updateInterval = interval;
+    definedAliases = [ "@nv" ];
+  };
+
   "github code search" = {
     urls = [ { template = "https://github.com/search?q=%22{searchTerms}%22&type=code"; } ];
     icon = "https://github.githubassets.com/favicons/favicon.svg";

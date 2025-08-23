@@ -75,6 +75,7 @@
       EDITOR = "hx";
       HOST = "${hostname}";
       TERMINAL = "wezterm";
+      # DIRENV_LOG_FORMAT = "";
     };
     packages = with pkgs; [
       inputs.additional-fonts.packages.${system}.astetica

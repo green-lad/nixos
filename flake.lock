@@ -295,7 +295,7 @@
         "type": "github"
       }
     },
-    "niri": {
+    "niri-flake": {
       "inputs": {
         "niri-stable": "niri-stable",
         "niri-unstable": "niri-unstable",
@@ -486,7 +486,7 @@
         "firefox-addons": "firefox-addons",
         "helix": "helix",
         "home-manager": "home-manager",
-        "niri": "niri",
+        "niri-flake": "niri-flake",
         "nix-your-shell": "nix-your-shell",
         "nixpkgs": "nixpkgs_3",
         "sops-nix": "sops-nix",

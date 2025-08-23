@@ -29,14 +29,15 @@
           format = '$EDITOR://$0',
       	})
 
-        wezterm.on('gui-startup', function(cmd)
-          local tab, pane, window = wezterm.mux.spawn_window(cmd or {})
-          if cmd and cmd.args and string.find(cmd.args[1], "cliphist%_fzf%_sixel.nu$") then
-            window:gui_window():set_config_overrides {
-              font_size = 8,
-            }
-          end
-        end)
+      	-- resize font size on startup
+        -- wezterm.on('gui-startup', function(cmd)
+        --   local tab, pane, window = wezterm.mux.spawn_window(cmd or {})
+        --   if cmd and cmd.args and string.find(cmd.args[1], "cliphist%_fzf%_sixel.nu$") then
+        --     window:gui_window():set_config_overrides {
+        --       font_size = 8,
+        --     }
+        --   end
+        -- end)
 
         wezterm.on('open-uri', function(window, pane, uri)
           -- wezterm.log_info('uri: ', uri)

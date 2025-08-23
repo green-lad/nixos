@@ -1,10 +1,11 @@
 #!/usr/bin/env -S nu
 
-def main [regex] {
-  return (get_icons_csv | from csv | where name =~ $regex | to nuon)
+def main [] {
+  let i = get_icons_csv | from csv | each {$"($in.name)\t($in.unicode)\t($in.icon)"} | to text | fuzzel -d --accept-nth=3
+  $i | wl-copy
+  print $i
 }
 
-# src: https://github.com/8bitmcu/NerdFont-Cheat-Sheet
 def get_icons_csv [] {
   return 'name,unicode,icon
 nf-fa-fa,f2b4,

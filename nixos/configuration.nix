@@ -45,7 +45,7 @@
   boot = {
     kernelModules = [ "uinput" ];
     loader = {
-      timeout = 0;
+      timeout =5;
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };

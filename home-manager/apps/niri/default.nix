@@ -6,7 +6,7 @@
 }:
 {
   imports = [
-    inputs.niri.homeModules.niri
+    inputs.niri-flake.homeModules.niri
     ../fuzzle
     ../waybar
   ];
@@ -16,6 +16,7 @@
     niri = {
       enable = true;
       package = pkgs.niri;
+      # package = inputs.niri.packages.${pkgs.system}.niri;
       settings = {
         hotkey-overlay = {
           skip-at-startup = true;
@@ -158,7 +159,7 @@
 
         prefer-no-csd = true;
 
-        screenshot-path = "~/screenshots/%Y-%m-%d_%H-%M-%S.png";
+        screenshot-path = "~/Documents/screenshots/%Y-%m-%d_%H-%M-%S.png";
 
         animations = {
           slowdown = 0.3;
@@ -196,9 +197,17 @@
             hotkey-overlay.title = "Open clipboard manager";
             action = spawn_with_transition "wezterm start --class float_wezterm ${./cliphist_fzf_sixel.nu}" "200";
           };
+          "Mod+N" = {
+            hotkey-overlay.title = "Open music manager";
+            action = spawn "wezterm" "start" "--class" "float_wezterm" "rmpc";
+          };
+          "Mod+B" = {
+            hotkey-overlay.title = "Choose icon";
+            action = spawn "${./choose_icon.nu}";
+          };
           "Mod+Shift+C" = {
             hotkey-overlay.title = "Pick color";
-            action = spawn "wezterm" "start" "${./pick_color.nu}";
+            action = spawn "wezterm" "start" "--class" "float_wezterm" "${./pick_color.nu}";
           };
           "Mod+X" = {
             hotkey-overlay.title = "Open clipboard diff";
@@ -311,6 +320,7 @@
 
           "Mod+M" = {
             repeat = false;
+            hotkey-overlay.title = "Toggle waybar";
             action = spawn ["nu" "-c" ''if (systemctl --user is-active waybar | to text) == "active" {systemctl --user stop waybar} else {systemctl --user start waybar}''];
           };
           "Mod+Z" = {
@@ -319,6 +329,7 @@
           };
           "Mod+Space" = {
             repeat = false;
+            hotkey-overlay.title = "Search in new tab";
             action = spawn ["nu" "-c" ''
               librewolf --new-tab $'https://duckduckgo.com/?q=(fuzzel -d -l 0 --placeholder "Type your search")'
               let id = niri msg -j windows | from json | where title =~ 'LibreWolf$' | get id | get 0
