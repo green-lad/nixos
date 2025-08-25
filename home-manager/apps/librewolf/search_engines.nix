@@ -168,6 +168,17 @@ in
     definedAliases = [ "@m" ];
   };
 
+  "steam" = {
+    urls = [
+      {
+        template = "https://store.steampowered.com/search/?term={searchTerms}";
+      }
+    ];
+    icon = "https://store.steampowered.com/favicon.ico";
+    updateInterval = interval;
+    definedAliases = [ "@st" ];
+  };
+
   "crossref" = {
     urls = [
       {

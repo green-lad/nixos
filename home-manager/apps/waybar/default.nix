@@ -9,7 +9,8 @@ in
       topbar = {
         backlight = {
           device = "intel_backlight";
-          format = "{icon} {percent}%";
+          format = "{icon} {percent}%<span color='#ffcc66'><b> | </b></span>";
+          # format = "{icon} {capacity}%";
           format-icons = [
             " "
             "󰃞 "
@@ -24,7 +25,8 @@ in
           smooth-scrolling-threshold = 1;
         };
         battery = {
-          format = "{icon} {capacity}%";
+          format = "{icon} {capacity}%<span color='#ffcc66'><b> | </b></span>";
+          # format = "";
           format-icons = {
             charging = [
               "󰢟"
@@ -149,6 +151,8 @@ in
             new_failed = "<span color='#e27878'> </span>";
           };
           on-click = "wezterm -e neomutt";
+          on-click-middle = "mbsync -a";
+          on-click-right = "mbsync -a";
           on-scroll-up = "";
           on-scroll-down = "";
         };
@@ -215,7 +219,7 @@ in
         };
         "custom/rfkill_wwan" = {
           exec = "${./rfkill.nu} wwan";
-          format = "{icon}";
+          format = "{}{icon}";
           return-type = "json";
           format-icons = {
             open = "<span> 󰑔 </span>";
@@ -335,9 +339,7 @@ in
           "group/hardware"
           "custom/separator"
           "battery"
-          "custom/separator"
           "backlight"
-          "custom/separator"
           "group/rebuild"
           "custom/separator"
           "group/power"

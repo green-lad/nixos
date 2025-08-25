@@ -2,6 +2,13 @@
 
 def main [type] {
   let ids = rfkill list $type -o ID -n -r | lines
+  print (
+    {
+      text: " - ",
+      tooltip: $"($type) not found",
+      # alt: (job recv)
+    } | to json | to text | lines | str join
+  )
   job spawn {
     rfkill event
       | lines
@@ -14,6 +21,7 @@ def main [type] {
   loop {
     print (
       {
+        text: "",
         tooltip: $type,
         alt: (job recv)
       } | to json | to text | lines | str join
