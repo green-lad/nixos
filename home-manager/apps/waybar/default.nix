@@ -9,8 +9,7 @@ in
       topbar = {
         backlight = {
           device = "intel_backlight";
-          format = "{icon} {percent}%<span color='#ffcc66'><b> | </b></span>";
-          # format = "{icon} {capacity}%";
+          format = "{icon} {percent}%<span color='#ffcc66'><b> |</b></span>";
           format-icons = [
             " "
             "󰃞 "
@@ -25,8 +24,7 @@ in
           smooth-scrolling-threshold = 1;
         };
         battery = {
-          format = "{icon} {capacity}%<span color='#ffcc66'><b> | </b></span>";
-          # format = "";
+          format = "{icon} {capacity}%<span color='#ffcc66'><b> |</b></span>";
           format-icons = {
             charging = [
               "󰢟"
@@ -75,6 +73,8 @@ in
           tooltip-format-enumerate-connected = "{device_alias}	{device_address}";
           tooltip-format-off = "powered off";
           tooltip-format-disabled = "disabled";
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
         clock = {
           actions = {
@@ -103,6 +103,8 @@ in
         cpu = {
           format = "  {usage}%";
           on-click = "wezterm -e htop";
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
         "custom/apps_placeholder" = {
           format = "<span color='#ffcc66'><b> 󰵆 </b></span>";
@@ -316,6 +318,8 @@ in
         memory = {
           format = "󰍛 {}%";
           on-click = "wezterm -e htop";
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
         modules-center = [
           "custom/separator"
@@ -354,6 +358,8 @@ in
           tooltip-format-disconnected = "disconnected";
           tooltip-format-disabled = "disabled";
           on-click = "rfkill toggle wlan";
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
 
         "network#eth" = {
@@ -365,6 +371,8 @@ in
           tooltip-format-disabled = "disabled";
           tooltip-format = "disconnected";
           on-click = "${./toggle_ethernet.nu}";
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
 
         pulseaudio = {
@@ -402,6 +410,8 @@ in
           format-ok = "✓";
           system = true;
           user = true;
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
 
         "wlr/taskbar" = {
@@ -414,10 +424,14 @@ in
           ignore-list = [
             "org.wezfurlong.wezterm"
           ];
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
 
         temperature = {
           format = "{temperatureC}°C ";
+          on-scroll-up = "";
+          on-scroll-down = "";
         };
 
         position = "top";
