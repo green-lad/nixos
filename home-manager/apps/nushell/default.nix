@@ -47,7 +47,7 @@
               --bind="${bind}"
             | decode utf-8
             | str trim
-        );
+        )
         if $choice != "" { commandline edit --${str} $choice }
       '';
     }];
@@ -72,7 +72,30 @@
             --preview-window='wrap'
             --no-multi-line
             --height 40%
-        );
+        )
+        if $choice != "" { commandline edit --insert $choice }
+      '';
+    }];
+    fzf_niri_action_help = [{
+      send = "ExecuteHostCommand";
+      cmd = ''
+        let choice = (
+          niri msg action
+            e>| lines
+            | skip 5
+            | drop 3
+            | to text
+            | parse -r '\s*(?P<action>.*)\n\s*(?P<description>.*)\n'
+            | to csv -n -s '#'
+            | str join (char -i 0)
+            | fzf
+                --read0
+                --layout reverse
+                --delimiter '#'
+                --with-nth '{1} -- {2}'
+                --accept-nth '{1}'
+                --height 40%
+        )
         if $choice != "" { commandline edit --insert $choice }
       '';
     }];
@@ -154,6 +177,13 @@
           keycode = "char_h";
           mode = [ "emacs" "vi_normal" "vi_insert" ];
           event = fzf_command_picker;
+        }
+        {
+          name = "fuzzy_niri_action_find";
+          modifier = "control";
+          keycode = "char_g";
+          mode = [ "emacs" "vi_normal" "vi_insert" ];
+          event = fzf_niri_action_help;
         }
       ];
     };

@@ -55,6 +55,8 @@
       url = "github:green-lad/fonts";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nsticky.url = "github:lonerOrz/nsticky";
   };
 
   outputs =

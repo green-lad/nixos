@@ -122,17 +122,23 @@
   fonts.fontconfig.enable = true;
 
   # src: https://github.com/gepbird/dotfiles/blob/82902d8e5681c42411ed6125f8e9a9322ac3c6c1/modules/gtk-qt.nix#L10 (there the colortheme also gets set, but lets use the default)
-  gtk = let extraConfig = {
-      gtk-application-prefer-dark-theme = true;
-      gtk-error-bell = false;
+  gtk =
+    let
+      extraConfig = {
+        gtk-application-prefer-dark-theme = true;
+        gtk-error-bell = false;
+      };
+    in
+    {
+      enable = true;
+      gtk2.configLocation = "${config.home.homeDirectory}/.local/share/gtk-2.0/gtkrc";
+      gtk2.extraConfig = pkgs.lib.foldlAttrs (
+        a: n: v:
+        "${a}\n${n} = ${pkgs.lib.trivial.boolToString v}"
+      ) "" extraConfig;
+      gtk3.extraConfig = extraConfig;
+      gtk4.extraConfig = extraConfig;
     };
-  in{
-    enable = true;
-    gtk2.configLocation = "${config.home.homeDirectory}/.local/share/gtk-2.0/gtkrc";
-    gtk2.extraConfig = pkgs.lib.foldlAttrs (a: n: v: "${a}\n${n} = ${pkgs.lib.trivial.boolToString v}") "" extraConfig;
-    gtk3.extraConfig = extraConfig;
-    gtk4.extraConfig = extraConfig;
-  };
 
   xdg.configFile."cat_installer/ca.pem" = {
     force = true;

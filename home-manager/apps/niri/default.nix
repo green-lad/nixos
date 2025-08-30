@@ -23,7 +23,7 @@
         };
         gestures = {
           hot-corners = {
-            enable = false;
+            # enable = false;
           };
         };
         input = {
@@ -139,6 +139,7 @@
               "${./niri_init_layout.nu}"
             ];
           }
+          { command = [ "nsticky" ]; }
           { command = [ "waybar" ]; }
           { command = [ "xwayland-satellite" ]; }
           {
@@ -314,6 +315,23 @@
           "Mod+O" = {
             repeat = false;
             action = toggle-overview;
+          };
+
+          "Mod+P" = {
+            action = spawn [
+              "wl-kbptr"
+              "-o" "general.modes=tile,bisect,click"
+              "-o" "mode_tile.selectable_bg_color=#0000"
+              "-o" "mode_tile.label_color=#cccc"
+              "-o" "mode_tile.label_symbols=abcdefghijklmnopqrstuvwxyz123
+"
+            ];
+          };
+
+          "Mod+E" = {
+            action = spawn [
+              "nsticky" "toggle-active"
+            ];
           };
 
           "Mod+Q".action = close-window;
@@ -493,8 +511,10 @@
 
   config.home.packages = with pkgs; [
     chafa
+    inputs.nsticky.packages.${system}.nsticky
     wdisplays
     wev
+    wl-kbptr
     xwayland-satellite
   ];
 
