@@ -34,16 +34,8 @@
     ./apps/yazi
   ];
 
-  programs.firefox = {
+  programs.vesktop = {
     enable = true;
-    profiles = {
-      default = {
-        id = 0;
-        name = "default";
-        isDefault = true;
-        # extensions.force = true;
-      };
-    };
   };
 
   stylix = (import ../stylix.nix) pkgs // {
@@ -70,12 +62,10 @@
     sessionVariables = {
       BROWSER = "librewolf";
       DISPLAY = ":0";
-      DIRENV_LOG_FORMAT = "";
       DISABLE_QT5_COMPAT = "0";
       EDITOR = "hx";
       HOST = "${hostname}";
       TERMINAL = "wezterm";
-      # DIRENV_LOG_FORMAT = "";
     };
     packages = with pkgs; [
       inputs.additional-fonts.packages.${system}.astetica

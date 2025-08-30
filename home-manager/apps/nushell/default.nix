@@ -3,6 +3,12 @@
   programs.direnv = {
     enable = true;
     enableNushellIntegration = true;
+    config = {
+      global = {
+        # siltent console output
+        log_filter="^$";
+      };
+    };
   };
   
   programs.nix-your-shell = {

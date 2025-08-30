@@ -12,9 +12,9 @@
   # };
 
   systemd.user.services."xdg-desktop-portal-gtk" = {
-    Install.WantedBy = pkgs.lib.mkForce [ "graphical-session-i3.target" ];
+    Install.WantedBy = pkgs.lib.mkForce [ "graphical-session.target" ];
     Unit = {
-      After = [ "graphical-session-i3.target" ];
+      After = [ "graphical-session.target" ];
       Description = "Portal service (GTK/GNOME implementation)";
     };
     Service = {
@@ -26,10 +26,40 @@
     };
   };
 
-  systemd.user.services."xdg-desktop-portal-termfilechooser" = {
-    Install.WantedBy = pkgs.lib.mkForce [ "graphical-session-i3.target" ];
+  systemd.user.services."xdg-desktop-portal-gnome" = {
+    Install.WantedBy = pkgs.lib.mkForce [ "graphical-session.target" ];
     Unit = {
-      After = [ "graphical-session-i3.target" ];
+      After = [ "graphical-session.target" ];
+      Description = "Gnome portal service";
+    };
+    Service = {
+      Type = "dbus";
+      BusName = "org.freedesktop.impl.portal.desktop.gnome";
+      ExecStart =
+        "${pkgs.xdg-desktop-portal-gnome}/libexec/xdg-desktop-portal-gnome";
+      Restart = "on-failure";
+    };
+  };
+
+  systemd.user.services."xdg-desktop-portal-wlr" = {
+    Install.WantedBy = pkgs.lib.mkForce [ "graphical-session.target" ];
+    Unit = {
+      After = [ "graphical-session.target" ];
+      Description = "Wlr portal service";
+    };
+    Service = {
+      Type = "dbus";
+      BusName = "org.freedesktop.impl.portal.desktop.wlr";
+      ExecStart =
+        "${pkgs.xdg-desktop-portal-wlr}/libexec/xdg-desktop-portal-wlr";
+      Restart = "on-failure";
+    };
+  };
+
+  systemd.user.services."xdg-desktop-portal-termfilechooser" = {
+    Install.WantedBy = pkgs.lib.mkForce [ "graphical-session.target" ];
+    Unit = {
+      After = [ "graphical-session.target" ];
       Description = "Portal service (terminal file chooser implementation)";
     };
     Service = {
@@ -42,9 +72,9 @@
   };
 
   systemd.user.services."xdg-desktop-portal" = {
-    Install.WantedBy = pkgs.lib.mkForce [ "graphical-session-i3.target" ];
+    Install.WantedBy = pkgs.lib.mkForce [ "graphical-session.target" ];
     Unit = {
-      After = [ "graphical-session-i3.target" ];
+      After = [ "graphical-session.target" ];
       Description = "Portal service";
     };
     Service = {
