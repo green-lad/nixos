@@ -323,8 +323,7 @@
               "-o" "general.modes=tile,bisect,click"
               "-o" "mode_tile.selectable_bg_color=#0000"
               "-o" "mode_tile.label_color=#cccc"
-              "-o" "mode_tile.label_symbols=abcdefghijklmnopqrstuvwxyz123
-"
+              "-o" "mode_tile.label_symbols=abcdefghijklmnopqrstuvwxyz123"
             ];
           };
 
