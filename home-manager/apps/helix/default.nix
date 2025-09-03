@@ -7,7 +7,6 @@
 {
   programs.helix = {
     extraPackages = with pkgs; [
-      codebook
       helix-gpt
       jq
       lazygit
@@ -27,6 +26,7 @@
       # snippet and used? word completion
       simple-completion-language-server
       texlab
+      tex-fmt
       typescript-language-server
     ];
     enable = true;
@@ -82,10 +82,6 @@
             ""
           ];
         };
-        codebook = {
-          command = "codebook-lsp";
-          args = [ "serve" ];
-        };
       };
       language = [
         {
@@ -101,14 +97,16 @@
           name = "latex";
           language-servers = [
             "texlab"
-            "codebook"
             "scls"
           ];
+          formatter = {
+            command = "tex-fmt";
+            args = [ "--stdin" ];
+          };
         }
         {
           name = "markdown";
           language-servers = [
-            "codebook"
             "scls"
           ];
         }
@@ -116,14 +114,20 @@
           name = "css";
           formatter = {
             command = "prettier";
-            args = ["--parser" "css"];
+            args = [
+              "--parser"
+              "css"
+            ];
           };
           language-servers = [ "uwu-colors" ];
         }
         {
           name = "nix";
           formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
-          language-servers = [ "scls" "uwu-colors" ];
+          language-servers = [
+            "scls"
+            "uwu-colors"
+          ];
         }
         {
           name = "nu";
@@ -149,7 +153,6 @@
           };
           language-servers = [
             "rust-analyzer"
-            "codebook"
             "gpt"
             "scls"
           ];
@@ -169,7 +172,6 @@
             unit = "    ";
           };
           language-servers = [
-            "codebook"
             "scls"
           ];
         }

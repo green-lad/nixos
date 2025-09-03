@@ -410,8 +410,8 @@
             "Mod+Up".action = focus-window-up;
             "Mod+Right".action = focus-column-right;
             "Mod+H".action = focus-column-left;
-            "Mod+J".action = focus-window-or-workspace-down;
-            "Mod+K".action = focus-window-or-workspace-up;
+            "Mod+J".action = focus-window-or-monitor-down;
+            "Mod+K".action = focus-window-or-monitor-up;
             "Mod+L".action = focus-column-right;
 
             "Mod+Ctrl+Left".action = move-column-left;

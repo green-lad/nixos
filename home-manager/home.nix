@@ -81,11 +81,13 @@
       htop
       inkscape
       jq
+      kdePackages.okular
       killall
       lazygit
       libreoffice
       lightburn
       mplayer
+      mpv
       nautilus
       obs-cmd
       obs-studio
@@ -101,6 +103,7 @@
       ))
       rustup
       songrec
+      termdown
       unzip
       wev
       wl-clipboard
