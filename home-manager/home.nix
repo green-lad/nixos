@@ -101,7 +101,6 @@
           oathtool
         ])
       ))
-      rustup
       songrec
       termdown
       unzip

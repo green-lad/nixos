@@ -12,8 +12,6 @@
       lazygit
       nil
       nixfmt-rfc-style
-      # sadly nufmt is unusable in its current state
-      # nufmt
       prettier
       (python3.withPackages (
         p:
@@ -21,9 +19,6 @@
           python-lsp-server
         ])
       ))
-      rust-analyzer
-      rustfmt
-      # snippet and used? word completion
       simple-completion-language-server
       texlab
       tex-fmt
@@ -39,14 +34,14 @@
         scls = {
           command = "simple-completion-language-server";
           config = {
-            max_completion_items = 100; # set max completion results len for each group: words, snippets, unicode-input
-            feature_words = true; # enable completion by word
-            feature_snippets = true; # enable snippets
-            snippets_first = true; # completions will return before snippets by default
-            snippets_inline_by_word_tail = false; # suggest snippets by WORD tail, for example text `xsq|` become `x^2|` when snippet `sq` has body `^2`
-            feature_unicode_input = false; # enable "unicode input"
-            feature_paths = false; # enable path completion
-            feature_citations = false; # enable citation completion (only on `citation` feature enabled)
+            max_completion_items = 100;
+            feature_words = false;
+            feature_snippets = true;
+            snippets_first = true;
+            snippets_inline_by_word_tail = false;
+            feature_unicode_input = false;
+            feature_paths = false;
+            feature_citations = false;
           };
           environment = {
             RUST_LOG = "info,simple-completion-language-server=info";
@@ -179,8 +174,6 @@
 
     };
     settings = {
-      # theme = "iceberg-dark";
-
       editor = {
         mouse = false;
         continue-comments = false;
@@ -188,7 +181,10 @@
         scrolloff = 0;
         line-number = "relative";
         bufferline = "always";
-        end-of-line-diagnostics = "hint";
+        end-of-line-diagnostics = "disable";
+        inline-diagnostics = {
+          cursor-line = "disable";
+        };
         auto-completion = false;
         path-completion = true;
         soft-wrap = {
@@ -218,11 +214,11 @@
         };
 
         whitespace = {
-          render = "all";
+          render = "none";
         };
 
         indent-guides = {
-          render = false;
+          render = true;
           character = "|";
           skip-levels = 0;
         };
@@ -294,6 +290,7 @@
               x = ":toggle whitespace.render all none";
               n = ":toggle-option indent-guides.render";
               p = ":toggle-option lsp.display-progress-messages";
+              h = '':toggle-option inline-diagnostics.cursor-line "disable" "hint"'';
             };
             l = {
               r = ":lsp-restart";
@@ -316,6 +313,9 @@
               ":insert-output yazi --chooser-file=/tmp/unique-file-u41ae15"
               '':insert-output echo "x1b[?1049h" > /dev/tty''
               ":cd %sh{cat /tmp/unique-file-u41ae15}"
+            ];
+            z = [
+              '':open "~/.config/helix/snippets/%{language}.json"''
             ];
             "+" = {
               n = [
