@@ -6,30 +6,36 @@
 }:
 {
   programs.helix = {
-    extraPackages = with pkgs; [
-      helix-gpt
-      jq
-      lazygit
-      nil
-      nixfmt-rfc-style
-      prettier
-      (python3.withPackages (
-        p:
-        (with p; [
-          python-lsp-server
-        ])
-      ))
-      simple-completion-language-server
-      texlab
-      tex-fmt
-      typescript-language-server
-    ];
+    extraPackages = with pkgs;
+      [
+        helix-gpt
+        jq
+        lazygit
+        dot-language-server
+        nil
+        nixfmt-rfc-style
+        prettier
+        (python3.withPackages (
+          p:
+          (with p; [
+            python-lsp-server
+          ])
+        ))
+        simple-completion-language-server
+        texlab
+        tex-fmt
+        typescript-language-server
+      ];
     enable = true;
     package = inputs.helix.packages.${pkgs.system}.helix;
     languages = {
       language-server = {
         uwu-colors = {
           command = "${inputs.uwu-colors.packages.${pkgs.system}.default}/bin/uwu_colors";
+        };
+        dot-language-server = {
+          command = "${pkgs.dot-language-server}/bin/dot-language-server";
+          args = [ "--stdio" ];
         };
         scls = {
           command = "simple-completion-language-server";
@@ -82,6 +88,19 @@
         {
           name = "csv";
           language-servers = [ "scls" ];
+        }
+        {
+          name = "dot";
+          formatter = {
+            # TODO: install the plugin for prettier by rappin prettier: https://github.com/UniqueNetwork/unique-chain/blob/bb80d781de1ea27a2ac29c02997ec3852425fd96/nix/prettier.nix#L4
+            command = "npx";
+            args = [
+              "prettier"
+              "--parser"
+              "dot-parser"
+            ];
+          };
+          language-servers = [ "dot-language-server" ];
         }
         {
           name = "json";
@@ -304,14 +323,12 @@
             e = [
               ":sh rm -f /tmp/unique-file-u41ae14"
               ":insert-output yazi '%{buffer_name}' --chooser-file=/tmp/unique-file-u41ae14"
-              '':insert-output echo "x1b[?1049h" > /dev/tty''
               ":open %sh{cat /tmp/unique-file-u41ae14}"
               ":redraw"
             ];
             E = [
               ":sh rm -f /tmp/unique-file-u41ae15"
               ":insert-output yazi --chooser-file=/tmp/unique-file-u41ae15"
-              '':insert-output echo "x1b[?1049h" > /dev/tty''
               ":cd %sh{cat /tmp/unique-file-u41ae15}"
             ];
             z = [

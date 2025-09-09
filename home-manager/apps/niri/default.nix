@@ -2,6 +2,7 @@
   config,
   pkgs,
   inputs,
+  hostname,
   ...
 }:
 {
@@ -346,6 +347,11 @@
                 "1%-"
               ];
             };
+
+            "Mod+Alt+H".action = let local_flake = ''$"path:($env.HOME)/config#${hostname}"'';
+            in spawn [
+              "wezterm" "start" "${../waybar/repl.nu}" "home-manager switch --flake ${local_flake}"
+            ];
 
             "Mod+G".action = set-dynamic-cast-window;
             "Mod+Ctrl+G".action = set-dynamic-cast-monitor;

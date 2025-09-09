@@ -31,6 +31,7 @@
     ./apps/taskwarrior
     ./apps/wezterm
     ./apps/xdg
+    ./apps/xdot
     ./apps/yazi
   ];
 
