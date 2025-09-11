@@ -77,6 +77,7 @@
       delta
       ffmpeg_6
       gnumake
+      go
       gimp
       graphviz
       htop

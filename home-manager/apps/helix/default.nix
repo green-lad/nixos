@@ -6,30 +6,44 @@
 }:
 {
   programs.helix = {
-    extraPackages = with pkgs;
-      [
-        helix-gpt
-        jq
-        lazygit
-        dot-language-server
-        nil
-        nixfmt-rfc-style
-        prettier
-        (python3.withPackages (
-          p:
-          (with p; [
-            python-lsp-server
-          ])
-        ))
-        simple-completion-language-server
-        texlab
-        tex-fmt
-        typescript-language-server
-      ];
+    extraPackages = with pkgs; [
+      gopls
+      helix-gpt
+      jq
+      lazygit
+      dot-language-server
+      nil
+      nixfmt-rfc-style
+      prettier
+      (python3.withPackages (
+        p:
+        (with p; [
+          python-lsp-server
+        ])
+      ))
+      simple-completion-language-server
+      taplo
+      texlab
+      tex-fmt
+      typescript-language-server
+    ];
     enable = true;
     package = inputs.helix.packages.${pkgs.system}.helix;
     languages = {
       language-server = {
+        gopls = {
+          command = "gopls";
+          config = {
+            gofumpt = true;
+          };
+        };
+        taplo = {
+          command = "taplo";
+          args = [
+            "lsp"
+            "stdio"
+          ];
+        };
         uwu-colors = {
           command = "${inputs.uwu-colors.packages.${pkgs.system}.default}/bin/uwu_colors";
         };
@@ -108,6 +122,17 @@
           language-servers = [ "scls" ];
         }
         {
+          name = "toml";
+          formatter = {
+            command = "taplo";
+            args = [
+              "format"
+              "-"
+            ];
+          };
+          language-servers = [ "taplo" ];
+        }
+        {
           name = "latex";
           language-servers = [
             "texlab"
@@ -156,8 +181,13 @@
           name = "python";
           language-servers = [
             "pylsp"
-            "gpt"
+            # "gpt"
             "scls"
+          ];
+          # this is only tmp for DiemBFT-Twins
+          file-types = [
+            "py"
+            "da"
           ];
         }
         {
@@ -167,7 +197,7 @@
           };
           language-servers = [
             "rust-analyzer"
-            "gpt"
+            # "gpt"
             "scls"
           ];
         }
