@@ -237,6 +237,28 @@ in
     definedAliases = [ "@rr" ];
   };
 
+  "rust doc" = {
+    urls = [
+      {
+        template = "https://docs.rs/releases/search?query={searchTerms}";
+      }
+    ];
+    icon = "https://www.rust-lang.org/static/images/favicon.svg";
+    updateInterval = interval;
+    definedAliases = [ "@rd" ];
+  };
+
+  "rust std" = {
+    urls = [
+      {
+        template = "https://doc.rust-lang.org/std/index.html?search={searchTerms}";
+      }
+    ];
+    icon = "https://www.rust-lang.org/static/images/favicon.svg";
+    updateInterval = interval;
+    definedAliases = [ "@rs" ];
+  };
+
   "rust themis" = {
     urls = [
       {
