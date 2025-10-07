@@ -259,6 +259,7 @@
         };
 
         lsp = {
+          snippets = false;
           auto-signature-help = false;
         };
 
