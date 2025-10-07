@@ -315,6 +315,54 @@
                 "next"
               ];
             };
+            "Mod+Print" = {
+              allow-when-locked = true;
+              action = spawn [
+                "rmpc"
+                "prev"
+              ];
+            };
+            "Mod+Scroll_Lock" = {
+              allow-when-locked = true;
+              action = spawn [
+                "rmpc"
+                "togglepause"
+              ];
+            };
+            "Mod+Pause" = {
+              allow-when-locked = true;
+              action = spawn [
+                "rmpc"
+                "next"
+              ];
+            };
+            "Mod+Shift+Print" = {
+              allow-when-locked = true;
+              action = spawn [
+                "wpctl"
+                "set-volume"
+                "@DEFAULT_AUDIO_SINK@"
+                "0.05-"
+              ];
+            };
+            "Mod+Shift+Scroll_Lock" = {
+              allow-when-locked = true;
+              action = spawn [
+                "wpctl"
+                "set-mute"
+                "@DEFAULT_AUDIO_SINK@"
+                "toggle"
+              ];
+            };
+            "Mod+Shift+Pause" = {
+              allow-when-locked = true;
+              action = spawn [
+                "wpctl"
+                "set-volume"
+                "@DEFAULT_AUDIO_SINK@"
+                "0.05+"
+              ];
+            };
             "XF86MonBrightnessUp" = {
               allow-when-locked = true;
               action = spawn [
