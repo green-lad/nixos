@@ -333,4 +333,28 @@ in
     updateInterval = interval;
     definedAliases = [ "@z" ];
   };
+
+  "Public APIs" = {
+    urls = [ { template = "https://github.com/public-apis/public-apis/search?q={searchTerms}"; } ];
+    updateInterval = interval;
+    definedAliases = [ "@pubapi" ];
+  };
+
+  
+  "Pixabay" = {
+    urls = [ { template = "https://pixabay.com/images/search/{searchTerms}"; } ];
+
+    updateInterval = updateOnceInAWeek;
+    definedAliases = [ "@pixabay" ];
+  };
+
+  "AliExpress" = {
+    urls = [ { template = "https://aliexpress.com/wholesale?SearchText={searchTerms}"; } ];
+
+    updateInterval = updateOnceInAWeek;
+    definedAliases = [
+      "@aliexpress"
+      "@ali"
+    ];
+  };
 }
