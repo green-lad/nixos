@@ -77,7 +77,6 @@
       brightnessctl
       cura-appimage
       delta
-      ffmpeg_6
       gnumake
       go
       gimp
@@ -105,12 +104,12 @@
           oathtool
         ])
       ))
-      songrec
-
       libsForQt5.qt5.qtwayland
       qt6.qtwayland
+      scooter
+      songrec
+      speedtest-cli
       supercollider
-
       termdown
       unzip
       wev

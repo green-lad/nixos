@@ -22,13 +22,21 @@
   environment = {
     # Remove unecessary preinstalled packages
     defaultPackages = [ ];
-    systemPackages = with pkgs; [
-      age
-      home-manager
-      nodejs
-      sops
-      xf86_input_wacom
-    ];
+    systemPackages =
+      with pkgs;
+      let
+        ffmpeg_with_rubberband = ffmpeg.override (old: {
+          withRubberband = true;
+        });
+      in
+      [
+        age
+        ffmpeg_with_rubberband
+        home-manager
+        nodejs
+        sops
+        xf86_input_wacom
+      ];
     sessionVariables = {
       BROWSER = "librewolf";
       DISPLAY = ":0";
@@ -135,10 +143,73 @@
       enable = true;
       musicDirectory = "/home/${user}/music/songs";
       user = "${user}";
+      # TODO: separate data from structure and create this via function
       extraConfig = ''
+        filter {
+          plugin "ffmpeg"
+          name   "semitone+2"
+          graph  "rubberband=pitch=1.12246204829593419095:tempo=1.12246204829593419095"
+        }
+        filter {
+          plugin "ffmpeg"
+          name   "semitone+4"
+          graph  "rubberband=pitch=1.25992104986470410019:tempo=1.25992104986470410019"
+        }
+        filter {
+          plugin "ffmpeg"
+          name   "semitone+6"
+          graph  "rubberband=pitch=1.41421356232229960378:tempo=1.41421356232229960378"
+        }
+        filter {
+          plugin "ffmpeg"
+          name   "semitone-2"
+          graph  "rubberband=pitch=0.89089871814033931107:tempo=0.89089871814033931107"
+        }
+        filter {
+          plugin "ffmpeg"
+          name   "semitone-4"
+          graph  "rubberband=pitch=0.79370052598409974867:tempo=0.79370052598409974867"
+        }
+        filter {
+          plugin "ffmpeg"
+          name   "semitone-6"
+          graph  "rubberband=pitch=0.70710678118654753949:tempo=0.70710678118654753949"
+        }
+
         audio_output {
           type "pipewire"
           name "Pipewire Output"
+          enabled "true"
+        }
+        audio_output {
+          type    "pipewire"
+          name    "pipewire (+2 semitone)"
+          filters "semitone+2"
+        }
+        audio_output {
+          type    "pipewire"
+          name    "pipewire (+4 semitone)"
+          filters "semitone+4"
+        }
+        audio_output {
+          type    "pipewire"
+          name    "pipewire (+6 semitone)"
+          filters "semitone+6"
+        }
+        audio_output {
+          type    "pipewire"
+          name    "pipewire (-2 semitone)"
+          filters "semitone-2"
+        }
+        audio_output {
+          type    "pipewire"
+          name    "pipewire (-4 semitone)"
+          filters "semitone-4"
+        }
+        audio_output {
+          type    "pipewire"
+          name    "pipewire (-6 semitone)"
+          filters "semitone-6"
         }
       '';
     };
