@@ -44,7 +44,7 @@
   boot = {
     kernelModules = [ "uinput" ];
     loader = {
-      timeout =5;
+      timeout = 5;
       systemd-boot.enable = true;
       efi.canTouchEfiVariables = true;
     };
@@ -99,7 +99,10 @@
       ModemManager = {
         enable = lib.mkForce true;
         path = [ pkgs.libqmi ];
-        wantedBy = [ "multi-user.target" "network.target" ];
+        wantedBy = [
+          "multi-user.target"
+          "network.target"
+        ];
       };
     };
   };
@@ -114,6 +117,20 @@
   # };
   # };
   services = {
+    # jack = {
+    #   jackd.enable = true;
+    #   # support ALSA only programs via ALSA JACK PCM plugin
+    #   alsa.enable = false;
+    #   # support ALSA only programs via loopback device (supports programs like Steam)
+    #   loopback = {
+    #     enable = true;
+    #     # buffering parameters for dmix device to work with ALSA only semi-professional sound programs
+    #     #dmixConfig = ''
+    #     #  period_size 2048
+    #     #'';
+    #   };
+    # };
+
     mpd = {
       enable = true;
       musicDirectory = "/home/${user}/music/songs";
@@ -211,6 +228,7 @@
       enable = true;
       pulse.enable = true;
       alsa.enable = true;
+      jack.enable = true;
 
       # source: https://github.com/TLATER/dotfiles
       # Disable the HFP bluetooth profile, because I always use external
@@ -482,9 +500,11 @@
         hashedPassword = "$6$igRbgm5cDL1ZG0Zc$tmrJZPcQtk7sul2Zumk7XidoVta8xE4sSZvPCCmRIbyDmw7b9bx5BG6XlXUfcOVVPh/wor.YirIZ3Sw5zB.tN0";
         home = "/home/${user}";
         extraGroups = [
-          "wheel"
-          "networkmanager"
           "adbusers"
+          "audio"
+          "jackaudiio"
+          "networkmanager"
+          "wheel"
         ];
         packages = [ ];
         openssh.authorizedKeys.keys = authorizedKeys;

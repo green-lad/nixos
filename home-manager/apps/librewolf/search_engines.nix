@@ -326,4 +326,11 @@ in
     updateInterval = interval;
     definedAliases = [ "@k" ];
   };
+
+  "zerspanungsbude" = {
+    urls = [ { template = "https://forum.zerspanungsbude.net/search.php?keywords={searchTerms}"; } ];
+    icon = "https://forum.zerspanungsbude.net/favicon.ico";
+    updateInterval = interval;
+    definedAliases = [ "@z" ];
+  };
 }

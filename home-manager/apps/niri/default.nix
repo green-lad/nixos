@@ -157,7 +157,6 @@
             ];
           }
           { command = [ "nsticky" ]; }
-          { command = [ "waybar" ]; }
           { command = [ "xwayland-satellite" ]; }
           {
             command = [
@@ -574,6 +573,13 @@
             "Mod+R".action = switch-preset-column-width;
             "Mod+Shift+R".action = switch-preset-window-height;
             "Mod+Ctrl+R".action = reset-window-height;
+            "Mod+Ctrl+Shift+R".action = {
+              spawn = [
+                "nu"
+                "-c"
+                ''random chars -l (fuzzel -d --prompt-only "length: " | into int) | wl-copy''
+              ];
+            };
             "Mod+F".action = maximize-column;
             "Mod+Shift+F".action = fullscreen-window;
 

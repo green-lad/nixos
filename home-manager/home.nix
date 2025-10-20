@@ -69,6 +69,8 @@
       TERMINAL = "wezterm";
     };
     packages = with pkgs; [
+      ngspice
+      kicad
       inputs.additional-fonts.packages.${system}.astetica
       inputs.additional-fonts.packages.${system}.leafery
       blender
@@ -104,6 +106,11 @@
         ])
       ))
       songrec
+
+      libsForQt5.qt5.qtwayland
+      qt6.qtwayland
+      supercollider
+
       termdown
       unzip
       wev
