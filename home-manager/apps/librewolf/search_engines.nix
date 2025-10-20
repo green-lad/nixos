@@ -1,9 +1,148 @@
 let
-  interval = 24 * 60 * 60 * 1000;
+  daily = 24 * 60 * 60 * 1000;
+  weekly = 7 * daily;
 in
 {
   "google".metaData.hidden = true;
   "bing".metaData.hidden = true;
+
+  "aliexpress" = {
+    urls = [ { template = "https://aliexpress.com/wholesale?SearchText={searchTerms}"; } ];
+    updateInterval = daily;
+    definedAliases = [ "@ali" ];
+  };
+
+  "amazon" = {
+    urls = [ { template = "https://www.amazon.de/s?k={searchTerms}"; } ];
+    icon = "https://www.amazon.de/favicon.ico";
+    updateInterval = daily;
+    definedAliases = [ "@a" ];
+  };
+
+  "arxiv" = {
+    urls = [
+      {
+        template = "https://arxiv.org/search/?query={searchTerms}&searchtype=all&source=header";
+      }
+    ];
+    icon = "https://static.arxiv.org/static/base/1.0.0a5/images/arxiv-logo-one-color-white.svg";
+    updateInterval = daily;
+    definedAliases = [ "@rfa" ];
+  };
+
+  "chefkoch" = {
+    urls = [
+      {
+        template = "https://www.chefkoch.de/rs/s0/{searchTerms}/Rezepte.html";
+      }
+    ];
+    icon = "https://img.chefkoch-cdn.de/favicon.ico";
+    updateInterval = daily;
+    definedAliases = [ "@ch" ];
+  };
+
+  "crossref" = {
+    urls = [
+      {
+        template = "https://search.crossref.org/search/works?q={searchTerms}&from_ui=yes";
+      }
+    ];
+    icon = "https://assets.crossref.org/favicon/android-chrome-192x192.png";
+    updateInterval = daily;
+    definedAliases = [ "@rfc" ];
+  };
+
+  "dict" = {
+    urls = [ { template = "https://www.dict.cc/?s={searchTerms}"; } ];
+    icon = "https://www4.dict.cc/img/favicons/favicon4.png";
+    updateInterval = daily;
+    definedAliases = [ "@d" ];
+  };
+
+  "dl.acm.org" = {
+    urls = [
+      {
+        template = "https://dl.acm.org/action/doSearch?AllField={searchTerms}";
+      }
+    ];
+    icon = "https://dl.acm.org/pb-assets/head-metadata/apple-touch-icon-1574252172393.png";
+    updateInterval = daily;
+    definedAliases = [ "@rfacm" ];
+  };
+
+  "fdroid" = {
+    urls = [ { template = "https://search.f-droid.org/?q={searchTerms}&lang=en"; } ];
+    icon = "https://f-droid.org/assets/favicon-16x16_7yyppfDSTAVyGb3ycHY84PYjHUwP96NKICAibLRpnXw=.png";
+    updateInterval = daily;
+    definedAliases = [ "@fd" ];
+  };
+
+  "firefox extensions" = {
+    urls = [
+      {
+        template = "https://addons.mozilla.org/en-US/firefox/search/";
+        params = [
+          {
+            name = "q";
+            value = "{searchTerms}";
+          }
+        ];
+      }
+    ];
+    icon = "https://www.mozilla.org/media/protocol/img/logos/firefox/logo.fedb52c912d6.svg";
+    updateInterval = daily;
+    definedAliases = [ "@fe" ];
+  };
+
+  "github code search" = {
+    urls = [ { template = "https://github.com/search?q=%22{searchTerms}%22&type=code"; } ];
+    icon = "https://github.githubassets.com/favicons/favicon.svg";
+    updateInterval = daily;
+    definedAliases = [ "@g" ];
+  };
+
+  "github nix code search" = {
+    urls = [
+      {
+        template = "https://github.com/search?q={searchTerms}%20language%3ANix&type=code";
+      }
+    ];
+    icon = "https://github.githubassets.com/favicons/favicon.svg";
+    updateInterval = daily;
+    definedAliases = [ "@gn" ];
+  };
+
+  "google maps" = {
+    urls = [ { template = "https://www.google.de/maps/place/{searchTerms}"; } ];
+    icon = "https://www.gstatic.com/images/branding/searchlogo/ico/favicon.ico";
+    updateInterval = daily;
+    definedAliases = [ "@m" ];
+  };
+
+  "google scholar" = {
+    urls = [ { template = "https://scholar.google.com/scholar?q={searchTerms}"; } ];
+    icon = "https://scholar.google.com/favicon.ico";
+    updateInterval = daily;
+    definedAliases = [ "@rfg" ];
+  };
+
+  "google" = {
+    urls = [ { template = "https://www.google.com/search?q={searchTerms}"; } ];
+    updateInterval = daily;
+    definedAliases = [ "@gl" ];
+  };
+
+  "helix config" = {
+    urls = [
+      {
+        template = "https://docs.helix-editor.com/editor.html?search={searchTerms}";
+      }
+    ];
+    icon = "https://helix-editor.com/favicon.svg";
+    updateInterval = daily;
+    definedAliases = [ "@hc" ];
+  };
+
   "home-manager options" = {
     urls = [
       {
@@ -21,19 +160,15 @@ in
       }
     ];
     icon = "https://wiki.nixos.org/nixos.png";
-    updateInterval = interval;
+    updateInterval = daily;
     definedAliases = [ "@hmo" ];
   };
 
-  "nixos wiki" = {
-    urls = [
-      {
-        template = "https://wiki.nixos.org/w/rest.php/v1/search/title?q={searchTerms}&limit=10";
-      }
-    ];
-    icon = "https://wiki.nixos.org/nixos.png";
-    updateInterval = interval;
-    definedAliases = [ "@hw" ];
+  "kleinanzeigen" = {
+    urls = [ { template = "https://www.kleinanzeigen.de/s-{searchTerms}/k0"; } ];
+    icon = "https://www.kleinanzeigen.de/favicon.svg";
+    updateInterval = daily;
+    definedAliases = [ "@k" ];
   };
 
   "nix old version" = {
@@ -43,26 +178,8 @@ in
       }
     ];
     icon = "https://wiki.nixos.org/nixos.png";
-    updateInterval = interval;
+    updateInterval = daily;
     definedAliases = [ "@nv" ];
-  };
-
-  "github code search" = {
-    urls = [ { template = "https://github.com/search?q=%22{searchTerms}%22&type=code"; } ];
-    icon = "https://github.githubassets.com/favicons/favicon.svg";
-    updateInterval = interval;
-    definedAliases = [ "@g" ];
-  };
-
-  "github nix code search" = {
-    urls = [
-      {
-        template = "https://github.com/search?q={searchTerms}%20language%3ANix&type=code";
-      }
-    ];
-    icon = "https://github.githubassets.com/favicons/favicon.svg";
-    updateInterval = interval;
-    definedAliases = [ "@gn" ];
   };
 
   "nix packages" = {
@@ -86,7 +203,7 @@ in
       }
     ];
     icon = "https://wiki.nixos.org/nixos.png";
-    updateInterval = interval;
+    updateInterval = daily;
     definedAliases = [ "@np" ];
   };
 
@@ -111,130 +228,49 @@ in
       }
     ];
     icon = "https://wiki.nixos.org/nixos.png";
-    updateInterval = interval;
+    updateInterval = daily;
     definedAliases = [ "@no" ];
   };
 
-  "firefox extensions" = {
+  "nixos wiki" = {
     urls = [
       {
-        template = "https://addons.mozilla.org/en-US/firefox/search/";
-        params = [
-          {
-            name = "q";
-            value = "{searchTerms}";
-          }
-        ];
+        template = "https://wiki.nixos.org/w/rest.php/v1/search/title?q={searchTerms}&limit=10";
       }
     ];
-    icon = "https://www.mozilla.org/media/protocol/img/logos/firefox/logo.fedb52c912d6.svg";
-    updateInterval = interval;
-    definedAliases = [ "@fe" ];
+    icon = "https://wiki.nixos.org/nixos.png";
+    updateInterval = daily;
+    definedAliases = [ "@hw" ];
   };
 
-  "youtube" = {
-    urls = [
-      {
-        template = "https://www.youtube.com/results?search_query={searchTerms}";
-      }
-    ];
-    icon = "https://www.youtube.com/s/desktop/2253fa3d/img/logos/favicon_144x144.png";
-    # icon = "https://www.gstatic.com/youtube/img/branding/youtubelogo/svg/youtubelogo.svg";
-    updateInterval = interval;
-    definedAliases = [ "@y" ];
+  "pixabay" = {
+    urls = [ { template = "https://pixabay.com/images/search/{searchTerms}"; } ];
+    updateInterval = daily;
+    definedAliases = [ "@pixabay" ];
   };
 
-  "chefkoch" = {
-    urls = [
-      {
-        template = "https://www.chefkoch.de/rs/s0/{searchTerms}/Rezepte.html";
-      }
-    ];
-    icon = "https://img.chefkoch-cdn.de/favicon.ico";
-    updateInterval = interval;
-    definedAliases = [ "@ch" ];
-  };
-
-  "google" = {
-    urls = [ { template = "https://www.google.com/search?q={searchTerms}"; } ];
-    updateInterval = interval;
-    definedAliases = [ "@gl" ];
-  };
-
-  "google maps" = {
-    urls = [ { template = "https://www.google.de/maps/place/{searchTerms}"; } ];
-    icon = "https://www.gstatic.com/images/branding/searchlogo/ico/favicon.ico";
-    updateInterval = interval;
-    definedAliases = [ "@m" ];
-  };
-
-  "steam" = {
-    urls = [
-      {
-        template = "https://store.steampowered.com/search/?term={searchTerms}";
-      }
-    ];
-    icon = "https://store.steampowered.com/favicon.ico";
-    updateInterval = interval;
-    definedAliases = [ "@st" ];
-  };
-
-  "crossref" = {
-    urls = [
-      {
-        template = "https://search.crossref.org/search/works?q={searchTerms}&from_ui=yes";
-      }
-    ];
-    icon = "https://assets.crossref.org/favicon/android-chrome-192x192.png";
-    updateInterval = interval;
-    definedAliases = [ "@rfc" ];
-  };
-
-  "arxiv" = {
-    urls = [
-      {
-        template = "https://arxiv.org/search/?query={searchTerms}&searchtype=all&source=header";
-      }
-    ];
-    icon = "https://static.arxiv.org/static/base/1.0.0a5/images/arxiv-logo-one-color-white.svg";
-    updateInterval = interval;
-    definedAliases = [ "@rfa" ];
-  };
-
-  "dl.acm.org" = {
-    urls = [
-      {
-        template = "https://dl.acm.org/action/doSearch?AllField={searchTerms}";
-      }
-    ];
-    icon = "https://dl.acm.org/pb-assets/head-metadata/apple-touch-icon-1574252172393.png";
-    updateInterval = interval;
-    definedAliases = [ "@rfacm" ];
-  };
-
-  "google scholar" = {
-    urls = [ { template = "https://scholar.google.com/scholar?q={searchTerms}"; } ];
-    icon = "https://scholar.google.com/favicon.ico";
-    updateInterval = interval;
-    definedAliases = [ "@rfg" ];
+  "public apis" = {
+    urls = [ { template = "https://github.com/public-apis/public-apis/search?q={searchTerms}"; } ];
+    updateInterval = daily;
+    definedAliases = [ "@pubapi" ];
   };
 
   "rust book" = {
     urls = [ { template = "https://doc.rust-lang.org/book/?search={searchTerms}"; } ];
     icon = "https://www.rust-lang.org/static/images/favicon.svg";
-    updateInterval = interval;
+    updateInterval = daily;
     definedAliases = [ "@rb" ];
   };
 
-  "rust language reference" = {
+  "rust by examlpe" = {
     urls = [
       {
-        template = "https://doc.rust-lang.org/reference/index.html?search={searchTerms}";
+        template = "https://doc.rust-lang.org/rust-by-example/index.html?search={searchTerms}";
       }
     ];
     icon = "https://www.rust-lang.org/static/images/favicon.svg";
-    updateInterval = interval;
-    definedAliases = [ "@rr" ];
+    updateInterval = daily;
+    definedAliases = [ "@re" ];
   };
 
   "rust doc" = {
@@ -244,8 +280,19 @@ in
       }
     ];
     icon = "https://www.rust-lang.org/static/images/favicon.svg";
-    updateInterval = interval;
+    updateInterval = daily;
     definedAliases = [ "@rd" ];
+  };
+
+  "rust language reference" = {
+    urls = [
+      {
+        template = "https://doc.rust-lang.org/reference/index.html?search={searchTerms}";
+      }
+    ];
+    icon = "https://www.rust-lang.org/static/images/favicon.svg";
+    updateInterval = daily;
+    definedAliases = [ "@rr" ];
   };
 
   "rust std" = {
@@ -255,7 +302,7 @@ in
       }
     ];
     icon = "https://www.rust-lang.org/static/images/favicon.svg";
-    updateInterval = interval;
+    updateInterval = daily;
     definedAliases = [ "@rs" ];
   };
 
@@ -266,95 +313,45 @@ in
       }
     ];
     icon = "https://www.rust-lang.org/static/images/favicon.svg";
-    updateInterval = interval;
+    updateInterval = daily;
     definedAliases = [ "@rt" ];
   };
 
-  "rust by examlpe" = {
+  "steam" = {
     urls = [
       {
-        template = "https://doc.rust-lang.org/rust-by-example/index.html?search={searchTerms}";
+        template = "https://store.steampowered.com/search/?term={searchTerms}";
       }
     ];
-    icon = "https://www.rust-lang.org/static/images/favicon.svg";
-    updateInterval = interval;
-    definedAliases = [ "@re" ];
-  };
-
-  "helix config" = {
-    urls = [
-      {
-        template = "https://docs.helix-editor.com/editor.html?search={searchTerms}";
-      }
-    ];
-    icon = "https://helix-editor.com/favicon.svg";
-    updateInterval = interval;
-    definedAliases = [ "@hc" ];
+    icon = "https://store.steampowered.com/favicon.ico";
+    updateInterval = daily;
+    definedAliases = [ "@st" ];
   };
 
   "thingiverse" = {
     urls = [ { template = "https://www.thingiverse.com/search?q={searchTerms}"; } ];
     icon = "https://cdn.thingiverse.com/site/img/favicons/favicon-192x192.png";
-    updateInterval = interval;
+    updateInterval = daily;
     definedAliases = [ "@th" ];
   };
 
-  "amazon" = {
-    urls = [ { template = "https://www.amazon.de/s?k={searchTerms}"; } ];
-    icon = "https://www.amazon.de/favicon.ico";
-    updateInterval = interval;
-    definedAliases = [ "@a" ];
-  };
-
-  "fdroid" = {
-    urls = [ { template = "https://search.f-droid.org/?q={searchTerms}&lang=en"; } ];
-    icon = "https://f-droid.org/assets/favicon-16x16_7yyppfDSTAVyGb3ycHY84PYjHUwP96NKICAibLRpnXw=.png";
-    updateInterval = interval;
-    definedAliases = [ "@fd" ];
-  };
-
-  "dict" = {
-    urls = [ { template = "https://www.dict.cc/?s={searchTerms}"; } ];
-    icon = "https://www4.dict.cc/img/favicons/favicon4.png";
-    updateInterval = interval;
-    definedAliases = [ "@d" ];
-  };
-
-  "kleinanzeigen" = {
-    urls = [ { template = "https://www.kleinanzeigen.de/s-{searchTerms}/k0"; } ];
-    icon = "https://www.kleinanzeigen.de/favicon.svg";
-    updateInterval = interval;
-    definedAliases = [ "@k" ];
+  "youtube" = {
+    urls = [
+      {
+        template = "https://www.youtube.com/results?search_query={searchTerms}";
+      }
+    ];
+    icon = "https://www.youtube.com/s/desktop/2253fa3d/img/logos/favicon_144x144.png";
+    # icon = "https://www.gstatic.com/youtube/img/branding/youtubelogo/svg/youtubelogo.svg";
+    updateInterval = daily;
+    definedAliases = [ "@y" ];
   };
 
   "zerspanungsbude" = {
     urls = [ { template = "https://forum.zerspanungsbude.net/search.php?keywords={searchTerms}"; } ];
     icon = "https://forum.zerspanungsbude.net/favicon.ico";
-    updateInterval = interval;
+    updateInterval = daily;
     definedAliases = [ "@z" ];
   };
 
-  "Public APIs" = {
-    urls = [ { template = "https://github.com/public-apis/public-apis/search?q={searchTerms}"; } ];
-    updateInterval = interval;
-    definedAliases = [ "@pubapi" ];
-  };
-
-  
-  "Pixabay" = {
-    urls = [ { template = "https://pixabay.com/images/search/{searchTerms}"; } ];
-
-    updateInterval = updateOnceInAWeek;
-    definedAliases = [ "@pixabay" ];
-  };
-
-  "AliExpress" = {
-    urls = [ { template = "https://aliexpress.com/wholesale?SearchText={searchTerms}"; } ];
-
-    updateInterval = updateOnceInAWeek;
-    definedAliases = [
-      "@aliexpress"
-      "@ali"
-    ];
-  };
 }
