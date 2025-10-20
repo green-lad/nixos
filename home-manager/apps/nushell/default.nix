@@ -16,6 +16,22 @@
     enableNushellIntegration = true;
   };
 
+  # programs.starship = {
+  #   enable = true;
+  #   enableNushellIntegration = true;
+  #   # Configuration written to ~/.config/starship.toml
+  #   settings = {
+  #     # add_newline = false;
+
+  #     # character = {
+  #     #   success_symbol = "[➜](bold green)";
+  #     #   error_symbol = "[➜](bold red)";
+  #     # };
+
+  #     # package.disabled = true;
+  #   };
+  # };
+
   # config info: config nu --doc | nu-highlight | less -R
   programs.nushell = let
     # the preview is complicated because:
@@ -197,6 +213,13 @@
     extraConfig = let preview = "${change_escape_command "'{1}\\n---\\n{2}'"}";
     in ''
       use std/dirs
+      alias d = dirs
+      alias da = dirs add
+      alias dd = dirs drop
+      alias dg = dirs goto
+      alias dn = dirs next
+      alias dp = dirs prev
+
       if ("~/.nu_help.json" | path type) != "file" {
         (
           help commands

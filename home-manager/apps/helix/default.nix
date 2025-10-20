@@ -194,6 +194,10 @@
           name = "rust";
           formatter = {
             command = "rustfmt";
+            args = [
+              "--edition"
+              "2024"
+            ];
           };
           language-servers = [
             "rust-analyzer"
@@ -309,6 +313,12 @@
             ":redraw"
             ":reload-all"
           ];
+          C-e = [
+            ":write-all"
+            ":insert-output scooter"
+            ":redraw"
+            ":reload-all"
+          ];
           H = [
             "jump_backward"
             "align_view_center"
@@ -330,6 +340,7 @@
           };
           F5 = ":config-reload";
           space = {
+            B = ":sh cargo build --bin (echo '%{buffer_name}' | parse -r '(.*/)*(?<bin>.*?)/src/.*' | get 0 | get bin)";
             space = "last_picker";
             C-q = ":buffer-close!";
             q = ":buffer-close";
@@ -347,10 +358,12 @@
               s = ":lsp-stop";
               w = ":lsp-workspace-command";
             };
+            m = ":format";
             u = ":sh rm %{buffer_name}";
             i = ":open ${config.xdg.configHome}";
             I = ":config-open";
             L = ":config-reload";
+            R = ":reload";
             e = [
               ":sh rm -f /tmp/unique-file-u41ae14"
               ":insert-output yazi '%{buffer_name}' --chooser-file=/tmp/unique-file-u41ae14"
