@@ -170,11 +170,14 @@
         }
         {
           name = "nu";
-          # sadly nufmt is unusable in its current state
-          # formatter = {
-          #   command = "${pkgs.nufmt}/bin/nufmt";
-          #   args = ["--stdin"];
-          # };
+          formatter = {
+            command = "topiary";
+            args = [
+              "format"
+              "--language"
+              "nu"
+            ];
+          };
           language-servers = [ "scls" ];
         }
         {

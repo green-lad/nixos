@@ -562,7 +562,8 @@
         "sops-nix": "sops-nix",
         "sops_secrets": "sops_secrets",
         "stylix": "stylix",
-        "uwu-colors": "uwu-colors"
+        "uwu-colors": "uwu-colors",
+        "wrapper-manager": "wrapper-manager"
       }
     },
     "rust-overlay": {
@@ -853,6 +854,21 @@
       "original": {
         "owner": "q60",
         "repo": "uwu_colors",
+        "type": "github"
+      }
+    },
+    "wrapper-manager": {
+      "locked": {
+        "lastModified": 1757156862,
+        "narHash": "sha256-OGXsTE5jWhGiFfK6OwMvjksrYSobsIFUSUzKsexCDxY=",
+        "owner": "viperML",
+        "repo": "wrapper-manager",
+        "rev": "801dd9c876fcada046af45543e8c7e0bbccf20ea",
+        "type": "github"
+      },
+      "original": {
+        "owner": "viperML",
+        "repo": "wrapper-manager",
         "type": "github"
       }
     },

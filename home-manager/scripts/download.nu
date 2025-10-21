@@ -38,7 +38,7 @@ export def download_one [outdir = $default_outdir, audio_format = "mp3"]: [
 
   let path = $'($outdir)/($input | get song).($audio_format)'
   if ($path | path exists) {
-    let existing = ffmpeg -i $path -f ffmetadata e>| parse -r '^\s*purl\s*:\s*(?P<purl>.*)$' | get purl | get 0 | url parse | get params | get value | get 0
+    let existing = (ffmpeg -i $path) | complete | get stderr | parse -r '\spurl\s*:\s*(?P<purl>.*)' | get purl | get 0 | url parse | get params | get value | get 0
     let mismatch = $existing != $yt_id
     if $mismatch {
       print $"(ansi red_italic)Mismatching missing: ($input), existing: ($existing)(ansi reset)"
@@ -75,8 +75,8 @@ export def download_n [outdir = $default_outdir]: [
   return ({
     downloads: ($r | where { |e| not $e.duplicate and not $e.download_failed }),
     duplicates: ($r | where { |e| $e.duplicate and not $e.mismatch }),
-    mismatches: ($r | where mismatch),
-    download_fails: ($r | where download_failed)
+    mismatches: ($r | where { |e| $e.mismatch}),
+    download_fails: ($r | where {|e| $e.download_failed})
   })
 }
 

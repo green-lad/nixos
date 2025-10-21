@@ -13,6 +13,7 @@
     ./sops.nix
     # ./apps/blender
     ./apps/chromium
+    ./apps/discord
     ./apps/fzf
     ./apps/gammastep
     ./apps/git
@@ -34,10 +35,6 @@
     ./apps/xdot
     ./apps/yazi
   ];
-
-  programs.vesktop = {
-    enable = true;
-  };
 
   stylix = (import ../stylix.nix) pkgs // {
     targets = {

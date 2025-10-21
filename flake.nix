@@ -57,6 +57,8 @@
     };
 
     nsticky.url = "github:lonerOrz/nsticky";
+
+    wrapper-manager.url = "github:viperML/wrapper-manager";
   };
 
   outputs =

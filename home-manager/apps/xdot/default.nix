@@ -2,7 +2,7 @@
 {
   config.home.packages = [ pkgs.xdot ];
   config.xdg.desktopEntries = {
-    firefox = {
+    xdot = {
       name = "xdot";
       genericName = "dot graph viewer";
       exec = "xdot";
