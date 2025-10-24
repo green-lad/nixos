@@ -107,6 +107,7 @@
       songrec
       speedtest-cli
       supercollider
+      swayimg
       termdown
       unzip
       wev
