@@ -90,3 +90,31 @@ layout.css.devPixelsPerPx
 ```
 nix develop nixpkgs#<pkgs_name>
 ```
+
+- use python3 package that is not part of nixpkgs in flake
+in let declaration:
+```
+modm-python-package = pkgs.python3Packages.buildPythonPackage rec {
+  pname = "modm";
+  version = "0.1.2";
+  src = pkgs.python3Packages.fetchPypi {
+    inherit pname version;
+    sha256 = "4c3edbf7fa945d3fc10c0191d1000ee5b491f3d0e43f363af3b9de12e38a5d12";
+  };
+  propagatedBuildInputs = [
+    lbuild-python-package
+    pkgs.python3Packages.lxml
+    pkgs.python3Packages.pyelftools
+    pkgs.python3Packages.pip
+  ];
+};
+```
+in buildInputs:
+```
+(python3.withPackages (python-pkgs: [
+  python-pkgs.<other_package_inside_nixpkgs>
+  modm-python-package
+  <other_packages>
+]))
+```
+

@@ -158,6 +158,13 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+        "custom/niri_overview" = {
+          format = "<span color='#ffcc66'>  󰕯 </span>";
+          tooltip-format = "toggle niri overview";
+          on-click = "niri msg action toggle-overview";
+          on-scroll-up = "";
+          on-scroll-down = "";
+        };
         "custom/opener_power" = {
           format = "<span color='#ffcc66'>    </span>";
           tooltip-format = "powermenu";
@@ -327,6 +334,8 @@ in
           "custom/separator"
         ];
         modules-left = [
+          "custom/niri_overview"
+          "custom/separator"
           "niri/workspaces"
           "custom/separator"
           "group/apps"

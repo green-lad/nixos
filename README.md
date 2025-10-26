@@ -47,6 +47,7 @@ To play around with it enable remote debugging in firefox / librewolf and open i
     - questions:
         - what do I do if pipe command hangs?
     - setup:
+        - open multiple files via yazi
         - sort items in info box "auto-info" by keybinding
         - global search of selection via Ctrl+s does not work
         - don't change the view position if the search was not successful
