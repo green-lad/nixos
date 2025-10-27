@@ -445,6 +445,10 @@
               repeat = false;
               action = spawn "${./otp.nu}";
             };
+            "Mod+S" = {
+              repeat = false;
+              action = spawn "${./get_secret.nu}";
+            };
             "Mod+Space" = {
               repeat = false;
               hotkey-overlay.title = "Search in new tab";
@@ -598,7 +602,7 @@
 
             "Mod+W".action = toggle-column-tabbed-display;
 
-            "Mod+S".action.switch-layout = "next";
+            "Mod+Shift+Ctrl+S".action.switch-layout = "next";
             "Mod+Ctrl+S".action.switch-layout = "prev";
 
             "Print" = {
