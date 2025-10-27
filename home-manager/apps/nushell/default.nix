@@ -205,7 +205,10 @@
             highlight.theme = "base16";
           };
           history = {
-            sync_on_enter = false;
+            file_format = "sqlite";
+            max_size = 1000000;
+            isolation = false;
+            sync_on_enter = true;
           };
           show_banner = false;
           edit_mode = "vi";
