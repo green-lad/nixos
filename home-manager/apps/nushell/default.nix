@@ -46,7 +46,10 @@
         };
       };
     in
-    [ topiary pkgs.tree-sitter ];
+    [
+      topiary
+      pkgs.tree-sitter
+    ];
 
   config.programs = {
     direnv = {
@@ -60,7 +63,32 @@
       };
     };
 
+    yazi = {
+      enable = true;
+      enableNushellIntegration = true;
+    };
+
+    zoxide = {
+      enable = true;
+      enableNushellIntegration = true;
+    };
+
+    # atuin = {
+    #   enable = true;
+    #   enableNushellIntegration = true;
+    # };
+
+    pay-respects = {
+      enable = true;
+      enableNushellIntegration = true;
+    };
+
     nix-your-shell = {
+      enable = true;
+      enableNushellIntegration = true;
+    };
+
+    carapace = {
       enable = true;
       enableNushellIntegration = true;
     };
@@ -169,7 +197,13 @@
         shellAliases = config.home.shellAliases;
         environmentVariables = config.home.sessionVariables;
         enable = true;
+        plugins = with pkgs.nushellPlugins; [
+          highlight
+        ];
         settings = {
+          plugins = {
+            highlight.theme = "base16";
+          };
           history = {
             sync_on_enter = false;
           };
@@ -509,6 +543,18 @@
       enableNushellIntegration = true;
       settings = {
         add_newline = false;
+        line_break = {
+          disabled = true;
+        };
+        format = "$directory";
+        right_format = "$all";
+        character = {
+          disabled = true;
+        };
+        directory = {
+          truncation_length = 99;
+          truncate_to_repo = false;
+        };
       };
     };
   };

@@ -314,8 +314,8 @@ in
             transition-left-to-right = false;
           };
           modules = [
-            "custom/rebuild-nixos"
             "custom/rebuild-home-manager"
+            "custom/rebuild-nixos"
             "custom/separator_minor"
           ];
           orientation = "horizontal";
