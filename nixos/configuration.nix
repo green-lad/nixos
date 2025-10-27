@@ -115,7 +115,12 @@
     };
   };
 
-  security.rtkit.enable = true;
+  security = {
+    rtkit.enable = true;
+    sudo = {
+      extraConfig = "%wheel ALL=(ALL) NOPASSWD: ALL";
+    };
+  };
 
   # security.acme = {
   #   acceptTerms = true;
