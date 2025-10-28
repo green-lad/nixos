@@ -35,6 +35,7 @@
         home-manager
         nodejs
         sops
+        tk-safe
         xf86_input_wacom
       ];
     sessionVariables = {

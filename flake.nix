@@ -90,6 +90,7 @@
           unfreePackages = [
             "lightburn"
             "steam"
+            "tk-safe"
           ];
         };
         x13 = {
@@ -99,6 +100,7 @@
           unfreePackages = [
             "lightburn"
             "steam"
+            "tk-safe"
           ];
         };
         x230 = {
