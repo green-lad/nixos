@@ -549,8 +549,13 @@
         line_break = {
           disabled = true;
         };
-        format = "$directory";
+        format = "$status$directory";
         right_format = "$all";
+        status = {
+          style = "bold red";
+          format = "[\\[$status\\]]($style) ";
+          disabled = false;
+        };
         character = {
           disabled = true;
         };

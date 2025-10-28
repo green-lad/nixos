@@ -127,7 +127,7 @@
       wants = [ "network-online.target" ];
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
-        ExecStartPre=''/bin/sh -c '[ ! -f "${ledgerFile}" ] && touch "${ledgerFile}" && chmod 770 "${ledgerFile}"' '';
+        ExecStartPre=''/bin/sh -c '[ -f "${ledgerFile}" ] || ${pkgs.coreutils}/bin/install -m770 -o fava -g fava /dev/null "${ledgerFile}"' '';
         ExecStart = "${pkgs.fava}/bin/fava ${ledgerFile}";
         Type = "simple";
         User = "fava";
