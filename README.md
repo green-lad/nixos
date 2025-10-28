@@ -33,6 +33,7 @@ To play around with it enable remote debugging in firefox / librewolf and open i
     - Make a search engine which can query multiple arguments (for example github search engine: searchTerm, language)
 
 - nushell:
+    - only use case insensitive completion when there are no upper case letters (generally these are input intentionally)
     - find a way to output existing operators on types (eg filesize type)
     - make scrolling easier by being able to collapse outputs of commands
     - make every command work (prefer) piped input: `ls ../**/* | get name | where {$in =~ xil_cache.h} | get 1 | path dirname | ls`

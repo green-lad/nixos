@@ -195,7 +195,9 @@
       {
         # see: https://github.com/nix-community/home-manager/issues/4313
         shellAliases = config.home.shellAliases;
-        environmentVariables = config.home.sessionVariables;
+        environmentVariables = config.home.sessionVariables // {
+          CARAPACE_MATCH = 1;
+        };
         enable = true;
         plugins = with pkgs.nushellPlugins; [
           highlight
