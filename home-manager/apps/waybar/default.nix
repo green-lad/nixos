@@ -321,6 +321,16 @@ in
           orientation = "horizontal";
         };
         height = 40;
+        "idle_inhibitor" = {
+          format = "<span color='#ffcc66'> {icon}</span>";
+          start-activated = false;
+          format-icons = {
+            activated = " ";
+            deactivated = " ";
+          };
+          tooltip-format-activated = "swayidle inactive";
+          tooltip-format-deactivated = "swayidle active";
+        };
         layer = "top";
         memory = {
           format = "󰍛 {}%";
@@ -353,6 +363,8 @@ in
           "custom/separator"
           "battery"
           "backlight"
+          "idle_inhibitor"
+          "custom/separator"
           "group/rebuild"
           "custom/separator"
           "group/power"

@@ -72,16 +72,6 @@
       ...
     }@inputs:
     let
-      pkgsWithUnfree =
-        unfreePackages: system:
-        (import nixpkgs {
-          inherit system;
-          config = {
-            allowUnfree = true;
-            allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) unfreePackages;
-          };
-        });
-
       systems = {
         nuc = {
           hostname = "nuc";
@@ -110,25 +100,22 @@
           unfreePackages = [ "lightburn" ];
         };
       };
-
     in
     {
       nixosConfigurations = builtins.mapAttrs (
         n: v:
         nixpkgs.lib.nixosSystem {
           system = v.system;
-          specialArgs =
-            inputs
-            // {
-              pkgs = pkgsWithUnfree v.unfreePackages v.system;
-            }
-            // {
-              user = builtins.head v.users;
-            }
-            // {
-              hostname = v.hostname;
-            };
+          specialArgs = {
+            inherit inputs;
+            user = builtins.head v.users;
+            hostname = v.hostname;
+          };
           modules = [
+            {
+              nixpkgs.config.allowUnfree = true;
+              nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) v.unfreePackages;
+            }
             stylix.nixosModules.stylix
             disko.nixosModules.disko
             sops-nix.nixosModules.sops
@@ -156,7 +143,15 @@
       homeConfigurations = builtins.mapAttrs (
         n: v:
         home-manager.lib.homeManagerConfiguration {
-          pkgs = pkgsWithUnfree v.unfreePackages v.system;
+          pkgs = (
+            import nixpkgs {
+              system = v.system;
+              config = {
+                allowUnfree = true;
+                allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) v.unfreePackages;
+              };
+            }
+          );
           modules = [
             stylix.homeModules.stylix
             ./home-manager/home.nix

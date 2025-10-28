@@ -395,10 +395,16 @@
               ];
             };
 
-            "Mod+Alt+H".action = let local_flake = ''$"path:($env.HOME)/config#${hostname}"'';
-            in spawn [
-              "wezterm" "start" "${../waybar/repl.nu}" "home-manager switch --flake ${local_flake}"
-            ];
+            "Mod+Alt+H".action =
+              let
+                local_flake = ''$"path:($env.HOME)/config#${hostname}"'';
+              in
+              spawn [
+                "wezterm"
+                "start"
+                "${../waybar/repl.nu}"
+                "home-manager switch --flake ${local_flake}"
+              ];
 
             "Mod+G".action = set-dynamic-cast-window;
             "Mod+Ctrl+G".action = set-dynamic-cast-monitor;
@@ -637,8 +643,52 @@
   ];
 
   config.services = {
-    mako.enable = true; # notification daemon
-    swayidle.enable = true; # idle management daemon
+    mako.enable = true;
+    swayidle =
+      let
+        lock = "${pkgs.swaylock}/bin/swaylock --daemonize";
+        display = status: "${pkgs.niri}/bin/niri msg action power-${status}-monitors";
+      in
+      {
+        enable = true;
+        timeouts = [
+          {
+            timeout = 60;
+            command = "${pkgs.libnotify}/bin/notify-send 'Locking in 5 seconds' -t 5000";
+          }
+          {
+            timeout = 70;
+            command = lock;
+          }
+          {
+            timeout = 80;
+            command = display "off";
+            resumeCommand = display "on";
+          }
+          {
+            timeout = 90;
+            command = "${pkgs.systemd}/bin/systemctl suspend";
+          }
+        ];
+        events = [
+          {
+            event = "before-sleep";
+            command = (display "off") + "; " + lock;
+          }
+          {
+            event = "after-resume";
+            command = display "on";
+          }
+          {
+            event = "lock";
+            command = (display "off") + "; " + lock;
+          }
+          {
+            event = "unlock";
+            command = display "on";
+          }
+        ];
+      };
     polkit-gnome.enable = true; # polkit
     cliphist = {
       enable = true;

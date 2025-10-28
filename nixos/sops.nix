@@ -1,5 +1,5 @@
-{ hostname, sops_secrets, ... }:
-let secretspath = builtins.toString sops_secrets;
+{ hostname, inputs, ... }:
+let secretspath = builtins.toString inputs.sops_secrets;
 in {
   sops = {
     defaultSopsFile = "${secretspath}/secrets.yaml";
