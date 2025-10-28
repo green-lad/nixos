@@ -31,6 +31,8 @@
       in
       [
         age
+        beancount
+        fava
         ffmpeg_with_rubberband
         home-manager
         nodejs
@@ -115,6 +117,33 @@
       };
     };
   };
+  systemd.services.fava =
+    let
+      ledgerFile = "/var/lib/fava/ledger.bean";
+    in
+    {
+      description = "Fava";
+      after = [ "network-online.target" ];
+      wants = [ "network-online.target" ];
+      wantedBy = [ "multi-user.target" ];
+      serviceConfig = {
+        ExecStartPre=''/bin/sh -c '[ ! -f "${ledgerFile}" ] && touch "${ledgerFile}" && chmod 770 "${ledgerFile}"' '';
+        ExecStart = "${pkgs.fava}/bin/fava ${ledgerFile}";
+        Type = "simple";
+        User = "fava";
+        Group = "fava";
+        Restart = "on-failure";
+        RestartSec = "5s";
+        NoNewPrivileges = true;
+        PrivateHome = true;
+        PrivateTmp = true;
+        PrivateDevices = true;
+        ProtectHome = true;
+        ProtectSystem = "full";
+        ReadWriteDirectories = "/var/lib/fava";
+      };
+    };
+  users.groups.fava = { };
 
   security = {
     rtkit.enable = true;
@@ -582,9 +611,18 @@
           "jackaudiio"
           "networkmanager"
           "wheel"
+          "fava"
         ];
         packages = [ ];
         openssh.authorizedKeys.keys = authorizedKeys;
+      };
+      fava = {
+        home = "/var/lib/fava";
+        createHome = true;
+        isSystemUser = true;
+        group = "fava";
+        # TODO: check on different PC if this works, on initial setup I set this manually
+        homeMode = "770";
       };
       root = {
         openssh.authorizedKeys.keys = authorizedKeys;

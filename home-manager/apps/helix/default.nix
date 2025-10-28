@@ -7,11 +7,12 @@
 {
   programs.helix = {
     extraPackages = with pkgs; [
+      beancount-language-server
+      dot-language-server
       gopls
       helix-gpt
       jq
       lazygit
-      dot-language-server
       nil
       nixfmt-rfc-style
       prettier
@@ -23,14 +24,22 @@
       ))
       simple-completion-language-server
       taplo
-      texlab
       tex-fmt
+      texlab
       typescript-language-server
     ];
     enable = true;
     package = inputs.helix.packages.${pkgs.system}.helix;
     languages = {
       language-server = {
+        beancount-language-server = {
+          command = "beancount-language-server";
+          args = [ "--stdio" ];
+          auto-format = true;
+          config = {
+            journal_file = "/var/lib/fava/ledger.bean";
+          };
+        };
         gopls = {
           command = "gopls";
           config = {
@@ -99,6 +108,11 @@
         };
       };
       language = [
+        {
+          name = "beancount";
+          auto-format = true;
+          language-servers = [ { name = "beancount-language-server"; } ];
+        }
         {
           name = "csv";
           language-servers = [ "scls" ];
