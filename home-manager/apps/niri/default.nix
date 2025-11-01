@@ -158,20 +158,6 @@
           }
           { command = [ "nsticky" ]; }
           { command = [ "xwayland-satellite" ]; }
-          {
-            command = [
-              "swayidle"
-              "-w"
-              "timeout"
-              "601"
-              "niri msg action power-off-monitors"
-              "timeout"
-              "600"
-              "swaylock -f"
-              "before-sleep"
-              "swaylock -f"
-            ];
-          }
         ];
 
         prefer-no-csd = true;
@@ -653,20 +639,20 @@
         enable = true;
         timeouts = [
           {
-            timeout = 60;
+            timeout = 300;
             command = "${pkgs.libnotify}/bin/notify-send 'Locking in 5 seconds' -t 5000";
           }
           {
-            timeout = 70;
+            timeout = 330;
             command = lock;
           }
           {
-            timeout = 80;
+            timeout = 360;
             command = display "off";
             resumeCommand = display "on";
           }
           {
-            timeout = 90;
+            timeout = 390;
             command = "${pkgs.systemd}/bin/systemctl suspend";
           }
         ];

@@ -152,6 +152,10 @@
     };
   };
 
+  virtualisation.waydroid = {
+    enable = true;
+  };
+
   # security.acme = {
   #   acceptTerms = true;
   #   defaults.email = "markus.schoetz@fau.de";
