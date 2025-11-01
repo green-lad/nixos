@@ -112,6 +112,17 @@ in
     definedAliases = [ "@gn" ];
   };
 
+  "github rust" = {
+    urls = [
+      {
+        template = "https://github.com/search?q={searchTerms}%20language%3ARust&type=code";
+      }
+    ];
+    icon = "https://github.githubassets.com/favicons/favicon.svg";
+    updateInterval = daily;
+    definedAliases = [ "@gr" ];
+  };
+
   "google maps" = {
     urls = [ { template = "https://www.google.de/maps/place/{searchTerms}"; } ];
     icon = "https://www.gstatic.com/images/branding/searchlogo/ico/favicon.ico";
