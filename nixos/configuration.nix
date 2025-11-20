@@ -20,7 +20,6 @@
   nixpkgs.overlays = [ inputs.nix-your-shell.overlays.default ];
 
   environment = {
-    # Remove unecessary preinstalled packages
     defaultPackages = [ ];
     systemPackages =
       with pkgs;
@@ -35,10 +34,15 @@
         fava
         ffmpeg_with_rubberband
         home-manager
+        input-remapper
+        libinput
+        nmap
         nodejs
+        pciutils
         sops
         tk-safe
-        xf86_input_wacom
+        usbutils
+        zip
       ];
     sessionVariables = {
       BROWSER = "librewolf";
@@ -117,6 +121,50 @@
       };
     };
   };
+  systemd.services.mouseless =
+    let
+      config_file = pkgs.writeText "mouseless_config.yaml" ''
+        # the default speed for mouse movement and scrolling
+        baseMouseSpeed: 1000.0
+        baseScrollSpeed: 20.0
+
+        # the rest of the config defines the layers with their bindings
+        layers:
+          # the first layer is active at start
+          - name: initial
+            bindings:
+              # when tab is held and another key pressed, activate mouse layer
+              tab: tap-hold-next tab ; toggle-layer mouse ; 500
+          - name: mouse
+            # when true, keys that are not mapped keep their original meaning
+            passThrough: true
+            bindings:
+              # quit mouse layer
+              q: layer initial
+              # keep the mouse layer active
+              space: layer mouse
+              l: move  1  0
+              h: move -1  0
+              j: move  0  1
+              k: move  0 -1
+              p: scroll up
+              n: scroll down
+              leftshift: speed 0.3
+              f: button left
+              d: button middle
+              s: button right
+      '';
+    in
+    {
+      description = "Mouseless key remapping service";
+      wantedBy = [ "default.target" ];
+      serviceConfig = {
+        # ExecStartPre = "sleep 2";
+        ExecStart = "${pkgs.mouseless}/bin/mouseless --config ${config_file}";
+        Restart = "always";
+        RestartSec = "5s";
+      };
+    };
   systemd.services.fava =
     let
       ledgerFile = "/var/lib/fava/ledger.bean";
@@ -127,7 +175,7 @@
       wants = [ "network-online.target" ];
       wantedBy = [ "multi-user.target" ];
       serviceConfig = {
-        ExecStartPre=''/bin/sh -c '[ -f "${ledgerFile}" ] || ${pkgs.coreutils}/bin/install -m770 -o fava -g fava /dev/null "${ledgerFile}"' '';
+        ExecStartPre = ''/bin/sh -c '[ -f "${ledgerFile}" ] || ${pkgs.coreutils}/bin/install -m770 -o fava -g fava /dev/null "${ledgerFile}"' '';
         ExecStart = "${pkgs.fava}/bin/fava ${ledgerFile}";
         Type = "simple";
         User = "fava";
@@ -156,6 +204,9 @@
     enable = true;
   };
 
+  # hardware.opentabletdriver.enable = true;
+  # hardware.opentabletdriver.daemon.enable = true;
+
   # security.acme = {
   #   acceptTerms = true;
   #   defaults.email = "markus.schoetz@fau.de";
@@ -177,6 +228,38 @@
     #     #'';
     #   };
     # };
+
+    radicale = {
+      enable = true;
+      settings = {
+        server.hosts = [ "[::1]:5232" ];
+        auth = {
+          type = "http_x_remote_user";
+        };
+        storage = {
+          filesystem_folder = "/var/lib/radicale/collections";
+        };
+      };
+      rights = {
+        root = {
+          user = ".+";
+          collection = "";
+          permissions = "rw";
+        };
+        principal = {
+          user = ".+";
+          collection = "{user}";
+          permissions = "rw";
+        };
+        calendars = {
+          user = ".+";
+          collection = "{user}/[^/]+";
+          permissions = "rw";
+        };
+      };
+    };
+
+    input-remapper.enable = true;
 
     mpd = {
       enable = true;
@@ -392,77 +475,6 @@
         };
       };
     };
-
-    # xserver = {
-    #   enable = true;
-    #   # xkb = {
-    #   #   layout = "de(us)";
-    #   #   options = "eurosign:e,caps:swapescape";
-    #   # };
-    #   desktopManager = { xterm.enable = false; };
-    #   modules = [ pkgs.xf86_input_wacom ];
-    #   windowManager.i3 = { enable = true; };
-    #   # displayManager = {
-    #   #   startx.enable = true;
-    #   # };
-    # };
-
-    # displayManager = {
-    #   defaultSession = "none+i3";
-    #   autoLogin = {
-    #     enable = true;
-    #     user = user;
-    #   };
-    # };
-
-    # only used for wayland
-    # kanata = {
-    #   enable = true;
-    #   keyboards = {
-    #     internalKeyboard = {
-    #       devices = [
-    #         # Replace the paths below with the appropriate device paths for your setup.
-    #         # Use `ls /dev/input/by-path/` to find your keyboard devices.
-    #         "/dev/input/by-path/platform-i8042-serio-0-event-kbd"
-    #       ];
-    #       extraDefCfg = "process-unmapped-keys yes";
-    #       config = ''
-    #         (defsrc
-    #          caps tab d h j k l ; [ ' - e
-    #         )
-    #         (defvar
-    #          tap-time 200
-    #          hold-time 200
-    #         )
-    #         (defalias
-    #          caps (tap-hold 200 200 esc lctl)
-    #          tab (tap-hold $tap-time $hold-time tab (layer-toggle arrow))
-    #          del del  ;; Alias for the true delete key action
-
-    #          ;; umlaute
-    #          Ae (unicode Ä)
-    #          Ue (unicode Ü)
-    #          Oe (unicode Ö)
-    #          ae (unicode ä)
-    #          ue (unicode ü)
-    #          oe (unicode ö)
-    #          _ae (fork @ae @Ae (lsft rsft))
-    #          _ue (fork @ue @Ue (lsft rsft))
-    #          _oe (fork @oe @Oe (lsft rsft))
-    #          sz (unicode ß)
-    #          eu (unicode €)
-
-    #         )
-    #         (deflayer base
-    #          @caps @tab d h j k l ; [ ' - e
-    #         )
-    #         (deflayer arrow
-    #          _ _ @del left down up right @oe @ue @ae @sz @eu
-    #         )
-    #       '';
-    #     };
-    #   };
-    # };
   };
 
   # Install fonts

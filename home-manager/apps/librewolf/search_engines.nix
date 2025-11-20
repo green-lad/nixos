@@ -243,6 +243,20 @@ in
     definedAliases = [ "@hw" ];
   };
 
+  "package dhl" = {
+    urls = [ { template = "https://www.dhl.de/de/privatkunden/pakete-empfangen/verfolgen.html?piececode={searchTerms}"; } ];
+    icon = "https://www.dhl.de/.resources/dhl/webresources/assets/icons/favicons/favicon-16x16.png";
+    updateInterval = daily;
+    definedAliases = [ "@pd" ];
+  };
+
+  "package hermes" = {
+    urls = [ { template = "https://www.myhermes.de/empfangen/sendungsverfolgung/sendungsinformation#{searchTerms}"; } ];
+    icon = "https://www.myhermes.de/assets/touchicons/favicon.ico";
+    updateInterval = daily;
+    definedAliases = [ "@ph" ];
+  };
+
   "pixabay" = {
     urls = [ { template = "https://pixabay.com/images/search/{searchTerms}"; } ];
     updateInterval = daily;

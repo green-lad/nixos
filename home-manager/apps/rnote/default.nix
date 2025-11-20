@@ -30,6 +30,18 @@
                 mode = "temporary";
               };
             };
+            stylus_primary_button = {
+              change_pen_style = {
+                style = "selector";
+                mode = "temporary";
+              };
+            };
+            stylus_secondary_button = {
+              change_pen_style = {
+                style = "eraser";
+                mode = "temporary";
+              };
+            };
           };
         };
       };

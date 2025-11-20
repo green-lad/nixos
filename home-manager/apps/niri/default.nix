@@ -392,6 +392,17 @@
                 "home-manager switch --flake ${local_flake}"
               ];
 
+            "Mod+Ctrl+Alt+H".action =
+              let
+                local_flake = ''$"path:($env.HOME)/config#${hostname}"'';
+              in
+              spawn [
+                "wezterm"
+                "start"
+                "${../waybar/repl.nu}"
+                "sudo nixos-rebuild switch --flake ${local_flake}"
+              ];
+
             "Mod+G".action = set-dynamic-cast-window;
             "Mod+Ctrl+G".action = set-dynamic-cast-monitor;
             "Mod+Shift+G".action = clear-dynamic-cast-target;

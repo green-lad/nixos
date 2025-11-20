@@ -10,8 +10,27 @@
     # currently, font rendering is broken in the new wezterm versions https://github.com/NixOS/nixpkgs/issues/336069
     # package = inputs.wezterm.packages.${pkgs.system}.default;
     extraConfig = ''
+      
         local wezterm = require("wezterm")
         local config = wezterm.config_builder()
+
+        local quick_select_patterns = {
+          -- Nushell error paths (like ╭─[/path/to/file.nu:1946:63])
+          "─\\[(.*\\:\\d+\\:\\d+)\\]",
+
+          -- Table patterns
+          -- $env.config.table.mode = "default"
+          -- $env.config.table.header_on_separator = true
+          -- $env.config.footer_mode = "always"
+          "(?<=─|╭|┬)([a-zA-Z0-9 _%.-]+?)(?=─|╮|┬)", -- Headers
+          "(?<=│ )([a-zA-Z0-9 _.-]+?)(?= │)", -- Column values
+
+          -- File paths (stops at ~, allows dots in path but stops before dot+space)
+          "/[^/\\s│~]+(?:/[^/\\s│~]+)*(?:\\.(?!\\s)[a-zA-Z0-9]+)?",
+        }
+
+        config.quick_select_patterns = quick_select_patterns
+
 
         config.enable_kitty_keyboard=true
         -- config.color_scheme = 'iceberg-dark'

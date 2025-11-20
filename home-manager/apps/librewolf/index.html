@@ -9,240 +9,186 @@
         min-height: 100%;
       }
       body {
-        display:flex;
-        flex-direction:column;
-        justify-content:center;
-        min-height:100vh;
-        position: absolute;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-around;
+        min-height: 100vh;
         background: #11121d;
         margin: 0;
-      }
-      #container {
-        padding: 20px;
         * {
-          margin: 20px 0;
-          border-radius:10px;
+          margin: 20px;
+          border-radius: 10px;
         }
       }
       input {
-        width: 100%;
+        color: white;
         font-size: 30px;
-        color: yellowgreen;
-        background: darkslategrey;
-        border: 2px solid gray;
+        background: #11121d;
+        border: 2px #3b414e solid;
         padding: 10px;
         box-sizing: border-box;
+      }
+      hr {
+        color: #cdd6f4;
       }
       #flex {
         display: flex;
         flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: stretch;
+        align-content: stretch;
+        flex-grow: 1;
         a {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-grow: 1;
           padding: 20px;
-          border: 1px gray solid;
+          border: 1px #3b414e solid;
           margin: 10px;
-          color: yellowgreen;
+          color: #b5bf82;
           text-decoration: none;
         }
         a:hover {
-          background: darkslategrey;
+          background: #1A1B2A;
         }
       }
     </style>
   </head>
   <html>
   <body>
-    <div id="container">
-      <input id="filter" type="text" onchange = "filter(event);"
-        oninput    = "this.onchange(event);"/>
-      <hr>
-      <div id="flex">
-        <a title="duck.ai" href="https://duckduckgo.com/?q=DuckDuckGo+AI+Chat&amp;ia=chat&amp;duckai=1">duck.ai</a>
-        <a title="studon.fau" href="https://www.studon.fau.de">studon.fau</a>
-        <a title="kleinanzeigen" href="https://www.kleinanzeigen.de/">kleinanzeigen</a>
-        <a title="miniflux" href="https://localhost:8002/">miniflux</a>
-        <a title="papis" href="http://localhost:8888/library/twins_themis/all">papis</a>
-        <a title="cur_doc" href="http://localhost:8000/">cur_doc</a>
-        <a title="scribd" href="https://www.scribd.com/document/498201474/Language-Proof-and-Logic-2nd-D-Barker-Plummer-J-Barwise-J-Etchemendy">scribd</a>
-        <a title="amazon" href="https://amazon.de/">amazon</a>
-        <a title="beancount" href="http://localhost:5000">beancount</a>
-        <a title="sparkasse" href="https://www.sparkasse-nuernberg.de/de/home.html">sparkasse</a>
-        <a title="consorsbank" href="https://www.consorsbank.de/home">consorsbank</a>
-        <a title="thingiverse" href="https://www.thingiverse.com/">thingiverse</a>
-        <a title="github" href="https://github.com/green-lad">github</a>
-        <a title="homeassistant" href="http://homeassistant:8123/">homeassistant</a>
-        <a title="fritz" href="https://fritz.box/">fritz</a>
-        <a title="my.remarkable" href="https://my.remarkable.com/">my.remarkable</a>
-        <a title="pocketnc" href="http://192.168.178.55/">pocketnc</a>
-        <a title="campo.fau" href="https://www.campo.fau.de/qisserver/pages/cs/sys/portal/hisinoneStartPage.faces">campo.fau</a>
-        <a title="home" href="http://greenlad.xyz/">home</a>
-        <a title="fsi.cs.fau" href="https://fsi.cs.fau.de/">fsi.cs.fau</a>
-        <a title="vgn" href="https://www.vgn.de/">vgn</a>
-        <a title="pocket_nc_simulator" href="https://sim.pentamachine.com/">pocket_nc_simulator</a>
-        <a title="chomsky" href="https://chomsky.info/">chomsky</a>
-        <a title="leanpub" href="https://leanpub.com/">leanpub</a>
-        <a title="radicale" href="http://localhost:5232/">radicale</a>
-        <a title="youtube" href="https://www.youtube.com/">youtube</a>
-        <a title="twitch" href="https://www.twitch.tv/barbarousking">twitch</a>
-        <a title="maps" href="https://maps.google.de/">maps</a>
-        <a title="currentaffairs" href="https://www.currentaffairs.org/">currentaffairs</a>
-        <a title="DHL Sendungsverfolgung" href="https://www.dhl.de/de/privatkunden/dhl-sendungsverfolgung.html">DHL Sendungsverfolgung</a>
-        <a title="dict.cc" href="https://www.dict.cc/">dict.cc</a>
-        <a title="chefkoch" href="http://chefkoch.de/">chefkoch</a>
-      </div>
-      <hr>
+    <input id="filter" type="text" oninput="filter(event);" onkeydown="change_url_on_enter(event)"/>
+    <hr>
+    <div id="flex">
     </div>
+    <hr>
 
-    <!-- <script> -->
-      <!-- let urls = [ -->
-        <!-- { -->
-          <!-- "label": "duck.ai", -->
-          <!-- "url": "https://duckduckgo.com/?q=DuckDuckGo+AI+Chat&ia=chat&duckai=1" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "studon.fau", -->
-          <!-- "url": "https://www.studon.fau.de/studon/ilias.php?baseClass=ilrepositorygui&reloadpublic=1&cmd=frameset&ref_id=1" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "kleinanzeigen", -->
-          <!-- "url": "https://www.kleinanzeigen.de/" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "miniflux", -->
-          <!-- "url": "https://localhost:8002" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "papis", -->
-          <!-- "url": "http://localhost:8888/library/papers/all" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "scribd", -->
-          <!-- "url": "https://www.scribd.com/document/498201474/Language-Proof-and-Logic-2nd-D-Barker-Plummer-J-Barwise-J-Etchemendy" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "amazon", -->
-          <!-- "url": "https://amazon.de" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "sparkasse", -->
-          <!-- "url": "https://www.sparkasse-nuernberg.de/de/home.html" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "consorsbank", -->
-          <!-- "url": "https://www.consorsbank.de/home" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "thingiverse", -->
-          <!-- "url": "https://www.thingiverse.com/" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "github", -->
-          <!-- "url": "https://github.com/green-lad" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "homeassistant", -->
-          <!-- "url": "http://homeassistant:8123/" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "fritz", -->
-          <!-- "url": "https://fritz.box/" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "my.remarkable", -->
-          <!-- "url": "https://my.remarkable.com/" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "pocketnc", -->
-          <!-- "url": "http://192.168.178.55" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "campo.fau", -->
-          <!-- "url": "https://www.campo.fau.de/qisserver/pages/cs/sys/portal/hisinoneStartPage.faces" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "home", -->
-          <!-- "url": "http://greenlad.xyz/" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "fsi.cs.fau", -->
-          <!-- "url": "https://fsi.cs.fau.de/" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "vgn", -->
-          <!-- "url": "https://www.vgn.de/" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "pocket_nc_simulator", -->
-          <!-- "url": "https://sim.pentamachine.com/" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "chomsky", -->
-          <!-- "url": "https://chomsky.info/" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "leanpub", -->
-          <!-- "url": "https://leanpub.com/" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "radicale", -->
-          <!-- "url": "http://localhost:5232" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "youtube", -->
-          <!-- "url": "https://www.youtube.com" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "twitch", -->
-          <!-- "url": "https://www.twitch.tv/barbarousking" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "maps", -->
-          <!-- "url": "https://maps.google.de" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "currentaffairs", -->
-          <!-- "url": "https://www.currentaffairs.org/" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "DHL Sendungsverfolgung", -->
-          <!-- "url": "https://www.dhl.de/de/privatkunden/dhl-sendungsverfolgung.html" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "dict.cc", -->
-          <!-- "url": "https://www.dict.cc/" -->
-        <!-- }, -->
-        <!-- { -->
-          <!-- "label": "chefkoch", -->
-          <!-- "url": "http://chefkoch.de" -->
-        <!-- } -->
-      <!-- ]; -->
+    <script>
+      let urls = [
+        {
+          "label": "beancount",
+          "url": "http://localhost:5000"
+        },
+        {
+          "label": "campo.fau",
+          "url": "https://www.campo.fau.de/qisserver/pages/cs/sys/portal/hisinoneStartPage.faces"
+        },
+        {
+          "label": "chomsky",
+          "url": "https://chomsky.info/"
+        },
+        {
+          "label": "consorsbank",
+          "url": "https://www.consorsbank.de/home"
+        },
+        {
+          "label": "currentaffairs",
+          "url": "https://www.currentaffairs.org/"
+        },
+        {
+          "label": "duck.ai",
+          "url": "https://duckduckgo.com/?q=DuckDuckGo+AI+Chat&ia=chat&duckai=1"
+        },
+        {
+          "label": "fritz",
+          "url": "https://fritz.box/"
+        },
+        {
+          "label": "fsi.cs.fau",
+          "url": "https://fsi.cs.fau.de/"
+        },
+        {
+          "label": "github",
+          "url": "https://github.com/green-lad"
+        },
+        {
+          "label": "home",
+          "url": "http://greenlad.xyz/"
+        },
+        {
+          "label": "homeassistant",
+          "url": "http://homeassistant:8123/"
+        },
+        {
+          "label": "leanpub",
+          "url": "https://leanpub.com/"
+        },
+        {
+          "label": "miniflux",
+          "url": "https://localhost:8002"
+        },
+        {
+          "label": "my.remarkable",
+          "url": "https://my.remarkable.com/"
+        },
+        {
+          "label": "papis",
+          "url": "http://localhost:8888/library/papers/all"
+        },
+        {
+          "label": "pocket_nc_simulator",
+          "url": "https://sim.pentamachine.com/"
+        },
+        {
+          "label": "pocketnc",
+          "url": "http://192.168.178.55"
+        },
+        {
+          "label": "radicale",
+          "url": "http://localhost:5232"
+        },
+        {
+          "label": "sparkasse",
+          "url": "https://www.sparkasse-nuernberg.de/de/home.html"
+        },
+        {
+          "label": "studon.fau",
+          "url": "https://www.studon.fau.de/studon/ilias.php?baseClass=ilrepositorygui&reloadpublic=1&cmd=frameset&ref_id=1"
+        },
+        {
+          "label": "vgn",
+          "url": "https://www.vgn.de/"
+        },
+      ];
 
-      <!-- let flex = document.getElementById("flex"); -->
-      <!-- let url_divs = []; -->
-      <!-- for (const url of urls) { -->
-        <!-- let a= document.createElement('a'); -->
-        <!-- let l = document.createTextNode(url.label); -->
-        <!-- a.appendChild(l); -->
-        <!-- a.title = url.label; -->
-        <!-- a.href = url.url; -->
-        <!-- flex.appendChild(a); -->
-        <!-- url_divs.push(a); -->
-      <!-- } -->
-      <!-- document.getElementById("filter").value = ""; -->
+      let flex = document.getElementById("flex");
+      for (const url of urls) {
+        let a= document.createElement('a');
+        let l = document.createTextNode(url.label);
+        a.appendChild(l);
+        a.title = url.label;
+        a.href = url.url;
+        flex.appendChild(a);
+        url.element = a;
+        url.matching = true;
+      }
+      let filterDom = document.getElementById("filter");
+      filterDom.value = "";
 
-      <!-- function filter(event) { -->
-        <!-- console.log(url_divs); -->
-        <!-- let filter = new RegExp(event.target.value, "i"); -->
-        <!-- for (const url_div of url_divs) { -->
-          <!-- if (url_div.text.match(filter)) { -->
-            <!-- url_div.style.display = "inherit"; -->
-            <!-- url_div.style.visibility = "inherit"; -->
-          <!-- } -->
-          <!-- else { -->
-            <!-- url_div.style.visibility = "hidden"; -->
-          <!-- } -->
-        <!-- } -->
-      <!-- } -->
-    <!-- </script> -->
-
+      function change_url_on_enter(event) {
+        if (event.key == "Enter") {
+          for (const url of urls) {
+            if (url.matching) {
+              window.location.href = url.url;
+            }
+          }
+        }
+      }
+      
+      function filter(event) {
+        let filter = new RegExp(filterDom.value, "i");
+        for (const url of urls) {
+          if (url.label.match(filter)) {
+            url.matching = true;
+            url.element.style.display = "inherit";
+            url.element.style.visibility = "inherit";
+          }
+          else {
+            url.matching = false;
+            url.element.style.visibility = "hidden";
+          }
+        }
+      }
+    </script>
   </body>
 </html>

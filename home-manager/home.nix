@@ -23,6 +23,7 @@
     ./apps/nushell
     ./apps/papis
     ./apps/pipewire_noise_cancelling
+    ./apps/radicale
     ./apps/ripgrep
     ./apps/rmpc
     ./apps/rnote
@@ -113,6 +114,8 @@
   };
 
   fonts.fontconfig.enable = true;
+
+  wayland.windowManager.sway.enable = true;
 
   # src: https://github.com/gepbird/dotfiles/blob/82902d8e5681c42411ed6125f8e9a9322ac3c6c1/modules/gtk-qt.nix#L10 (there the colortheme also gets set, but lets use the default)
   gtk =

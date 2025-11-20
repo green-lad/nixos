@@ -220,6 +220,9 @@
             vi_normal = "block";
           };
 
+          table.header_on_separator = true;
+          footer_mode = "always";
+
           keybindings = [
             {
               name = "copy_working_directory";
