@@ -66,51 +66,78 @@
       HOST = "${hostname}";
       TERMINAL = "wezterm";
     };
-    packages = with pkgs; [
-      (python3.withPackages (p: (with p; [ oathtool ])))
-      blender
-      brightnessctl
-      cura-appimage
-      delta
-      gimp
-      gnumake
-      go
-      graphviz
-      htop
-      inkscape
-      inputs.additional-fonts.packages.${system}.astetica
-      inputs.additional-fonts.packages.${system}.leafery
-      jq
-      kdePackages.okular
-      kicad
-      killall
-      lazygit
-      libreoffice
-      libsForQt5.qt5.qtwayland
-      lightburn
-      mplayer
-      mpv
-      nautilus
-      ngspice
-      obs-cmd
-      obs-studio
-      openscad
-      pastel
-      pulseaudio
-      pulsemixer
-      qt6.qtwayland
-      scooter
-      songrec
-      speedtest-cli
-      supercollider
-      swayimg
-      termdown
-      unzip
-      wev
-      wl-clipboard
-      yt-dlp
-      zathura
-    ];
+    packages =
+      with pkgs;
+      let
+        script_folder = ./scripts;
+        scripts = builtins.map (
+          script_name:
+          pkgs.writeScriptBin ("my-" + script_name) (builtins.readFile (script_folder + "/${script_name}"))
+        ) (builtins.attrNames (builtins.readDir script_folder));
+      in
+      scripts
+      ++ [
+        (python3.withPackages (p: (with p; [ oathtool ])))
+        blender
+        brightnessctl
+        cura-appimage
+        delta
+        gimp
+        gnumake
+        go
+        graphviz
+        htop
+        inkscape
+        inputs.additional-fonts.packages.${system}.astetica
+        inputs.additional-fonts.packages.${system}.leafery
+        jq
+        kdePackages.okular
+        kicad
+        killall
+        lazygit
+        libreoffice
+        libsForQt5.qt5.qtwayland
+        lightburn
+        mplayer
+        mpv
+        nautilus
+        ngspice
+        obs-cmd
+        obs-studio
+        openscad
+        pastel
+        pulseaudio
+        pulsemixer
+        qt6.qtwayland
+        scooter
+        songrec
+        speedtest-cli
+        supercollider
+        swayimg
+        termdown
+        unzip
+        wev
+        wl-clipboard
+        yt-dlp
+        zathura
+      ];
+  };
+
+  services.tomat = {
+    enable = true;
+    settings = {
+      notification = {
+        enabled = false;
+      };
+      sound = {
+        enabled = true;
+      };
+      timer = {
+        auto_advance = false;
+        break = 5;
+        work = 25;
+      };
+    };
   };
 
   fonts.fontconfig.enable = true;

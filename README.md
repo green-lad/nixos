@@ -69,8 +69,6 @@ To play around with it enable remote debugging in firefox / librewolf and open i
         - selection history tree (edited selections get removed?)
 
 - misc:
-    - use overlay instead of overwriting specialArgs.pkgs
-    - add ./home-manager/scripts path (see sth like: https://ertt.ca/nix/shell-scripts/)
     - add music quickly (via url link from clipboard, fuzzle, yt-dlp) to local music
     - Reset root system (impermanence)
     - Get realtime kernel and linuxcnc working

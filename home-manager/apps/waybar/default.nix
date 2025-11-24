@@ -238,6 +238,14 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+        "custom/tomat" = {
+          exec = "tomat watch --interval 1";
+          return-type = "json";
+          format = "{}";
+          on-click = "tomat toggle";
+          on-click-middle = "tomat skip";
+          on-click-right = "tomat stop";
+        };
 
         "group/connections" = {
           drawer = {
@@ -353,6 +361,8 @@ in
           "niri/window"
         ];
         modules-right = [
+          "custom/tomat"
+          "custom/separator"
           "custom/mail"
           "custom/separator"
           "pulseaudio"

@@ -229,6 +229,12 @@
     #   };
     # };
 
+    taskchampion-sync-server = {
+      enable = true;
+      port = 10222;
+      openFirewall = true;
+    };
+
     radicale = {
       enable = true;
       settings = {
@@ -360,16 +366,21 @@
     };
     nginx = {
       enable = true;
-      virtualHosts."papis.${hostname}" = {
+      virtualHosts."${hostname}.papis" = {
         locations."/" = {
           proxyPass = "http://127.0.0.1:8888";
+        };
+      };
+      virtualHosts."${hostname}.task" = {
+        locations."/" = {
+          proxyPass = "http://127.0.0.1:10222";
         };
       };
       virtualHosts."${hostname}".locations."/" = {
         root = pkgs.writeTextDir "index.html" (builtins.readFile ../home-manager/apps/librewolf/index.html);
         extraConfig = "try_files /index.html =404;";
       };
-      virtualHosts."jellyfin.${hostname}.link" = {
+      virtualHosts."${hostname}.yellyfin.link" = {
         # useACMEHost = "jellyfin.${hostname}.link";
         # forceSSL = true;
         # kTLS = true;
@@ -556,49 +567,49 @@
     # needed for zfs
     hostId = "8425e349";
     wireless.iwd.enable = true;
-    nftables.ruleset = ''
-      # Check out https://wiki.nftables.org/ for better documentation.
-      # Table for both IPv4 and IPv6.
-      table inet filter {
-        # Block all incoming connections traffic except SSH and "ping".
-        chain input {
-          type filter hook input priority 0;
+    # nftables.ruleset = ''
+    #   # Check out https://wiki.nftables.org/ for better documentation.
+    #   # Table for both IPv4 and IPv6.
+    #   table inet filter {
+    #     # Block all incoming connections traffic except SSH and "ping".
+    #     chain input {
+    #       type filter hook input priority 0;
 
-          # accept any localhost traffic
-          iifname lo accept
+    #       # accept any localhost traffic
+    #       iifname lo accept
 
-          # accept traffic originated from us
-          ct state {established, related} accept
+    #       # accept traffic originated from us
+    #       ct state {established, related} accept
 
-          # ICMP
-          # routers may also want: mld-listener-query, nd-router-solicit
-          ip6 nexthdr icmpv6 icmpv6 type { destination-unreachable, packet-too-big, time-exceeded, parameter-problem, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
-          ip protocol icmp icmp type { destination-unreachable, router-advertisement, time-exceeded, parameter-problem } accept
+    #       # ICMP
+    #       # routers may also want: mld-listener-query, nd-router-solicit
+    #       ip6 nexthdr icmpv6 icmpv6 type { destination-unreachable, packet-too-big, time-exceeded, parameter-problem, nd-router-advert, nd-neighbor-solicit, nd-neighbor-advert } accept
+    #       ip protocol icmp icmp type { destination-unreachable, router-advertisement, time-exceeded, parameter-problem } accept
 
-          # allow "ping"
-          ip6 nexthdr icmpv6 icmpv6 type echo-request accept
-          ip protocol icmp icmp type echo-request accept
+    #       # allow "ping"
+    #       ip6 nexthdr icmpv6 icmpv6 type echo-request accept
+    #       ip protocol icmp icmp type echo-request accept
 
-          tcp dport {ssh,http,https} accept
+    #       tcp dport {ssh,http,https} accept
 
-          tcp dport 30000-60000 accept
+    #       tcp dport 30000-60000 accept
 
-          # count and drop any other traffic
-          counter drop
-        }
+    #       # count and drop any other traffic
+    #       counter drop
+    #     }
 
-        # Allow all outgoing connections.
-        chain output {
-          type filter hook output priority 0;
-          accept
-        }
+    #     # Allow all outgoing connections.
+    #     chain output {
+    #       type filter hook output priority 0;
+    #       accept
+    #     }
 
-        chain forward {
-          type filter hook forward priority 0;
-          accept
-        }
-      }
-    '';
+    #     chain forward {
+    #       type filter hook forward priority 0;
+    #       accept
+    #     }
+    #   }
+    # '';
     # interfaces.enp0s25 = {
     #   ipv4.addresses = [{
     #     address = "10.10.10.1";
