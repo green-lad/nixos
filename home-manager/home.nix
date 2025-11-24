@@ -23,7 +23,7 @@
     ./apps/nushell
     ./apps/papis
     ./apps/pipewire_noise_cancelling
-    ./apps/radicale
+    # ./apps/radicale
     ./apps/ripgrep
     ./apps/rmpc
     ./apps/rnote

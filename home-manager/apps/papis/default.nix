@@ -12,7 +12,8 @@ let
     ./override_empty_bibtex_ref_and_fix_fzf_using_nushell.patch);
 in {
   programs.papis = {
-    enable = true;
+    # TODO: fix tests failing (caused by patch?)
+    enable = false;
     package = pkgs.papis.overrideAttrs (old: { patches = [ papis_patch ]; });
     libraries = {
       twins_themis = {

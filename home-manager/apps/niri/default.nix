@@ -32,6 +32,46 @@
             enable = false;
           };
         };
+        # see: https://github.com/sodiboo/niri-flake/issues/1446
+        # recent-windows = with config.lib.niri.actions; {
+        #   open-delay-ms = 150;
+
+        #   highlight = {
+        #     active-color = "#999999ff";
+        #     urgent-color = "#ff9999ff";
+        #     padding = 30;
+        #     corner-radius = 0;
+        #   };
+
+        #   previews = {
+        #     max-height = 480;
+        #     max-scale = 0.5;
+        #   };
+
+        #   binds = {
+        #     "Alt+Tab".action = "next-window";
+        #     "Alt+Shift+Tab".action = "previous-window";
+        #     "Alt+grave" = {
+        #       action = "next-window";
+        #       filter = "app-id";
+        #     };
+        #     "Alt+Shift+grave" = {
+        #       action = "previous-window";
+        #       filter = "app-id";
+        #     };
+
+        #     "Mod+Tab".action = "next-window";
+        #     "Mod+Shift+Tab".action = "previous-window";
+        #     "Mod+grave" = {
+        #       action = "next-window";
+        #       filter = "app-id";
+        #     };
+        #     "Mod+Shift+grave" = {
+        #       action = "previous-window";
+        #       filter = "app-id";
+        #     };
+        #   };
+        # };
         input = {
           keyboard = {
             repeat-delay = 200;
@@ -614,7 +654,7 @@
                   "niri msg action screenshot-window --id=$'(niri msg --json pick-window | from json | get id)'";
             };
             "Ctrl+Print".action.screenshot-screen = { };
-            "Alt+Print".action = screenshot;
+            # "Alt+Print".action = screenshot;
 
             "Mod+Escape" = {
               allow-inhibiting = false;

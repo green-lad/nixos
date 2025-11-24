@@ -1,16 +1,21 @@
-{ ... }: {
+{ ... }:
+{
   programs.git = {
     enable = true;
-    userName = "Markus Schoetz";
-    userEmail = "markus.schoetz@fau.de";
-    extraConfig = {
+    settings = {
+      user = {
+        name = "Markus Schoetz";
+        email = "markus.schoetz@fau.de";
+      };
       core.pager = "delta";
       interactive.diffFilter = "delta --color-only";
       delta = {
         enable = true;
         navigate = true;
       };
-      merge = { conflictstyle = "zdiff3"; };
+      merge = {
+        conflictstyle = "zdiff3";
+      };
     };
   };
 }

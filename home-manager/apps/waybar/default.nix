@@ -144,7 +144,7 @@ in
         };
         "custom/mail" = {
           exec = "${./get_mail_count.nu}";
-          format = "{icon} {}";
+          format = "{icon} {text}";
           return-type = "json";
           format-icons = {
             opened = " ";
