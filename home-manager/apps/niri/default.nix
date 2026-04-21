@@ -17,7 +17,7 @@
     niri = {
       enable = true;
       package = pkgs.niri;
-      # package = inputs.niri.packages.${pkgs.system}.niri;
+      # package = inputs.niri.packages.${pkgs.stdenv.hostPlatform.system}.niri;
       settings = {
         environment = {
           DISPLAY = ":0"; # For xwayland
@@ -191,11 +191,6 @@
         };
 
         spawn-at-startup = [
-          {
-            command = [
-              "${./niri_init_layout.nu}"
-            ];
-          }
           { command = [ "nsticky" ]; }
           { command = [ "xwayland-satellite" ]; }
         ];
@@ -249,7 +244,7 @@
             };
             "Mod+B" = {
               hotkey-overlay.title = "Choose icon";
-              action = spawn "${./choose_icon.nu}";
+              action = spawn "${./choose_icon.nu}" "false";
             };
             "Mod+Shift+C" = {
               hotkey-overlay.title = "Pick color";
@@ -481,7 +476,7 @@
               action = spawn [
                 "nu"
                 "-c"
-                ''if (systemctl --user is-active waybar | to text) == "active" {systemctl --user stop waybar} else {systemctl --user start waybar}''
+                ''try {let _ = systemctl --user is-active waybar; systemctl --user stop waybar} catch {systemctl --user start waybar}''
               ];
             };
             "Mod+Z" = {
@@ -683,6 +678,8 @@
     mako.enable = true;
     swayidle =
       let
+        timeout_start = 60 * 60;
+        increment = 30;
         lock = "${pkgs.swaylock}/bin/swaylock --daemonize";
         display = status: "${pkgs.niri}/bin/niri msg action power-${status}-monitors";
       in
@@ -690,41 +687,27 @@
         enable = true;
         timeouts = [
           {
-            timeout = 300;
+            timeout = timeout_start;
             command = "${pkgs.libnotify}/bin/notify-send 'Locking in 5 seconds' -t 5000";
           }
           {
-            timeout = 330;
+            timeout = timeout_start + increment * 1;
             command = lock;
           }
           {
-            timeout = 360;
+            timeout = timeout_start + increment * 2;
             command = display "off";
             resumeCommand = display "on";
           }
           {
-            timeout = 390;
+            timeout = timeout_start + increment * 3;
             command = "${pkgs.systemd}/bin/systemctl suspend";
           }
         ];
-        events = [
-          {
-            event = "before-sleep";
-            command = (display "off") + "; " + lock;
-          }
-          {
-            event = "after-resume";
-            command = display "on";
-          }
-          {
-            event = "lock";
-            command = (display "off") + "; " + lock;
-          }
-          {
-            event = "unlock";
-            command = display "on";
-          }
-        ];
+        events = {
+          before-sleep = "${pkgs.swaylock}/bin/swaylock -fF";
+          lock = "lock";
+        };
       };
     polkit-gnome.enable = true; # polkit
     cliphist = {

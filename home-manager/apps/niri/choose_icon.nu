@@ -1,7 +1,13 @@
 #!/usr/bin/env -S nu
 
-def main [] {
-  let i = get_icons_csv | from csv | each {$"($in.name)\t($in.unicode)\t($in.icon)"} | to text | fuzzel -d --accept-nth=3
+def main [on_console=true] {
+  mut i = null;
+  if $on_console {
+    # TODO: make icon more visible and alligned in one column
+    $i = get_icons_csv | from csv | each {$"($in.name)\t($in.unicode)\t($in.icon)"} | to text | fzf --accept-nth=3
+  } else {
+    $i = get_icons_csv | from csv | each {$"($in.name)\t($in.unicode)\t($in.icon)"} | to text | fuzzel -d --accept-nth=3
+  }
   $i | wl-copy
   print $i
 }

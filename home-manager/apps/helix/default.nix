@@ -10,11 +10,10 @@
       beancount-language-server
       dot-language-server
       gopls
-      helix-gpt
       jq
       lazygit
       nil
-      nixfmt-rfc-style
+      nixfmt
       prettier
       (python3.withPackages (
         p:
@@ -29,7 +28,7 @@
       typescript-language-server
     ];
     enable = true;
-    package = inputs.helix.packages.${pkgs.system}.helix;
+    package = inputs.helix.packages.${pkgs.stdenv.hostPlatform.system}.helix;
     languages = {
       language-server = {
         beancount-language-server = {
@@ -54,7 +53,7 @@
           ];
         };
         uwu-colors = {
-          command = "${inputs.uwu-colors.packages.${pkgs.system}.default}/bin/uwu_colors";
+          command = "${inputs.uwu-colors.packages.${pkgs.stdenv.hostPlatform.system}.default}/bin/uwu_colors";
         };
         dot-language-server = {
           command = "${pkgs.dot-language-server}/bin/dot-language-server";
@@ -86,25 +85,6 @@
               enable = true;
             };
           };
-        };
-        gpt = {
-          command = "helix-gpt";
-          args = [
-            "--handler"
-            "ollama"
-            "--ollamaModel"
-            "codellama"
-            "--fetchTimeout"
-            "300000"
-            "--actionTimeout"
-            "300000"
-            "--completionTimeout"
-            "300000"
-            "--ollamaTimeout"
-            "300000"
-            "--triggerCharacters"
-            ""
-          ];
         };
       };
       language = [

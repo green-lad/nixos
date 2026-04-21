@@ -73,9 +73,11 @@ in {
 
     userDirs = {
       enable = true;
+      setSessionVariables = true;
       # createDirectories = true;
       extraConfig = {
-        XDG_SCREENSHOTS_DIR = "${config.xdg.userDirs.documents}/screenshots";
+        # TODO: this should also work without since "xdg-user-dir SCREENSHOTS" exists
+        # XDG_SCREENSHOTS_DIR = "${config.xdg.userDirs.documents}/screenshots";
       };
     };
   };

@@ -9,6 +9,7 @@
       # chrome:flags does not show these values correctly
       "--enable-experimental-web-platform-features"
       "--enable-web-bluetooth-new-permissions-backend"
+      "--password-store=basic"
     ];
     extensions = [
       # dark reader
@@ -17,7 +18,8 @@
       "hlepfoohegkhhmjieoechaddaejaokhf"
       # espruino web IDE
 			"bleoifhkdalbjfbobjackfdifdneehpo"
+			# uBlock Origin Lite
+      "ddkjiahejlhfcafbddmgiahcphecmpfh"
     ];
-
   };
 }

@@ -135,10 +135,17 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
-        "custom/lock" = {
+        "custom/lock_with_suspend" = {
           format = " 󰍁 ";
           tooltip-format = "lock";
-          on-click = "swaylock";
+          on-click = "${./lock.nu} true";
+          on-scroll-up = "";
+          on-scroll-down = "";
+        };
+        "custom/lock_without_suspend" = {
+          format = " 󰣮 ";
+          tooltip-format = "lock";
+          on-click = "${./lock.nu} false";
           on-scroll-up = "";
           on-scroll-down = "";
         };
@@ -159,7 +166,7 @@ in
           on-scroll-down = "";
         };
         "custom/niri_overview" = {
-          format = "<span color='#ffcc66'>  󰕯 </span>";
+          format = "<span color='#ffcc66'>   󰕯 </span>";
           tooltip-format = "toggle niri overview";
           on-click = "niri msg action toggle-overview";
           on-scroll-up = "";
@@ -171,9 +178,21 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+        "custom/opener_lock" = {
+          format = "<span color='#ffcc66'> 󰣯 </span>";
+          tooltip-format = "lockmenu";
+          on-scroll-up = "";
+          on-scroll-down = "";
+        };
+        "custom/opener_nix_build" = {
+          format = "<span color='#ffcc66'> 󱄅 </span>";
+          tooltip-format = "nix_build_menu";
+          on-scroll-up = "";
+          on-scroll-down = "";
+        };
         "custom/opener_hardware" = {
           format = "<span color='#ffcc66'>  </span>";
-          tooltip-format = "powermenu";
+          tooltip-format = "hardware_menu";
           on-scroll-up = "";
           on-scroll-down = "";
         };
@@ -201,14 +220,27 @@ in
         "custom/rebuild-home-manager" = {
           format = "  ";
           tooltip-format = "rebuild home-manager";
-          on-click = "wezterm -e -- ${./repl.nu} 'home-manager switch --flake ${local_flake}'";
+          on-click = "wezterm -e -- ${./repl.nu} 'home-manager switch --flake ${local_flake}' $( ${./rebuild_check_send_mail.nu} false true )";
           on-scroll-up = "";
           on-scroll-down = "";
         };
         "custom/rebuild-nixos" = {
-          format = "  ";
+          format = "  ";
           tooltip-format = "rebuild nixos";
-          on-click = "wezterm -e -- ${./repl.nu} 'sudo nixos-rebuild switch --flake ${local_flake}'";
+          on-click = "wezterm -e -- ${./repl.nu} 'sudo nixos-rebuild switch --flake ${local_flake}' $( ${./rebuild_check_send_mail.nu} false true )";
+          on-scroll-up = "";
+          on-scroll-down = "";
+        };
+        "custom/rebuild-send_mail" = {
+          exec = "${./rebuild_check_send_mail.nu} false false";
+          interval = "once";
+          format = "{}{icon}";
+          return-type = "json";
+          format-icons = {
+            enabled = "<span color='#CCCCCC'> 󰇮 </span>";
+            disabled = "<span color='#CCCCCC'> 󱏣 </span>";
+          };
+          on-click = "${./rebuild_check_send_mail.nu} true false";
           on-scroll-up = "";
           on-scroll-down = "";
         };
@@ -237,14 +269,6 @@ in
           on-click = "rfkill toggle wwan";
           on-scroll-up = "";
           on-scroll-down = "";
-        };
-        "custom/tomat" = {
-          exec = "tomat watch --interval 1";
-          return-type = "json";
-          format = "{}";
-          on-click = "tomat toggle";
-          on-click-middle = "tomat skip";
-          on-click-right = "tomat stop";
         };
 
         "group/connections" = {
@@ -308,8 +332,6 @@ in
             "custom/opener_power"
             "custom/quit"
             "custom/separator_minor"
-            "custom/lock"
-            "custom/separator_minor"
             "custom/reboot"
             "custom/separator_minor"
             "custom/power"
@@ -317,20 +339,41 @@ in
           ];
           orientation = "horizontal";
         };
-        "group/rebuild" = {
+        "group/build_nix" = {
           drawer = {
             transition-left-to-right = false;
+            click-to-reveal = true;
           };
           modules = [
+            "custom/opener_nix_build"
             "custom/rebuild-home-manager"
+            "custom/separator_minor"
             "custom/rebuild-nixos"
+            "custom/separator_minor"
+            "custom/rebuild-send_mail"
+            "custom/separator_minor"
+          ];
+          orientation = "horizontal";
+        };
+        "group/lock" = {
+          drawer = {
+            transition-left-to-right = false;
+            click-to-reveal = true;
+          };
+          modules = [
+            "custom/opener_lock"
+            "custom/lock_without_suspend"
+            "custom/separator_minor"
+            "custom/lock_with_suspend"
+            "custom/separator_minor"
+            "idle_inhibitor"
             "custom/separator_minor"
           ];
           orientation = "horizontal";
         };
         height = 40;
         "idle_inhibitor" = {
-          format = "<span color='#ffcc66'> {icon}</span>";
+          format = " {icon}";
           start-activated = false;
           format-icons = {
             activated = " ";
@@ -361,8 +404,6 @@ in
           "niri/window"
         ];
         modules-right = [
-          "custom/tomat"
-          "custom/separator"
           "custom/mail"
           "custom/separator"
           "pulseaudio"
@@ -373,9 +414,9 @@ in
           "custom/separator"
           "battery"
           "backlight"
-          "idle_inhibitor"
+          "group/build_nix"
           "custom/separator"
-          "group/rebuild"
+          "group/lock"
           "custom/separator"
           "group/power"
         ];

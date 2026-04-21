@@ -1,24 +1,30 @@
 #!/usr/bin/env -S nu
 
-def main [cmd, quit_keys = [q, esc], retry_keys = [enter]] {
+def main [cmd, notify = false, mail_address = "markus.schoetz@fau.de", quit_keys = [q, esc], retry_keys = [enter]] {
   let entry_keys = $quit_keys | append $retry_keys
   mut c = ""
+  mut result = {exit_code: 1}
 
-  while not ($c in $quit_keys) {
-    $c = try {
-      nu -c $cmd
-      "q"
-    } catch { |err|
-      print ($err.msg)
+  while $result.exit_code > 0 and not ($c in $quit_keys) {
+    let start_time = date now
+    $result = do -i { nu -c (nu -c $cmd) } | tee { print } | complete
+    if $notify {
+      let header = if $result.exit_code > 0 { $"Nixos ($start_time) failed" } else { $"Nixos ($start_time) succeeded" }
+      let msg = if $result.exit_code > 0 { $result.stderr } else { $result.stdout}
+      $msg | neomutt -s $header $mail_address
+    }
+
+    if $result.exit_code > 0 {
       print $"(ansi green_italic){quit: $($quit_keys), retry: $($retry_keys)}(ansi reset)"
-      mut ct = ""
-      while not ($ct in $entry_keys) {
+
+      $c = ""
+      while not ($c in $entry_keys) {
         try {
           sleep 100ms
-          $ct = (input listen).code
+          $c = (input listen).code
         }
       }
-      $ct
     }
   }
 }
+

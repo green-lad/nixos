@@ -8,7 +8,7 @@
   programs.wezterm = {
     enable = true;
     # currently, font rendering is broken in the new wezterm versions https://github.com/NixOS/nixpkgs/issues/336069
-    # package = inputs.wezterm.packages.${pkgs.system}.default;
+    # package = inputs.wezterm.packages.${pkgs.stdenv.hostPlatform.system}.default;
     extraConfig = ''
       
         local wezterm = require("wezterm")

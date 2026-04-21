@@ -45,14 +45,14 @@ get_wlan_state_x() {
 
 turn_on_wlan_x() {
   wlanNumber=$1
-  if [ $(get_wlan_state_x $wlanNumber) = "0" ]; then
+  if [ $(get_wlan_state_x $wlanNumber) == "0" ]; then
     set_wlan_x 1 $wlanNumber
   fi
 }
 
 turn_off_wlan_x() {
   wlanNumber=$1
-  if [ $(get_wlan_state_x $wlanNumber) = "1" ]; then
+  if [ $(get_wlan_state_x $wlanNumber) == "1" ]; then
     set_wlan_x 0 $wlanNumber
   fi
 }

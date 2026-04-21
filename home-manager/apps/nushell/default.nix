@@ -200,11 +200,12 @@
         };
         enable = true;
         plugins = with pkgs.nushellPlugins; [
-          highlight
+          # TODO: find solution for nushellPlugins being updated less reguraly than the the nushell versions causing nix builds to fail periodically
+          # highlight
         ];
         settings = {
           plugins = {
-            highlight.theme = "base16";
+            highlight.theme = "Nord";
           };
           history = {
             file_format = "sqlite";

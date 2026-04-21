@@ -6,16 +6,23 @@ in
   "google".metaData.hidden = true;
   "bing".metaData.hidden = true;
 
+  "app store" = {
+    urls = [ { template = "https://www.apple.com/us/search/{searchTerms}?src=globalnav"; } ];
+    icon = "https://www.apple.com/favicon.ico";
+    updateInterval = weekly;
+    definedAliases = [ "@iosapp" ];
+  };
+
   "aliexpress" = {
     urls = [ { template = "https://aliexpress.com/wholesale?SearchText={searchTerms}"; } ];
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@ali" ];
   };
 
   "amazon" = {
     urls = [ { template = "https://www.amazon.de/s?k={searchTerms}"; } ];
     icon = "https://www.amazon.de/favicon.ico";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@a" ];
   };
 
@@ -26,7 +33,7 @@ in
       }
     ];
     icon = "https://static.arxiv.org/static/base/1.0.0a5/images/arxiv-logo-one-color-white.svg";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@rfa" ];
   };
 
@@ -37,7 +44,7 @@ in
       }
     ];
     icon = "https://img.chefkoch-cdn.de/favicon.ico";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@ch" ];
   };
 
@@ -48,14 +55,25 @@ in
       }
     ];
     icon = "https://assets.crossref.org/favicon/android-chrome-192x192.png";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@rfc" ];
+  };
+
+  "crows_supply" = {
+    urls = [
+      {
+        template = "https://www.crowdsupply.com/search?q={searchTerms}";
+      }
+    ];
+    icon = "https://www.crowdsupply.com/_marvin/images/favicon.ico";
+    updateInterval = weekly;
+    definedAliases = [ "@cs" ];
   };
 
   "dict" = {
     urls = [ { template = "https://www.dict.cc/?s={searchTerms}"; } ];
     icon = "https://www4.dict.cc/img/favicons/favicon4.png";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@d" ];
   };
 
@@ -66,14 +84,25 @@ in
       }
     ];
     icon = "https://dl.acm.org/pb-assets/head-metadata/apple-touch-icon-1574252172393.png";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@rfacm" ];
+  };
+
+  "etsy.com" = {
+    urls = [
+      {
+        template = "https://www.etsy.com/de-en/search?q={searchTerms}";
+      }
+    ];
+    icon = "https://www.etsy.com/images/favicon-16x16.png";
+    updateInterval = weekly;
+    definedAliases = [ "@e" ];
   };
 
   "fdroid" = {
     urls = [ { template = "https://search.f-droid.org/?q={searchTerms}&lang=en"; } ];
     icon = "https://f-droid.org/assets/favicon-16x16_7yyppfDSTAVyGb3ycHY84PYjHUwP96NKICAibLRpnXw=.png";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@fd" ];
   };
 
@@ -90,14 +119,14 @@ in
       }
     ];
     icon = "https://www.mozilla.org/media/protocol/img/logos/firefox/logo.fedb52c912d6.svg";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@fe" ];
   };
 
   "github code search" = {
     urls = [ { template = "https://github.com/search?q=%22{searchTerms}%22&type=code"; } ];
     icon = "https://github.githubassets.com/favicons/favicon.svg";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@g" ];
   };
 
@@ -108,7 +137,7 @@ in
       }
     ];
     icon = "https://github.githubassets.com/favicons/favicon.svg";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@gn" ];
   };
 
@@ -119,27 +148,27 @@ in
       }
     ];
     icon = "https://github.githubassets.com/favicons/favicon.svg";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@gr" ];
   };
 
   "google maps" = {
     urls = [ { template = "https://www.google.de/maps/place/{searchTerms}"; } ];
     icon = "https://www.gstatic.com/images/branding/searchlogo/ico/favicon.ico";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@m" ];
   };
 
   "google scholar" = {
     urls = [ { template = "https://scholar.google.com/scholar?q={searchTerms}"; } ];
     icon = "https://scholar.google.com/favicon.ico";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@rfg" ];
   };
 
   "google" = {
     urls = [ { template = "https://www.google.com/search?q={searchTerms}"; } ];
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@gl" ];
   };
 
@@ -150,7 +179,7 @@ in
       }
     ];
     icon = "https://helix-editor.com/favicon.svg";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@hc" ];
   };
 
@@ -171,15 +200,33 @@ in
       }
     ];
     icon = "https://wiki.nixos.org/nixos.png";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@hmo" ];
+  };
+
+  "haskell hoogle" = {
+    urls = [
+      {
+        template = "https://hoogle.haskell.org/?hoogle={searchTerms}";
+      }
+    ];
+    icon = "https://hoogle.haskell.org/favicon.png";
+    updateInterval = weekly;
+    definedAliases = [ "@hh" ];
+  };
+
+  "kickstarter" = {
+    urls = [ { template = "https://www.kickstarter.com/discover/advanced?term={searchTerms}"; } ];
+    icon = "https://a.kickstarter.com/favicon.ico";
+    updateInterval = weekly;
+    definedAliases = [ "@ki" ];
   };
 
   "kleinanzeigen" = {
     urls = [ { template = "https://www.kleinanzeigen.de/s-{searchTerms}/k0"; } ];
     icon = "https://www.kleinanzeigen.de/favicon.svg";
-    updateInterval = daily;
-    definedAliases = [ "@k" ];
+    updateInterval = weekly;
+    definedAliases = [ "@kl" ];
   };
 
   "nix old version" = {
@@ -189,7 +236,7 @@ in
       }
     ];
     icon = "https://wiki.nixos.org/nixos.png";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@nv" ];
   };
 
@@ -214,7 +261,7 @@ in
       }
     ];
     icon = "https://wiki.nixos.org/nixos.png";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@np" ];
   };
 
@@ -239,7 +286,7 @@ in
       }
     ];
     icon = "https://wiki.nixos.org/nixos.png";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@no" ];
   };
 
@@ -250,40 +297,47 @@ in
       }
     ];
     icon = "https://wiki.nixos.org/nixos.png";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@hw" ];
   };
 
   "package dhl" = {
     urls = [ { template = "https://www.dhl.de/de/privatkunden/pakete-empfangen/verfolgen.html?piececode={searchTerms}"; } ];
     icon = "https://www.dhl.de/.resources/dhl/webresources/assets/icons/favicons/favicon-16x16.png";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@pd" ];
   };
 
   "package hermes" = {
     urls = [ { template = "https://www.myhermes.de/empfangen/sendungsverfolgung/sendungsinformation#{searchTerms}"; } ];
     icon = "https://www.myhermes.de/assets/touchicons/favicon.ico";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@ph" ];
   };
 
   "pixabay" = {
     urls = [ { template = "https://pixabay.com/images/search/{searchTerms}"; } ];
-    updateInterval = daily;
+    icon = "https://thepiratebay.org/favicon.ico";
+    updateInterval = weekly;
     definedAliases = [ "@pixabay" ];
+  };
+
+  "piratebay" = {
+    urls = [ { template = "https://thepiratebay.org/search.php?q={searchTerms}&cat=0"; } ];
+    updateInterval = weekly;
+    definedAliases = [ "@pb" ];
   };
 
   "public apis" = {
     urls = [ { template = "https://github.com/public-apis/public-apis/search?q={searchTerms}"; } ];
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@pubapi" ];
   };
 
   "rust book" = {
     urls = [ { template = "https://doc.rust-lang.org/book/?search={searchTerms}"; } ];
     icon = "https://www.rust-lang.org/static/images/favicon.svg";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@rb" ];
   };
 
@@ -294,7 +348,7 @@ in
       }
     ];
     icon = "https://www.rust-lang.org/static/images/favicon.svg";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@re" ];
   };
 
@@ -305,7 +359,7 @@ in
       }
     ];
     icon = "https://www.rust-lang.org/static/images/favicon.svg";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@rd" ];
   };
 
@@ -316,7 +370,7 @@ in
       }
     ];
     icon = "https://www.rust-lang.org/static/images/favicon.svg";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@rr" ];
   };
 
@@ -327,7 +381,7 @@ in
       }
     ];
     icon = "https://www.rust-lang.org/static/images/favicon.svg";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@rs" ];
   };
 
@@ -338,7 +392,7 @@ in
       }
     ];
     icon = "https://www.rust-lang.org/static/images/favicon.svg";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@rt" ];
   };
 
@@ -349,14 +403,14 @@ in
       }
     ];
     icon = "https://store.steampowered.com/favicon.ico";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@st" ];
   };
 
   "thingiverse" = {
     urls = [ { template = "https://www.thingiverse.com/search?q={searchTerms}"; } ];
     icon = "https://cdn.thingiverse.com/site/img/favicons/favicon-192x192.png";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@th" ];
   };
 
@@ -368,14 +422,14 @@ in
     ];
     icon = "https://www.youtube.com/s/desktop/2253fa3d/img/logos/favicon_144x144.png";
     # icon = "https://www.gstatic.com/youtube/img/branding/youtubelogo/svg/youtubelogo.svg";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@y" ];
   };
 
   "zerspanungsbude" = {
     urls = [ { template = "https://forum.zerspanungsbude.net/search.php?keywords={searchTerms}"; } ];
     icon = "https://forum.zerspanungsbude.net/favicon.ico";
-    updateInterval = daily;
+    updateInterval = weekly;
     definedAliases = [ "@z" ];
   };
 

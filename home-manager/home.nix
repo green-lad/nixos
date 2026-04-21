@@ -5,11 +5,13 @@
   pkgs,
   system,
   user,
+  overlays,
   ...
 }:
 {
   imports = [
     inputs.sops-nix.homeManagerModules.sops
+    ./hosts/${hostname}.nix
     ./apps/blender
     ./apps/chromium
     ./apps/discord
@@ -21,7 +23,7 @@
     ./apps/neomutt
     ./apps/niri
     ./apps/nushell
-    ./apps/papis
+    # ./apps/papis
     ./apps/pipewire_noise_cancelling
     # ./apps/radicale
     ./apps/ripgrep
@@ -78,10 +80,12 @@
       scripts
       ++ [
         (python3.withPackages (p: (with p; [ oathtool ])))
+        android-studio
         blender
         brightnessctl
         cura-appimage
         delta
+        freecad
         gimp
         gnumake
         go
@@ -98,6 +102,7 @@
         libreoffice
         libsForQt5.qt5.qtwayland
         lightburn
+        localsend
         mplayer
         mpv
         nautilus
@@ -160,7 +165,10 @@
         "${a}\n${n} = ${pkgs.lib.trivial.boolToString v}"
       ) "" extraConfig;
       gtk3.extraConfig = extraConfig;
-      gtk4.extraConfig = extraConfig;
+      gtk4 = {
+        extraConfig = extraConfig;
+        theme = null;
+      };
     };
 
   xdg.configFile."cat_installer/ca.pem" = {

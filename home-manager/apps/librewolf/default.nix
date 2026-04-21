@@ -100,7 +100,7 @@ in {
         extensions.force = true;
         extensions = {
           # see: https://nur.nix-community.org/repos/rycee/
-          packages = with inputs.firefox-addons.packages.${pkgs.system}; [
+          packages = with inputs.firefox-addons.packages.${pkgs.stdenv.hostPlatform.system}; [
             darkreader
             don-t-fuck-with-paste
             firefox-color

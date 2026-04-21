@@ -1,6 +1,8 @@
 { hostname, inputs, ... }:
-let secretspath = builtins.toString inputs.sops_secrets;
-in {
+let
+  secretspath = builtins.toString inputs.sops_secrets;
+in
+{
   sops = {
     defaultSopsFile = "${secretspath}/secrets.yaml";
     validateSopsFiles = false;
@@ -12,7 +14,21 @@ in {
     };
 
     secrets = {
+      "nix-serve/private" = {
+        restartUnits = [ "nix-serve.service" ];
+      };
+      "nix-serve/public" = {
+        restartUnits = [ "nix-serve.service" ];
+      };
+      radicale_htpasswd = {
+        restartUnits = [ "radicale.service" ];
+        group = "radicale";
+        mode = "440";
+      };
+      "cloudflare_api/email" = { };
+      "cloudflare_api/key" = { };
       network_keys = { };
+      # vikunja_env = { };
       "miniflux/password" = {
         restartUnits = [ "miniflux.service" ];
         group = "miniflux_secrets";

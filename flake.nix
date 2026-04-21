@@ -72,32 +72,41 @@
       ...
     }@inputs:
     let
-      systems = {
+      overlays = [
+        inputs.nix-your-shell.overlays.default
+        (import ./pkgs)
+      ];
+      hosts = {
         nuc = {
           hostname = "nuc";
-          system = "x86_64-linux";
+          hostPlatform_system = "x86_64-linux";
           users = [ "markus" ];
           unfreePackages = [
+            "android-studio"
             "lightburn"
+            "rustdesk"
             "steam"
             "tk-safe"
           ];
+          domain = "greenlad.net";
         };
         x13 = {
           hostname = "x13";
-          system = "x86_64-linux";
+          hostPlatform_system = "x86_64-linux";
           users = [ "markus" ];
           unfreePackages = [
             "lightburn"
             "steam"
             "tk-safe"
           ];
+          domain = "greenlad.net";
         };
         x230 = {
           hostname = "x230";
-          system = "x86_64-linux";
+          hostPlatform_system = "x86_64-linux";
           users = [ "markus" ];
           unfreePackages = [ "lightburn" ];
+          domain = "greenlad.net";
         };
       };
     in
@@ -105,14 +114,16 @@
       nixosConfigurations = builtins.mapAttrs (
         n: v:
         nixpkgs.lib.nixosSystem {
-          system = v.system;
+          system = v.hostPlatform_system;
           specialArgs = {
             inherit inputs;
             user = builtins.head v.users;
             hostname = v.hostname;
+            domain = v.domain;
           };
           modules = [
             {
+              nixpkgs.overlays = overlays;
               nixpkgs.config.allowUnfree = true;
               nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) v.unfreePackages;
             }
@@ -120,7 +131,7 @@
             disko.nixosModules.disko
             sops-nix.nixosModules.sops
             ./nixos/configuration.nix
-            ./nixos/sops.nix
+            # ./nixos/sops.nix
             ./disk-config.nix
             home-manager.nixosModules.home-manager
             {
@@ -133,19 +144,20 @@
                 inherit inputs;
                 user = builtins.head v.users;
                 hostname = v.hostname;
-                system = v.system;
+                system = v.hostPlatform_system;
               };
             }
           ];
         }
-      ) systems;
+      ) hosts;
 
       homeConfigurations = builtins.mapAttrs (
         n: v:
         home-manager.lib.homeManagerConfiguration {
           pkgs = (
             import nixpkgs {
-              system = v.system;
+              inherit overlays;
+              system = v.hostPlatform_system;
               config = {
                 allowUnfree = true;
                 allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) v.unfreePackages;
@@ -160,9 +172,9 @@
             inherit inputs;
             user = builtins.head v.users;
             hostname = v.hostname;
-            system = v.system;
+            system = v.hostPlatform_system;
           };
         }
-      ) systems;
+      ) hosts;
     };
 }

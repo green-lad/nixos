@@ -6,18 +6,18 @@
   pkgs,
   stylix,
   user,
+  domain,
   ...
 }:
 {
   imports = [
     ./harware-configuration.nix
-    # ${hostname}
+    ./hosts/${hostname}.nix
+    ./sops.nix
   ];
 
   # some modules only support stylix in nixos (for example chromium)
   stylix = (import ../stylix.nix) pkgs;
-
-  nixpkgs.overlays = [ inputs.nix-your-shell.overlays.default ];
 
   environment = {
     defaultPackages = [ ];
@@ -30,8 +30,9 @@
       in
       [
         age
+        android-tools
         beancount
-        fava
+        dig
         ffmpeg_with_rubberband
         home-manager
         input-remapper
@@ -39,6 +40,7 @@
         nmap
         nodejs
         pciutils
+        rustdesk
         sops
         tk-safe
         usbutils
@@ -92,7 +94,6 @@
   };
 
   programs = {
-    adb.enable = true;
     dconf.enable = true;
     steam.enable = true;
     gnupg.agent = {
@@ -100,17 +101,31 @@
       enableSSHSupport = true;
     };
     niri.enable = true;
+    chromium = {
+      enable = true;
+      # extraOpts work with /etc/chromium/policies which is why home-manager can't configure them (see: https://github.com/nix-community/home-manager/issues/3677)
+      # see: https://chromeenterprise.google/policies
+      extraOpts = {
+        BrowserSignin = 0;
+        PasswordManagerEnabled = false;
+        RestoreOnStartup = 1;
+        SavingBrowserHistoryDisabled = true;
+        DefaultBrowserSettingEnabled = false;
+        AutofillAddressEnabled = false;
+        AutofillCreditCardEnabled = false;
+        DefaultSearchProviderEnabled = true;
+        DefaultSearchProviderName = "DuckDuckGo";
+        DefaultSearchProviderSearchURL = "https://duckduckgo.com/?q={searchTerms}";
+        SearchSuggestEnabled = false;
+      };
+    };
   };
-
-  # TODO: for miniflux use separte config file and OAUTH2 (see: https://github.com/felschr/nixos-config/blob/41307308527cdf7a352e87e2ff36d91546eb29a4/services/miniflux.nix#L12)
-  users.groups.miniflux_secrets = { };
 
   systemd = {
     services = {
       mpd.environment = {
         XDG_RUNTIME_DIR = "/run/user/1000";
       };
-      miniflux.serviceConfig.SupplementaryGroups = [ "miniflux_secrets" ];
       ModemManager = {
         enable = lib.mkForce true;
         path = [ pkgs.libqmi ];
@@ -121,6 +136,7 @@
       };
     };
   };
+
   systemd.services.mouseless =
     let
       config_file = pkgs.writeText "mouseless_config.yaml" ''
@@ -135,7 +151,7 @@
             bindings:
               # when tab is held and another key pressed, activate mouse layer
               tab: tap-hold-next tab ; toggle-layer mouse ; 500
-          - name: mouse
+          - name: moaaause
             # when true, keys that are not mapped keep their original meaning
             passThrough: true
             bindings:
@@ -165,33 +181,6 @@
         RestartSec = "5s";
       };
     };
-  systemd.services.fava =
-    let
-      ledgerFile = "/var/lib/fava/ledger.bean";
-    in
-    {
-      description = "Fava";
-      after = [ "network-online.target" ];
-      wants = [ "network-online.target" ];
-      wantedBy = [ "multi-user.target" ];
-      serviceConfig = {
-        ExecStartPre = ''/bin/sh -c '[ -f "${ledgerFile}" ] || ${pkgs.coreutils}/bin/install -m770 -o fava -g fava /dev/null "${ledgerFile}"' '';
-        ExecStart = "${pkgs.fava}/bin/fava ${ledgerFile}";
-        Type = "simple";
-        User = "fava";
-        Group = "fava";
-        Restart = "on-failure";
-        RestartSec = "5s";
-        NoNewPrivileges = true;
-        PrivateHome = true;
-        PrivateTmp = true;
-        PrivateDevices = true;
-        ProtectHome = true;
-        ProtectSystem = "full";
-        ReadWriteDirectories = "/var/lib/fava";
-      };
-    };
-  users.groups.fava = { };
 
   security = {
     rtkit.enable = true;
@@ -204,17 +193,26 @@
     enable = true;
   };
 
-  # hardware.opentabletdriver.enable = true;
-  # hardware.opentabletdriver.daemon.enable = true;
+  virtualisation.docker.enable = true;
 
-  # security.acme = {
-  #   acceptTerms = true;
-  #   defaults.email = "markus.schoetz@fau.de";
-  # certs."jellyfin.nuc.link" = {
-  #   listenHTTP = true;
-  # };
-  # };
   services = {
+    nginx = {
+      enable = true;
+      virtualHosts = {
+        "${hostname}".locations = {
+          "/" = {
+            root = pkgs.writeTextDir "index.html" (builtins.readFile ../home-manager/apps/librewolf/index.html);
+            extraConfig = "try_files /index.html =404;";
+          };
+        };
+        "${hostname}.${domain}".locations = {
+          "/" = {
+            root = pkgs.writeTextDir "index.html" (builtins.readFile ../home-manager/apps/librewolf/index.html);
+            extraConfig = "try_files /index.html =404;";
+          };
+        };
+      };
+    };
     # jack = {
     #   jackd.enable = true;
     #   # support ALSA only programs via ALSA JACK PCM plugin
@@ -229,117 +227,83 @@
     #   };
     # };
 
-    taskchampion-sync-server = {
-      enable = true;
-      port = 10222;
-      openFirewall = true;
-    };
-
-    radicale = {
-      enable = true;
-      settings = {
-        server.hosts = [ "[::1]:5232" ];
-        auth = {
-          type = "http_x_remote_user";
-        };
-        storage = {
-          filesystem_folder = "/var/lib/radicale/collections";
-        };
-      };
-      rights = {
-        root = {
-          user = ".+";
-          collection = "";
-          permissions = "rw";
-        };
-        principal = {
-          user = ".+";
-          collection = "{user}";
-          permissions = "rw";
-        };
-        calendars = {
-          user = ".+";
-          collection = "{user}/[^/]+";
-          permissions = "rw";
-        };
-      };
-    };
-
     input-remapper.enable = true;
 
     mpd = {
       enable = true;
-      musicDirectory = "/home/${user}/music/songs";
       user = "${user}";
+      settings = {
+        music_directory = "/home/${user}/music/songs";
+      };
       # TODO: separate data from structure and create this via function
-      extraConfig = ''
-        filter {
-          plugin "ffmpeg"
-          name   "semitone+2"
-          graph  "rubberband=pitch=1.12246204829593419095:tempo=1.12246204829593419095"
-        }
-        filter {
-          plugin "ffmpeg"
-          name   "semitone+4"
-          graph  "rubberband=pitch=1.25992104986470410019:tempo=1.25992104986470410019"
-        }
-        filter {
-          plugin "ffmpeg"
-          name   "semitone+6"
-          graph  "rubberband=pitch=1.41421356232229960378:tempo=1.41421356232229960378"
-        }
-        filter {
-          plugin "ffmpeg"
-          name   "semitone-2"
-          graph  "rubberband=pitch=0.89089871814033931107:tempo=0.89089871814033931107"
-        }
-        filter {
-          plugin "ffmpeg"
-          name   "semitone-4"
-          graph  "rubberband=pitch=0.79370052598409974867:tempo=0.79370052598409974867"
-        }
-        filter {
-          plugin "ffmpeg"
-          name   "semitone-6"
-          graph  "rubberband=pitch=0.70710678118654753949:tempo=0.70710678118654753949"
-        }
+      # settings = ''
+      #   filter {
+      #     plugin "ffmpeg"
+      #     name   "semitone+2"
+      #     graph  "rubberband=pitch=1.12246204829593419095:tempo=1.12246204829593419095"
+      #   }
+      #   filter {
+      #     plugin "ffmpeg"
+      #     name   "semitone+4"
+      #     graph  "rubberband=pitch=1.25992104986470410019:tempo=1.25992104986470410019"
+      #   }
+      #   filter {
+      #     plugin "ffmpeg"
+      #     name   "semitone+6"
+      #     graph  "rubberband=pitch=1.41421356232229960378:tempo=1.41421356232229960378"
+      #   }
+      #   filter {
+      #     plugin "ffmpeg"
+      #     name   "semitone-2"
+      #     graph  "rubberband=pitch=0.89089871814033931107:tempo=0.89089871814033931107"
+      #   }
+      #   filter {
+      #     plugin "ffmpeg"
+      #     name   "semitone-4"
+      #     graph  "rubberband=pitch=0.79370052598409974867:tempo=0.79370052598409974867"
+      #   }
+      #   filter {
+      #     plugin "ffmpeg"
+      #     name   "semitone-6"
+      #     graph  "rubberband=pitch=0.70710678118654753949:tempo=0.70710678118654753949"
+      #   }
 
-        audio_output {
-          type "pipewire"
-          name "Pipewire Output"
-          enabled "true"
-        }
-        audio_output {
-          type    "pipewire"
-          name    "pipewire (+2 semitone)"
-          filters "semitone+2"
-        }
-        audio_output {
-          type    "pipewire"
-          name    "pipewire (+4 semitone)"
-          filters "semitone+4"
-        }
-        audio_output {
-          type    "pipewire"
-          name    "pipewire (+6 semitone)"
-          filters "semitone+6"
-        }
-        audio_output {
-          type    "pipewire"
-          name    "pipewire (-2 semitone)"
-          filters "semitone-2"
-        }
-        audio_output {
-          type    "pipewire"
-          name    "pipewire (-4 semitone)"
-          filters "semitone-4"
-        }
-        audio_output {
-          type    "pipewire"
-          name    "pipewire (-6 semitone)"
-          filters "semitone-6"
-        }
-      '';
+      #   audio_output {
+      #     type "pipewire"
+      #     name "Pipewire Output"
+      #     enabled "true"
+      #   }
+      #   audio_output {
+      #     type    "pipewire"
+      #     name    "pipewire (+2 semitone)"
+      #     filters "semitone+2"
+      #   }
+      #   audio_output {
+      #     type    "pipewire"
+      #     name    "pipewire (+4 semitone)"
+      #     filters "semitone+4"
+      #   }
+      #   audio_output {
+      #     type    "pipewire"
+      #     name    "pipewire (+6 semitone)"
+      #     filters "semitone+6"
+      #   }
+      #   audio_output {
+      #     type    "pipewire"
+      #     name    "pipewire (-2 semitone)"
+      #     filters "semitone-2"
+      #   }
+      #   audio_output {
+      #     type    "pipewire"
+      #     name    "pipewire (-4 semitone)"
+      #     filters "semitone-4"
+      #   }
+      #   audio_output {
+      #     type    "pipewire"
+      #     name    "pipewire (-6 semitone)"
+      #     filters "semitone-6"
+      #   }
+      # '';
     };
     greetd = {
       enable = true;
@@ -353,62 +317,14 @@
         };
       };
     };
-    jellyfin = {
-      enable = true;
-      openFirewall = true;
-    };
-    ollama = {
-      enable = true;
-      loadModels = [
-        "deepseek-r1:latest"
-        "codellama:latest"
-      ];
-    };
-    nginx = {
-      enable = true;
-      virtualHosts."${hostname}.papis" = {
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:8888";
-        };
-      };
-      virtualHosts."${hostname}.task" = {
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:10222";
-        };
-      };
-      virtualHosts."${hostname}".locations."/" = {
-        root = pkgs.writeTextDir "index.html" (builtins.readFile ../home-manager/apps/librewolf/index.html);
-        extraConfig = "try_files /index.html =404;";
-      };
-      virtualHosts."${hostname}.yellyfin.link" = {
-        # useACMEHost = "jellyfin.${hostname}.link";
-        # forceSSL = true;
-        # kTLS = true;
-        # enableACME = true;
-        locations."/" = {
-          proxyPass = "http://127.0.0.1:8096";
-          # proxyWebsockets = true;
-        };
-      };
-    };
-    miniflux = {
-      enable = true;
-      createDatabaseLocally = true;
-      adminCredentialsFile = pkgs.writeTextFile {
-        name = "miniflux.conf";
-        text = ''
-          ADMIN_USERNAME=${user}
-          ADMIN_PASSWORD_FILE=${config.sops.secrets."miniflux/password".path}
-        '';
-      };
-      config = {
-        BASE_URL = "https://${hostname}/";
-        PORT = 8002;
-        FETCH_YOUTUBE_WATCH_TIME = "true";
-        CERT_FILE = "${config.sops.secrets."miniflux/certificate".path}";
-        KEY_FILE = "${config.sops.secrets."miniflux/key".path}";
-      };
-    };
+    # ollama = {
+    #   enable = true;
+    #   loadModels = [
+    #     "deepseek-r1:latest"
+    #     "codellama:latest"
+    #   ];
+    # };
+
     udev.extraRules = ''
       KERNEL=="uinput", MODE="0660", GROUP="uinput", OPTIONS+="static_node=uinput"
       SUBSYSTEM=="backlight", ACTION=="add", KERNEL=="intel_backlight", \
@@ -501,12 +417,25 @@
   };
 
   nix = {
-    settings.auto-optimise-store = true;
-    settings.allowed-users = [ user ];
-    settings.experimental-features = [
-      "nix-command"
-      "flakes"
-    ];
+    settings = {
+      auto-optimise-store = true;
+      allowed-users = [ user ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
+
+      # cache settings
+      substituters = [
+        "https://binarycache.${domain}"
+        "https://nix-community.cachix.org"
+        "https://cache.nixos.org/"
+      ];
+      trusted-public-keys = [
+        "${domain}:liR8oYwic0ybpff/qRfvuHJHhqxeFlF2Vz0Oxc/oXbs="
+        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+      ];
+    };
     gc = {
       automatic = true;
       dates = "weekly";
@@ -528,6 +457,18 @@
   };
 
   networking = {
+    firewall = {
+      enable = false;
+      logRefusedPackets = true;
+      allowedTCPPorts = [
+        53
+        80
+        443
+        5230
+        5232
+        8096
+      ];
+    };
     modemmanager = {
       enable = true;
       fccUnlockScripts = [
@@ -566,7 +507,6 @@
     };
     # needed for zfs
     hostId = "8425e349";
-    wireless.iwd.enable = true;
     # nftables.ruleset = ''
     #   # Check out https://wiki.nftables.org/ for better documentation.
     #   # Table for both IPv4 and IPv6.
@@ -635,23 +575,16 @@
         extraGroups = [
           "adbusers"
           "audio"
+          "docker"
           "jackaudiio"
           "networkmanager"
           "wheel"
-          "fava"
         ];
         packages = [ ];
         openssh.authorizedKeys.keys = authorizedKeys;
       };
-      fava = {
-        home = "/var/lib/fava";
-        createHome = true;
-        isSystemUser = true;
-        group = "fava";
-        # TODO: check on different PC if this works, on initial setup I set this manually
-        homeMode = "770";
-      };
       root = {
+        shell = pkgs.nushell;
         openssh.authorizedKeys.keys = authorizedKeys;
       };
     };

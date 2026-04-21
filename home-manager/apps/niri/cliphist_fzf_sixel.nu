@@ -8,7 +8,12 @@ let preview =  r##'
   if ($p | describe) == "binary" {
     $p | chafa -f sixel -s $"($env.FZF_PREVIEW_COLUMNS)x($env.FZF_PREVIEW_LINES)"
   } else {
-    $p | nu-highlight
+    # TODO: nu-check seems to be broken, it returns true for svg content for example, this causes nu-highlight two be used when the highlight of a different language is wanted
+    if ($p | nu-check) {
+      $p | nu-highlight
+    } else {
+      $p | highlight -t Nord
+    }
   }
 '##
 
