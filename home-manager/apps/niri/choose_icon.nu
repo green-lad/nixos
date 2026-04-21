@@ -2,11 +2,14 @@
 
 def main [on_console=true] {
   mut i = null;
+  let icon_lines = get_icons_csv | from csv | to md -p | lines | skip 2 | str trim -c "|"
+  let input = $icon_lines | to text
   if $on_console {
-    # TODO: make icon more visible and alligned in one column
-    $i = get_icons_csv | from csv | each {$"($in.name)\t($in.unicode)\t($in.icon)"} | to text | fzf --accept-nth=3
+    $i = $input | fzf --accept-nth=3 --layout reverse --height 40% --nth=1 --delimiter="|"
   } else {
-    $i = get_icons_csv | from csv | each {$"($in.name)\t($in.unicode)\t($in.icon)"} | to text | fuzzel -d --accept-nth=3
+    let max_length = $icon_lines | str length | math max
+    # TODO: fuzzel's color matching (-m) seems to be broken when using --match-nth
+    $i = $input | fuzzel -d --nth-delimiter="|" -f "SauceCodePro Nerd Font Propo:size=12" -w $max_length --accept-nth=3 --match-nth=1
   }
   $i | wl-copy
   print $i
