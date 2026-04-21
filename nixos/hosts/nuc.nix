@@ -9,6 +9,10 @@
   imports = [
   ];
 
+  sops.secrets = {
+    "cloudflare_api/email" = { };
+    "cloudflare_api/key" = { };
+  };
   security.acme = {
     acceptTerms = true;
     certs = {
@@ -34,6 +38,14 @@
   };
   users.users.nginx.extraGroups = [ "acme" ];
 
+  sops.secrets = {
+    "nix-serve/private" = {
+      restartUnits = [ "nix-serve.service" ];
+    };
+    "nix-serve/public" = {
+      restartUnits = [ "nix-serve.service" ];
+    };
+  };
   services.nix-serve = {
     enable = true;
     port = 5002;
@@ -133,6 +145,13 @@
     # environmentFiles = [ config.sops.secrets.vikunja_env.path ];
   };
 
+  sops.secrets = {
+    radicale_htpasswd = {
+      restartUnits = [ "radicale.service" ];
+      group = "radicale";
+      mode = "440";
+    };
+  };
   services.radicale = {
     enable = true;
     settings = {
@@ -233,6 +252,23 @@
 
   # TODO: for miniflux use separte config file and OAUTH2 (see: https://github.com/felschr/nixos-config/blob/41307308527cdf7a352e87e2ff36d91546eb29a4/services/miniflux.nix#L12)
   users.groups.miniflux_secrets = { };
+  sops.secrets = {
+    "miniflux/password" = {
+      restartUnits = [ "miniflux.service" ];
+      group = "miniflux_secrets";
+      mode = "440";
+    };
+    "miniflux/key" = {
+      restartUnits = [ "miniflux.service" ];
+      group = "miniflux_secrets";
+      mode = "440";
+    };
+    "miniflux/certificate" = {
+      restartUnits = [ "miniflux.service" ];
+      group = "miniflux_secrets";
+      mode = "440";
+    };
+  };
   systemd.services.miniflux.serviceConfig.SupplementaryGroups = [ "miniflux_secrets" ];
   services.miniflux = {
     enable = true;
