@@ -9,7 +9,7 @@ in
       topbar = {
         backlight = {
           device = "intel_backlight";
-          format = "{icon} {percent}%<span color='#ffcc66'><b> |</b></span>";
+          format = "{icon} {percent}%<span color='#AAAAAA'> | </span>";
           format-icons = [
             " "
             "󰃞 "
@@ -24,7 +24,7 @@ in
           smooth-scrolling-threshold = 1;
         };
         battery = {
-          format = "{icon} {capacity}%<span color='#ffcc66'><b> |</b></span>";
+          format = "{icon} {capacity}%<span color='#AAAAAA'> | </span>";
           format-icons = {
             charging = [
               "󰢟"
@@ -320,6 +320,8 @@ in
             "custom/separator_minor"
             "systemd-failed-units"
             "custom/separator_minor"
+            "battery"
+            "backlight"
           ];
           orientation = "horizontal";
         };
@@ -412,8 +414,6 @@ in
           "custom/separator"
           "group/hardware"
           "custom/separator"
-          "battery"
-          "backlight"
           "group/build_nix"
           "custom/separator"
           "group/lock"
