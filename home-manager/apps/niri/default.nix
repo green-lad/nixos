@@ -191,6 +191,7 @@
         };
 
         spawn-at-startup = [
+          { command = [ "systemctl" "--user" "start" "waybar" ]; }
           { command = [ "nsticky" ]; }
           { command = [ "xwayland-satellite" ]; }
         ];
