@@ -199,9 +199,19 @@
           CARAPACE_MATCH = 1;
         };
         enable = true;
-        plugins = with pkgs.nushellPlugins; [
-          # TODO: find solution for nushellPlugins being updated less reguraly than the the nushell versions causing nix builds to fail periodically
-          # highlight
+        plugins = with pkgs; [
+          # TODO: update package
+          nu_plugin_highlight
+
+          nushellPlugins.formats
+          nushellPlugins.gstat
+          nushellPlugins.query
+          nushellPlugins.polars
+
+          # TODO: update plugin and package
+          # nushellPlugins.semver
+          # TODO: package
+          # nushellPlugins.skim
         ];
         settings = {
           plugins = {

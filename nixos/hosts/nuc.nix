@@ -38,6 +38,10 @@
   };
   users.users.nginx.extraGroups = [ "acme" ];
 
+  nix.settings = {
+    allowed-users = [ "nix-serve" ];
+    trusted-users = [ "nix-serve" ];
+  };
   sops.secrets = {
     "nix-serve/private" = {
       restartUnits = [ "nix-serve.service" ];

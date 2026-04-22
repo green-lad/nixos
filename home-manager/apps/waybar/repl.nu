@@ -7,11 +7,10 @@ def main [cmd, notify = false, mail_address = "markus.schoetz@fau.de", quit_keys
 
   while $result.exit_code > 0 and not ($c in $quit_keys) {
     let start_time = date now
-    $result = do -i { nu -c (nu -c $cmd) } | tee { print } | complete
+    $result = do -i { nu -c $cmd } | tee -e { print } | tee { print } | complete
     if $notify {
       let header = if $result.exit_code > 0 { $"Nixos ($start_time) failed" } else { $"Nixos ($start_time) succeeded" }
-      let msg = if $result.exit_code > 0 { $result.stderr } else { $result.stdout}
-      $msg | neomutt -s $header $mail_address
+      $result | neomutt -s $header $mail_address
     }
 
     if $result.exit_code > 0 {

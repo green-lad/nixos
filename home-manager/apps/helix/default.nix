@@ -343,6 +343,7 @@
             q = ":buffer-close";
             Q = ":buffer-close-others";
             t = {
+              f = ":toggle-option auto-format";
               i = ":toggle-option lsp.display-inlay-hints";
               w = ":toggle-option soft-wrap.enable";
               x = ":toggle whitespace.render all none";
