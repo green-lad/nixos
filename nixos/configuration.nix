@@ -432,7 +432,7 @@
         "https://cache.nixos.org/"
       ];
       trusted-public-keys = [
-        "${domain}:liR8oYwic0ybpff/qRfvuHJHhqxeFlF2Vz0Oxc/oXbs="
+        "binarycache.${domain}:liR8oYwic0ybpff/qRfvuHJHhqxeFlF2Vz0Oxc/oXbs="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       ];
     };
