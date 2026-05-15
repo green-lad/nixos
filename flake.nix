@@ -90,6 +90,17 @@
           ];
           domain = "greenlad.net";
         };
+        rad = {
+          hostname = "rad";
+          hostPlatform_system = "x86_64-linux";
+          users = [ "markus" ];
+          unfreePackages = [
+            "lightburn"
+            "steam"
+            "tk-safe"
+          ];
+          domain = "greenlad.net";
+        };
         x13 = {
           hostname = "x13";
           hostPlatform_system = "x86_64-linux";
