@@ -60,6 +60,28 @@ environmentFile:
         psk = "$home_wlan_psk";
       };
     };
+    sis = {
+      connection = {
+        id = "sis_wlan";
+        type = "wifi";
+      };
+      ipv4 = {
+        method = "auto";
+      };
+      ipv6 = {
+        addr-gen-mode = "default";
+        method = "auto";
+      };
+      wifi = {
+        mode = "infrastructure";
+        ssid = "$sis_wlan_ssid";
+      };
+      wifi-security = {
+        auth-alg = "open";
+        key-mgmt = "wpa-psk";
+        psk = "$sis_wlan_psk";
+      };
+    };
     eduroam = {
       connection = {
         id = "eduroam";

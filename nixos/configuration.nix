@@ -11,8 +11,9 @@
 }:
 {
   imports = [
-    ./harware-configuration.nix
-    ./hosts/${hostname}.nix
+    ./hosts/${hostname}/hardware-configuration.nix
+    ./hosts/${hostname}
+    ./hosts/${hostname}/disk-config.nix
     ./sops.nix
   ];
 
