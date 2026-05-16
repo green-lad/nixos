@@ -59,6 +59,13 @@
     };
   };
 
+  programs.obs-studio = {
+    enable = true;
+    plugins = with pkgs.obs-studio-plugins; [
+      obs-shaderfilter
+    ];
+  };
+
   home = {
     username = user;
     homeDirectory = "/home/${user}";
@@ -111,7 +118,6 @@
         nautilus
         ngspice
         obs-cmd
-        obs-studio
         openscad
         pastel
         pulseaudio

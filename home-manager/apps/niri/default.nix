@@ -83,6 +83,8 @@
             numlock = true;
           };
 
+          workspace-auto-back-and-forth = true;
+
           touchpad = {
             tap = true;
             natural-scroll = true;
@@ -99,7 +101,6 @@
               x = 0;
               y = 0;
             };
-            backdrop-color = "#111111";
           };
 
           "eDP-1" = {
@@ -108,16 +109,53 @@
               x = 0;
               y = 960;
             };
-            backdrop-color = "#111111";
-
-            # normal, 90, 180, 270, flipped, flipped-90, flipped-180 and flipped-270.
-            # transform = "normal";
+          };
+          "DP-4" = {
+            scale = 1;
+            focus-at-startup = true;
+            position = {
+              x = 0;
+              y = 1200;
+            };
+            transform = {
+              rotation = 0;
+              flipped = false;
+            };
+          };
+          "DP-6" = {
+            scale = 1;
+            position = {
+              x = 0;
+              y = 0;
+            };
+            transform = {
+              rotation = 270;
+              flipped = false;
+            };
           };
         };
 
+        layer-rules = [
+          {
+            matches = [
+              {
+                namespace = "^notifications$";
+              }
+            ];
+            block-out-from = "screen-capture";
+          }
+        ];
         window-rules = [
           {
             matches = [ { is-window-cast-target = true; } ];
+            focus-ring = {
+              active = {
+                color = "#f38ba8";
+              };
+              inactive = {
+                color = "#7d0d2d";
+              };
+            };
             border = {
               active = {
                 color = "#f38ba8";
@@ -128,7 +166,16 @@
             };
           }
           {
+            matches = [
+              {
+                title = "sops$";
+              }
+            ];
+            block-out-from = "screen-capture";
+          }
+          {
             matches = [ ];
+            clip-to-geometry = true;
             open-maximized = true;
           }
           {
@@ -139,7 +186,28 @@
             ];
             open-floating = true;
           }
+          # TODO: blender changes size after opening (maximized to edges) which is not wanted (following does not work)
+          # {
+          #   matches = [
+          #     {
+          #       app-id = "^blender$";
+          #     }
+          #   ];
+          #   open-maximized-to-edges = false;
+          # }
+          {
+            matches = [
+              {
+                title = "^Blender";
+              }
+            ];
+            open-floating = true;
+          }
         ];
+
+        overview = {
+          backdrop-color = "#111111";
+        };
 
         layout = {
           gaps = 10;
@@ -170,17 +238,30 @@
           };
 
           focus-ring = {
-            enable = false;
+            enable = true;
+            width = 1;
+            active = {
+              color = "#7fc8ff";
+            };
+            inactive = {
+              color = "#7fa0aa";
+            };
+            urgent = {
+              color = "#737300";
+            };
           };
 
           border = {
             enable = true;
-            width = 4;
+            width = 1;
             active = {
               color = "#7fc8ff";
             };
             inactive = {
               color = "#505050";
+            };
+            urgent = {
+              color = "#e3e300";
             };
           };
 
@@ -191,7 +272,14 @@
         };
 
         spawn-at-startup = [
-          { command = [ "systemctl" "--user" "start" "waybar" ]; }
+          {
+            command = [
+              "systemctl"
+              "--user"
+              "start"
+              "waybar"
+            ];
+          }
           { command = [ "nsticky" ]; }
           { command = [ "xwayland-satellite" ]; }
         ];
@@ -477,7 +565,7 @@
               action = spawn [
                 "nu"
                 "-c"
-                ''try {let _ = systemctl --user is-active waybar; systemctl --user stop waybar} catch {systemctl --user start waybar}''
+                "try {let _ = systemctl --user is-active waybar; systemctl --user stop waybar} catch {systemctl --user start waybar}"
               ];
             };
             "Mod+Z" = {
