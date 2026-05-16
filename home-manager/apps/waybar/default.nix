@@ -5,6 +5,18 @@ in
 {
   programs.waybar = {
     enable = true;
+    style = ''
+      #workspaces button.focused {
+        color: rgba(255, 204, 102, 1);
+      }
+      .modules-left #workspaces button.focused,
+      .modules-left #workspaces button.active {
+        border-bottom: none;
+      }
+      button:hover {
+        background: none;
+      }
+    '';
     settings = {
       topbar = {
         backlight = {
@@ -106,20 +118,6 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
-        "custom/apps_placeholder" = {
-          format = "<span color='#ffcc66'><b> 󰵆 </b></span>";
-          interval = "once";
-          tooltip = false;
-          on-scroll-up = "";
-          on-scroll-down = "";
-        };
-        "custom/connect_placeholder" = {
-          format = "<span color='#ffcc66'> 󰀂 </span>";
-          interval = "once";
-          tooltip = false;
-          on-scroll-up = "";
-          on-scroll-down = "";
-        };
         "custom/disk" = {
           exec = "${./read_zfs.nu}";
           format = " {}%";
@@ -165,6 +163,9 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+        "niri/workspaces" = {
+          cursor = true;
+        };
         "custom/niri_overview" = {
           format = "<span color='#ffcc66'>   󰕯 </span>";
           tooltip-format = "toggle niri overview";
@@ -172,32 +173,52 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+        "custom/opener_app_overview" = {
+          cursor = true;
+          format = "<span color='#ffcc66'><b> 󰵆 </b></span>";
+          interval = "once";
+          tooltip = false;
+          on-scroll-up = "";
+          on-scroll-down = "";
+        };
+        "custom/opener_connections" = {
+          cursor = true;
+          format = "<span color='#ffcc66'> 󰀂 </span>";
+          interval = "once";
+          tooltip = false;
+          on-scroll-up = "";
+          on-scroll-down = "";
+        };
         "custom/opener_power" = {
+          cursor = true;
           format = "<span color='#ffcc66'>    </span>";
           tooltip-format = "powermenu";
           on-scroll-up = "";
           on-scroll-down = "";
         };
         "custom/opener_lock" = {
+          cursor = true;
           format = "<span color='#ffcc66'> 󰣯 </span>";
           tooltip-format = "lockmenu";
           on-scroll-up = "";
           on-scroll-down = "";
         };
         "custom/opener_nix_build" = {
+          cursor = true;
           format = "<span color='#ffcc66'> 󱄅 </span>";
           tooltip-format = "nix_build_menu";
           on-scroll-up = "";
           on-scroll-down = "";
         };
         "custom/opener_hardware" = {
+          cursor = true;
           format = "<span color='#ffcc66'>  </span>";
           tooltip-format = "hardware_menu";
           on-scroll-up = "";
           on-scroll-down = "";
         };
         "custom/power" = {
-          format = "   ";
+          format = "  ";
           tooltip-format = "power off";
           on-click = "shutdown now";
           on-scroll-up = "";
@@ -277,7 +298,7 @@ in
             click-to-reveal = true;
           };
           modules = [
-            "custom/connect_placeholder"
+            "custom/opener_connections"
             "bluetooth"
             "custom/separator_minor"
             "network#wlan"
@@ -295,7 +316,7 @@ in
             click-to-reveal = true;
           };
           modules = [
-            "custom/apps_placeholder"
+            "custom/opener_app_overview"
             "wlr/taskbar"
             "custom/separator_minor"
           ];
@@ -486,7 +507,9 @@ in
           on-scroll-down = "";
         };
 
+        # TODO: sort by niri order and only show the once in the current workspace (if that works, ignore-list can be cleared)
         "wlr/taskbar" = {
+          cursor = true;
           format = "{icon}";
           icon-size = 14;
           icon-theme = "Numix-Circle";
