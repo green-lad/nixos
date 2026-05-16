@@ -6,6 +6,7 @@
   system,
   user,
   overlays,
+  hosts,
   ...
 }:
 {

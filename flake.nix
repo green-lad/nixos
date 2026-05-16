@@ -131,6 +131,7 @@
             user = builtins.head v.users;
             hostname = v.hostname;
             domain = v.domain;
+            hosts = hosts;
           };
           modules = [
             {
@@ -154,6 +155,7 @@
                 user = builtins.head v.users;
                 hostname = v.hostname;
                 system = v.hostPlatform_system;
+                hosts = hosts;
               };
             }
           ];
@@ -182,6 +184,7 @@
             user = builtins.head v.users;
             hostname = v.hostname;
             system = v.hostPlatform_system;
+            hosts = hosts;
           };
         }
       ) hosts;
