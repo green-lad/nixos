@@ -20,6 +20,7 @@
     ./apps/gammastep
     ./apps/git
     ./apps/helix
+    ./apps/lazygit
     ./apps/librewolf
     ./apps/neomutt
     ./apps/niri
