@@ -22,6 +22,7 @@
     ./apps/helix
     ./apps/lazygit
     ./apps/librewolf
+    ./apps/lutris
     ./apps/neomutt
     ./apps/niri
     ./apps/nushell
