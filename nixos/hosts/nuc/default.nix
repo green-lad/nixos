@@ -98,9 +98,9 @@
             "82:88:91:D5:AE:5B,${ipv4_network_part}.80,Xperia-10-V"
             "10:F6:0A:DD:25:93,${ipv4_network_part}.81,x13"
             "60:67:20:2C:39:A8,${ipv4_network_part}.82,x230"
+            "60:67:20:2C:39:A8,${ipv4_network_part}.85,rad"
             # "60:67:20:2C:39:A8,${ipv4_network_part}.83,pocketnc"
             # "60:67:20:2C:39:A8,${ipv4_network_part}.84,ruida_laser"
-            # "<TODO>,${ipv4_network_part}.90,tc"
           ];
           ipv6 = false;
           leaseTime = "3650d";

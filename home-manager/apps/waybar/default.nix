@@ -1,6 +1,7 @@
 { hostname, ... }:
 let
   local_flake = ''$"path:($env.HOME)/config#${hostname}"'';
+  tmp_file_send_mail_indicator = " /tmp/waybar_mail_nix_build.tmp";
 in
 {
   programs.waybar = {
@@ -241,19 +242,19 @@ in
         "custom/rebuild-home-manager" = {
           format = "  ";
           tooltip-format = "rebuild home-manager";
-          on-click = "wezterm -e -- ${./repl.nu} 'home-manager switch --flake ${local_flake}' $( ${./rebuild_check_send_mail.nu} false true )";
+          on-click = "wezterm -e -- ${./repl.nu} 'home-manager switch --flake ${local_flake}' ${tmp_file_send_mail_indicator}";
           on-scroll-up = "";
           on-scroll-down = "";
         };
         "custom/rebuild-nixos" = {
           format = "  ";
           tooltip-format = "rebuild nixos";
-          on-click = "wezterm -e -- ${./repl.nu} 'sudo nixos-rebuild switch --flake ${local_flake}' $( ${./rebuild_check_send_mail.nu} false true )";
+          on-click = "wezterm -e -- ${./repl.nu} 'sudo nixos-rebuild switch --flake ${local_flake}' ${tmp_file_send_mail_indicator}";
           on-scroll-up = "";
           on-scroll-down = "";
         };
         "custom/rebuild-send_mail" = {
-          exec = "${./rebuild_check_send_mail.nu} false false";
+          exec = "${./rebuild_check_send_mail.nu} ${tmp_file_send_mail_indicator} false";
           interval = "once";
           format = "{}{icon}";
           return-type = "json";
@@ -261,7 +262,7 @@ in
             enabled = "<span color='#CCCCCC'> 󰇮 </span>";
             disabled = "<span color='#CCCCCC'> 󱏣 </span>";
           };
-          on-click = "${./rebuild_check_send_mail.nu} true false";
+          on-click = "${./rebuild_check_send_mail.nu} ${tmp_file_send_mail_indicator} true";
           on-scroll-up = "";
           on-scroll-down = "";
         };

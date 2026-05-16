@@ -90,6 +90,17 @@
           ];
           domain = "greenlad.net";
         };
+        rad = {
+          hostname = "rad";
+          hostPlatform_system = "x86_64-linux";
+          users = [ "markus" ];
+          unfreePackages = [
+            "lightburn"
+            "steam"
+            "tk-safe"
+          ];
+          domain = "greenlad.net";
+        };
         x13 = {
           hostname = "x13";
           hostPlatform_system = "x86_64-linux";
@@ -120,6 +131,7 @@
             user = builtins.head v.users;
             hostname = v.hostname;
             domain = v.domain;
+            hosts = hosts;
           };
           modules = [
             {
@@ -131,8 +143,6 @@
             disko.nixosModules.disko
             sops-nix.nixosModules.sops
             ./nixos/configuration.nix
-            # ./nixos/sops.nix
-            ./disk-config.nix
             home-manager.nixosModules.home-manager
             {
               home-manager.useGlobalPkgs = true;
@@ -145,6 +155,7 @@
                 user = builtins.head v.users;
                 hostname = v.hostname;
                 system = v.hostPlatform_system;
+                hosts = hosts;
               };
             }
           ];
@@ -173,6 +184,7 @@
             user = builtins.head v.users;
             hostname = v.hostname;
             system = v.hostPlatform_system;
+            hosts = hosts;
           };
         }
       ) hosts;

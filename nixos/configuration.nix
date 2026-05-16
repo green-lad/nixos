@@ -11,8 +11,9 @@
 }:
 {
   imports = [
-    ./harware-configuration.nix
-    ./hosts/${hostname}.nix
+    ./hosts/${hostname}/hardware-configuration.nix
+    ./hosts/${hostname}
+    ./hosts/${hostname}/disk-config.nix
     ./sops.nix
   ];
 
@@ -124,7 +125,7 @@
   systemd = {
     services = {
       mpd.environment = {
-        XDG_RUNTIME_DIR = "/run/user/1000";
+        XDG_RUNTIME_DIR = "/run/user/${toString config.users.users.${user}.uid}";
       };
       ModemManager = {
         enable = lib.mkForce true;
@@ -334,8 +335,11 @@
 
     openssh = {
       enable = true;
-      #settings.PermitRootLogin = "prohibit-password";
-      settings.PermitRootLogin = "yes";
+      settings = {
+        PermitRootLogin = "prohibit-password";
+        PasswordAuthentication = false;
+        KbdInteractiveAuthentication = false;
+      };
     };
 
     libinput.enable = true;
@@ -564,6 +568,8 @@
       authorizedKeys = [
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAP46k4CU/BnDnnrXA4NZKUXm00Exc3yEyZ4J4dIFPIf markus.schoetz@fau.de" # x230
         "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINFEIGdKfvmy7cfhjnE6RAi2fw0qaUApBTRgTuLCI5Ji markus.schoetz@fau.de" # nuc
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIM3oEsrPax6TxE+eQKsJZOxu+oT0euh4D3DNjm1U1DTN markus.schoetz@fau.de" # rad
+        "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICGADKNWQOVH6UErGHSgoFhUfvMxg//UZpNVRAnjrK/Q markus.schoetz@fau.de" # x13
       ];
     in
     {

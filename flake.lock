@@ -636,10 +636,10 @@
     "sops_secrets": {
       "flake": false,
       "locked": {
-        "lastModified": 1776437108,
-        "narHash": "sha256-z2qjAf19toESqsp5B8A+FBs6xoyu4SeLRuN+g8fk0Po=",
+        "lastModified": 1778942607,
+        "narHash": "sha256-xnGvalnnZPeV6VD/zr0eesASt2E4mR8gq7xPBafilQE=",
         "ref": "refs/heads/master",
-        "rev": "12a52b4bf5855f8d7e8d59feaed384f297087123",
+        "rev": "644b1f1ea656d26cd81c3ca43d65ce0b74e192a3",
         "shallow": true,
         "type": "git",
         "url": "ssh://git@github.com/green-lad/sops_secrets"
