@@ -95,41 +95,26 @@
           };
         };
         outputs = {
-          "HDMI-A-1" = {
-            scale = 1.25;
-            position = {
-              x = 0;
-              y = 0;
-            };
-          };
-
-          "eDP-1" = {
-            scale = 1.25;
-            position = {
-              x = 0;
-              y = 960;
-            };
-          };
-          "DP-4" = {
+          "Dell Inc. DELL U2415 7MT0161P23KS" = {
             scale = 1;
             focus-at-startup = true;
             position = {
               x = 0;
-              y = 1200;
+              y = 0;
             };
             transform = {
               rotation = 0;
               flipped = false;
             };
           };
-          "DP-6" = {
+          "Dell Inc. DELL U2415 7MT0161P24NS" = {
             scale = 1;
             position = {
               x = 0;
-              y = 0;
+              y = 1200;
             };
             transform = {
-              rotation = 270;
+              rotation = 0;
               flipped = false;
             };
           };
