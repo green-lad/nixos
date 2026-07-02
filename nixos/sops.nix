@@ -18,7 +18,6 @@ in
 
     secrets = {
       network_keys = { };
-      # vikunja_env = { };
       "keys/${hostname}/public" = { };
     };
   };

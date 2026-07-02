@@ -29,7 +29,7 @@
     ./apps/niri
     ./apps/nushell
     # ./apps/papis
-    ./apps/pipewire_noise_cancelling
+    # ./apps/pipewire_noise_cancelling
     # ./apps/radicale
     ./apps/ripgrep
     ./apps/rmpc

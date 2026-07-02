@@ -141,14 +141,6 @@
     settings.MEMOS_PORT = 5230;
   };
 
-  services.vikunja = {
-    enable = true;
-    port = 3456;
-    frontendScheme = "http";
-    frontendHostname = "127.0.0.1";
-    # environmentFiles = [ config.sops.secrets.vikunja_env.path ];
-  };
-
   sops.secrets = {
     radicale_htpasswd = {
       restartUnits = [ "radicale.service" ];
@@ -239,11 +231,6 @@
       "pihole.${domain}".locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:443";
-        };
-      };
-      "vikunja.${domain}".locations = {
-        "/" = {
-          proxyPass = "http://127.0.0.1:3456";
         };
       };
       "memos.${domain}".locations = {
