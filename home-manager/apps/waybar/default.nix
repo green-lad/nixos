@@ -1,7 +1,9 @@
 { hostname, ... }:
 let
-  local_flake = ''$"path:($env.HOME)/config#${hostname}"'';
-  tmp_file_send_mail_indicator = " /tmp/waybar_mail_nix_build.tmp";
+  local_flake = ''$"path:($env.HOME)/config"'';
+  local_flake_with_host = ''${local_flake}#${hostname}"'';
+  tmp_file_send_mail_indicator = "/tmp/waybar_mail_nix_build.tmp";
+  tmp_file_override_cache_setting_indicator = "/tmp/waybar_override_cache_setting_nix_build.tmp";
 in
 {
   programs.waybar = {
@@ -36,6 +38,7 @@ in
           reverse-scrolling = true;
           smooth-scrolling-threshold = 1;
         };
+
         battery = {
           format = "{icon} {capacity}%<span color='#AAAAAA'> | </span>";
           format-icons = {
@@ -73,6 +76,7 @@ in
             ];
           };
         };
+
         bluetooth = {
           format = "<span>  </span>";
           format-off = "<span color='#CCCCCC'> 󰂳 </span>";
@@ -89,6 +93,7 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+
         clock = {
           actions = {
             on-click-right = "mode";
@@ -113,12 +118,14 @@ in
           interval = 1;
           tooltip-format = "<tt><small>{calendar}</small></tt>";
         };
+
         cpu = {
           format = "  {usage}%";
           on-click = "wezterm -e htop";
           on-scroll-up = "";
           on-scroll-down = "";
         };
+
         "custom/disk" = {
           exec = "${./read_zfs.nu}";
           format = " {}%";
@@ -127,6 +134,7 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+
         "custom/gammastep" = {
           exec = ''gammastep -p 2>&1 >/dev/null | grep -o -e '[0-9]\+K' '';
           format = "󱄄 {}";
@@ -134,6 +142,7 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+
         "custom/lock_with_suspend" = {
           format = " 󰍁 ";
           tooltip-format = "lock";
@@ -141,6 +150,7 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+
         "custom/lock_without_suspend" = {
           format = " 󰣮 ";
           tooltip-format = "lock";
@@ -148,6 +158,7 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+
         "custom/mail" = {
           exec = "${./get_mail_count.nu}";
           format = "{icon} {text}";
@@ -164,9 +175,11 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+
         "niri/workspaces" = {
           cursor = true;
         };
+
         "custom/niri_overview" = {
           format = "<span color='#ffcc66'>   󰕯 </span>";
           tooltip-format = "toggle niri overview";
@@ -174,6 +187,76 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+
+        "custom/nix_collect_garbage" = {
+          format = "  ";
+          tooltip-format = "nix collect garbage";
+          on-click = "wezterm -e -- ${./nix_cmd_repl.nu} 'nix-collect-garbage' ${tmp_file_send_mail_indicator} ${tmp_file_override_cache_setting_indicator}";
+          on-scroll-up = "";
+          on-scroll-down = "";
+        };
+
+        "custom/nix_home-manager_rebuild" = {
+          format = "  ";
+          tooltip-format = "rebuild home-manager";
+          on-click = "wezterm -e -- ${./nix_cmd_repl.nu} 'home-manager switch --flake ${local_flake_with_host}' ${tmp_file_send_mail_indicator} ${tmp_file_override_cache_setting_indicator}";
+          on-scroll-up = "";
+          on-scroll-down = "";
+        };
+
+        "custom/nix_nixos_rebuild" = {
+          format = "  ";
+          tooltip-format = "rebuild nixos";
+          on-click = "wezterm -e -- ${./nix_cmd_repl.nu} 'sudo nixos-rebuild switch --flake ${local_flake_with_host}' ${tmp_file_send_mail_indicator} ${tmp_file_override_cache_setting_indicator}";
+          on-scroll-up = "";
+          on-scroll-down = "";
+        };
+
+        "custom/nix_override_cache_setting" = {
+          exec = "${./file_indicator_toggle.nu} ${tmp_file_override_cache_setting_indicator} 'Override cache setting' false";
+          interval = "once";
+          format = "{}{icon}";
+          return-type = "json";
+          format-icons = {
+            enabled = "<span color='#CCCCCC'> 󰒋 </span>";
+            disabled = "<span color='#CCCCCC'> 󰒏 </span>";
+          };
+          on-click = "${./file_indicator_toggle.nu} ${tmp_file_override_cache_setting_indicator} 'Override cache setting' true";
+          on-scroll-up = "";
+          on-scroll-down = "";
+        };
+
+        "custom/nix_send_mail" = {
+          exec = "${./file_indicator_toggle.nu} ${tmp_file_send_mail_indicator} 'Send mail' false";
+          interval = "once";
+          format = "{}{icon}";
+          return-type = "json";
+          format-icons = {
+            enabled = "<span color='#CCCCCC'> 󰇮 </span>";
+            disabled = "<span color='#CCCCCC'> 󱏣 </span>";
+          };
+          on-click = "${./file_indicator_toggle.nu} ${tmp_file_send_mail_indicator} 'Send mail' true";
+          on-scroll-up = "";
+          on-scroll-down = "";
+        };
+
+        "custom/nix_update_flakes" = {
+          format = "  ";
+          tooltip-format = "update nix flakes used by the system";
+          on-click = "wezterm -e -- ${./nix_cmd_repl.nu} 'nix flake update --flake ${local_flake}' ${tmp_file_send_mail_indicator} ${tmp_file_override_cache_setting_indicator}";
+          on-scroll-up = "";
+          on-scroll-down = "";
+        };
+
+        "custom/opener_audio" = {
+          cursor = true;
+          format = "<span color='#ffcc66'>  </span>";
+          interval = "once";
+          tooltip = false;
+          on-scroll-up = "";
+          on-scroll-down = "";
+        };
+
         "custom/opener_app_overview" = {
           cursor = true;
           format = "<span color='#ffcc66'><b> 󰵆 </b></span>";
@@ -182,6 +265,7 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+
         "custom/opener_connections" = {
           cursor = true;
           format = "<span color='#ffcc66'> 󰀂 </span>";
@@ -190,6 +274,7 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+
         "custom/opener_power" = {
           cursor = true;
           format = "<span color='#ffcc66'>    </span>";
@@ -197,6 +282,7 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+
         "custom/opener_lock" = {
           cursor = true;
           format = "<span color='#ffcc66'> 󰣯 </span>";
@@ -204,13 +290,23 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
-        "custom/opener_nix_build" = {
+
+        "custom/opener_nix" = {
           cursor = true;
           format = "<span color='#ffcc66'> 󱄅 </span>";
-          tooltip-format = "nix_build_menu";
+          tooltip-format = "nix_commands";
           on-scroll-up = "";
           on-scroll-down = "";
         };
+
+        "custom/opener_nix_options" = {
+          cursor = true;
+          format = "<span color='#ffcc66'>  </span>";
+          tooltip-format = "nix_options";
+          on-scroll-up = "";
+          on-scroll-down = "";
+        };
+
         "custom/opener_hardware" = {
           cursor = true;
           format = "<span color='#ffcc66'>  </span>";
@@ -218,6 +314,7 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+
         "custom/power" = {
           format = "  ";
           tooltip-format = "power off";
@@ -225,6 +322,7 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+
         "custom/quit" = {
           format = " 󰗼 ";
           tooltip-format = "quit niri";
@@ -232,6 +330,7 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+
         "custom/reboot" = {
           format = " 󰜉 ";
           tooltip-format = "reboot";
@@ -239,33 +338,7 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
-        "custom/rebuild-home-manager" = {
-          format = "  ";
-          tooltip-format = "rebuild home-manager";
-          on-click = "wezterm -e -- ${./repl.nu} 'home-manager switch --flake ${local_flake}' ${tmp_file_send_mail_indicator}";
-          on-scroll-up = "";
-          on-scroll-down = "";
-        };
-        "custom/rebuild-nixos" = {
-          format = "  ";
-          tooltip-format = "rebuild nixos";
-          on-click = "wezterm -e -- ${./repl.nu} 'sudo nixos-rebuild switch --flake ${local_flake}' ${tmp_file_send_mail_indicator}";
-          on-scroll-up = "";
-          on-scroll-down = "";
-        };
-        "custom/rebuild-send_mail" = {
-          exec = "${./rebuild_check_send_mail.nu} ${tmp_file_send_mail_indicator} false";
-          interval = "once";
-          format = "{}{icon}";
-          return-type = "json";
-          format-icons = {
-            enabled = "<span color='#CCCCCC'> 󰇮 </span>";
-            disabled = "<span color='#CCCCCC'> 󱏣 </span>";
-          };
-          on-click = "${./rebuild_check_send_mail.nu} ${tmp_file_send_mail_indicator} true";
-          on-scroll-up = "";
-          on-scroll-down = "";
-        };
+
         "custom/separator" = {
           format = "<span color='#ffcc66'><b> | </b></span>";
           interval = "once";
@@ -273,6 +346,7 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+
         "custom/separator_minor" = {
           format = "<span color='#AAAAAA'> | </span>";
           interval = "once";
@@ -280,6 +354,7 @@ in
           on-scroll-up = "";
           on-scroll-down = "";
         };
+
         "custom/rfkill_wwan" = {
           exec = "${./rfkill.nu} wwan";
           format = "{}{icon}";
@@ -291,6 +366,21 @@ in
           on-click = "rfkill toggle wwan";
           on-scroll-up = "";
           on-scroll-down = "";
+        };
+
+        "group/audio" = {
+          drawer = {
+            transition-left-to-right = false;
+            click-to-reveal = true;
+          };
+          modules = [
+            "custom/opener_audio"
+            "wireplumber#source"
+            "custom/separator_minor"
+            "wireplumber#sink"
+            "custom/separator_minor"
+          ];
+          orientation = "horizontal";
         };
 
         "group/connections" = {
@@ -311,6 +401,7 @@ in
           ];
           orientation = "horizontal";
         };
+
         "group/apps" = {
           drawer = {
             transition-left-to-right = false;
@@ -323,6 +414,7 @@ in
           ];
           orientation = "horizontal";
         };
+
         "group/hardware" = {
           drawer = {
             transition-left-to-right = false;
@@ -347,6 +439,7 @@ in
           ];
           orientation = "horizontal";
         };
+
         "group/power" = {
           drawer = {
             transition-left-to-right = false;
@@ -363,22 +456,43 @@ in
           ];
           orientation = "horizontal";
         };
-        "group/build_nix" = {
+
+        "group/nix_options" = {
           drawer = {
             transition-left-to-right = false;
             click-to-reveal = true;
           };
           modules = [
-            "custom/opener_nix_build"
-            "custom/rebuild-home-manager"
+            "custom/opener_nix_options"
+            "custom/nix_send_mail"
             "custom/separator_minor"
-            "custom/rebuild-nixos"
-            "custom/separator_minor"
-            "custom/rebuild-send_mail"
+            "custom/nix_override_cache_setting"
             "custom/separator_minor"
           ];
           orientation = "horizontal";
         };
+
+        "group/nix" = {
+          drawer = {
+            transition-left-to-right = false;
+            click-to-reveal = true;
+          };
+          modules = [
+            "custom/opener_nix"
+            "custom/nix_home-manager_rebuild"
+            "custom/separator_minor"
+            "custom/nix_update_flakes"
+            "custom/separator_minor"
+            "custom/nix_collect_garbage"
+            "custom/separator_minor"
+            "custom/nix_nixos_rebuild"
+            "custom/separator_minor"
+            "group/nix_options"
+            "custom/separator_minor"
+          ];
+          orientation = "horizontal";
+        };
+
         "group/lock" = {
           drawer = {
             transition-left-to-right = false;
@@ -395,6 +509,7 @@ in
           ];
           orientation = "horizontal";
         };
+
         height = 40;
         "idle_inhibitor" = {
           format = " {icon}";
@@ -428,15 +543,18 @@ in
           "niri/window"
         ];
         modules-right = [
+          "tray"
+          "custom/separator"
           "custom/mail"
           "custom/separator"
-          "pulseaudio"
+          # "pulseaudio"
+          "group/audio"
           "custom/separator"
           "group/connections"
           "custom/separator"
           "group/hardware"
           "custom/separator"
-          "group/build_nix"
+          "group/nix"
           "custom/separator"
           "group/lock"
           "custom/separator"
@@ -469,9 +587,39 @@ in
           on-scroll-down = "";
         };
 
-        pulseaudio = {
+        # pulseaudio = {
+        #   format = "{icon}  {volume}%";
+        #   format-bluetooth = "{volume}% {icon}";
+        #   format-muted = "     ";
+        #   format-icons = {
+        #     "alsa_output.pci-0000_00_1f.3.analog-stereo" = "";
+        #     "alsa_output.pci-0000_00_1f.3.analog-stereo-muted" = "";
+        #     headphone = "";
+        #     hands-free = "";
+        #     headset = "󰋎";
+        #     phone = "";
+        #     phone-muted = "";
+        #     portable = "";
+        #     car = "";
+        #     default = [
+        #       ""
+        #       ""
+        #     ];
+        #   };
+        #   reverse-scrolling = true;
+        #   scroll-step = 0.5;
+        #   on-click = "wezterm -e rmpc";
+        #   on-click-right = "wezterm -e pulsemixer";
+        #   on-click-middle = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
+        #   ignored-sinks = [
+        #     "Easy Effects Sink"
+        #   ];
+        # };
+
+        "wireplumber#sink" = {
+          node-type = "Audio/Sink";
           format = "{icon}  {volume}%";
-          format-bluetooth = "{volume}% {icon}";
+          # format-bluetooth = "{volume}% {icon}";
           format-muted = "     ";
           format-icons = {
             "alsa_output.pci-0000_00_1f.3.analog-stereo" = "";
@@ -491,11 +639,26 @@ in
           reverse-scrolling = true;
           scroll-step = 0.5;
           on-click = "wezterm -e rmpc";
-          on-click-right = "wezterm -e pulsemixer";
+          on-click-right = "pwvucontrol";
           on-click-middle = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
-          ignored-sinks = [
-            "Easy Effects Sink"
-          ];
+        };
+
+        "wireplumber#source" = {
+          node-type = "Audio/Source";
+          format = "{icon}  {volume}%";
+          # format-bluetooth = "{volume}% {icon}";
+          format-muted = "  󰍭  ";
+          format-icons = {
+            default = [
+              "󰢳"
+              "󰢴"
+            ];
+          };
+          reverse-scrolling = true;
+          scroll-step = 0.5;
+          on-click = "wezterm -e rmpc";
+          on-click-right = "pwvucontrol";
+          on-click-middle = "wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle";
         };
 
         systemd-failed-units = {

@@ -10,15 +10,12 @@
     enable = true;
     enableDefaultConfig = false;
 
-    matchBlocks =
-      let
-        hostBlocks = builtins.mapAttrs (n: v: {
-          host = n;
-          user = user;
-          identityFile = [ config.sops.secrets."keys/${hostname}/private".path ];
-        }) hosts;
-      in
-      hostBlocks
+    settings =
+      builtins.mapAttrs (n: v: {
+        host = n;
+        user = user;
+        identityFile = [ config.sops.secrets."keys/${hostname}/private".path ];
+      }) hosts
       // {
         "github" = {
           host = "github";

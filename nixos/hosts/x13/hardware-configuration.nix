@@ -4,8 +4,10 @@
   boot.initrd.availableKernelModules =
     [ "xhci_pci" "ehci_pci" "ahci" "usb_storage" "sd_mod" "sdhci_pci" ];
   boot.initrd.kernelModules = [ ];
+  boot.initrd.supportedFilesystems = [ "zfs" ];
   boot.kernelModules = [ "kvm-intel" ];
   boot.extraModulePackages = [ ];
+  boot.zfs.forceImportRoot = false;
 
   # src: 
   #boot.initrd.postDeviceCommands = lib.mkAfter ''

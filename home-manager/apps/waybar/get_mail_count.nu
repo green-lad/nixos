@@ -55,8 +55,8 @@ def main [maildir = "~/Maildir", channel = "INBOX", --only_get_state, --get_tool
       mbsync -a -q
     }
     print (get_state $maildir $channel)
-    job spawn { watch -r true $maildir $send_job }
-    job spawn { watch /var/network.json $send_job }
+    job spawn { watch -r true $maildir | each $send_job }
+    job spawn { watch /var/network.json | each $send_job }
     loop {
       print (job recv)
     }

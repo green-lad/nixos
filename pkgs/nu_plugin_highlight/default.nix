@@ -9,17 +9,17 @@
 
 rustPlatform.buildRustPackage (finalAttrs: {
   pname = "nu_plugin_highlight";
-  version = "1.4.14+0.112.2";
+  version = "v1.4.15+0.113.1";
 
   src = fetchFromGitHub {
     owner = "cptpiepmatz";
     repo = "nu-plugin-highlight";
-    tag = "v${finalAttrs.version}";
-    hash = "sha256-zNvHSUpIMpRWw+1DMG4BukfdpZ3jQ6hQ2WisXFmnHGM=";
+    tag = "${finalAttrs.version}";
+    hash = "sha256-zJYbtGpQU0CrAu7sEQWv06hJj/PCD/iYCLOLrNmsL5U=";
     fetchSubmodules = true;
   };
 
-  cargoHash = "sha256-ZOu774x8EhW/QbP6dCIgz0BGjkv42rK0E8+oe/I7uhU=";
+  cargoHash = "sha256-oJtmmKRylOZQjBBifvWBx7ikwK2inGg8rGb/rPZ/t/s=";
 
   nativeBuildInputs = [ pkg-config ] ++ lib.optionals stdenv.cc.isClang [ rustPlatform.bindgenHook ];
 

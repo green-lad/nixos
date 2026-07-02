@@ -156,7 +156,10 @@
         }
         {
           name = "nix";
-          formatter.command = "${pkgs.nixfmt}/bin/nixfmt";
+          formatter = {
+            command = "${pkgs.nixfmt}/bin/nixfmt";
+            args = [ "-" ];
+          };
           language-servers = [
             "scls"
             "uwu-colors"

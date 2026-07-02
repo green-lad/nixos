@@ -18,7 +18,11 @@
   ];
 
   # some modules only support stylix in nixos (for example chromium)
-  stylix = (import ../stylix.nix) pkgs;
+  stylix = (import ../stylix.nix) pkgs // {
+    targets = {
+      qt.enable = true;
+    };
+  };
 
   environment = {
     defaultPackages = [ ];
@@ -95,6 +99,14 @@
   };
 
   programs = {
+    obs-studio = {
+      enable = true;
+      enableVirtualCamera = true;
+      plugins = with pkgs.obs-studio-plugins; [
+        obs-shaderfilter
+        obs-pipewire-audio-capture
+      ];
+    };
     dconf.enable = true;
     steam.enable = true;
     gnupg.agent = {
@@ -353,58 +365,59 @@
       pulse.enable = true;
       alsa.enable = true;
       jack.enable = true;
+      wireplumber.enable = true;
 
       # source: https://github.com/TLATER/dotfiles
       # Disable the HFP bluetooth profile, because I always use external
       # microphones anyway. It sucks and sometimes devices end up caught
       # in it even if I have another microphone.
-      wireplumber.extraConfig = {
-        "50-bluez" = {
-          "monitor.bluez.rules" = [
-            {
-              matches = [ { "device.name" = "~bluez_card.*"; } ];
-              actions = {
-                update-props = {
-                  "bluez5.auto-connect" = [
-                    "a2dp_sink"
-                    "a2dp_source"
-                  ];
-                  "bluez5.hw-volume" = [
-                    "a2dp_sink"
-                    "a2dp_source"
-                  ];
-                };
-              };
-            }
-          ];
-          "monitor.bluez.properties" = {
-            "bluez5.roles" = [
-              "a2dp_sink"
-              "a2dp_source"
-              "bap_sink"
-              "bap_source"
-            ];
+      # wireplumber.extraConfig = {
+      #   "50-bluez" = {
+      #     "monitor.bluez.rules" = [
+      #       {
+      #         matches = [ { "device.name" = "~bluez_card.*"; } ];
+      #         actions = {
+      #           update-props = {
+      #             "bluez5.auto-connect" = [
+      #               "a2dp_sink"
+      #               "a2dp_source"
+      #             ];
+      #             "bluez5.hw-volume" = [
+      #               "a2dp_sink"
+      #               "a2dp_source"
+      #             ];
+      #           };
+      #         };
+      #       }
+      #     ];
+      #     "monitor.bluez.properties" = {
+      #       "bluez5.roles" = [
+      #         "a2dp_sink"
+      #         "a2dp_source"
+      #         "bap_sink"
+      #         "bap_source"
+      #       ];
 
-            "bluez5.codecs" = [
-              "ldac"
-              "aptx"
-              "aptx_ll_duplex"
-              "aptx_ll"
-              "aptx_hd"
-              "opus_05_pro"
-              "opus_05_71"
-              "opus_05_51"
-              "opus_05"
-              "opus_05_duplex"
-              "aac"
-              "sbc_xq"
-              "sbc"
-            ];
+      #       "bluez5.codecs" = [
+      #         "ldac"
+      #         "aptx"
+      #         "aptx_ll_duplex"
+      #         "aptx_ll"
+      #         "aptx_hd"
+      #         "opus_05_pro"
+      #         "opus_05_71"
+      #         "opus_05_51"
+      #         "opus_05"
+      #         "opus_05_duplex"
+      #         "aac"
+      #         "sbc_xq"
+      #         "sbc"
+      #       ];
 
-            "bluez5.hfphsp-backend" = "none";
-          };
-        };
-      };
+      #       "bluez5.hfphsp-backend" = "none";
+      #     };
+      #   };
+      # };
     };
   };
 
@@ -429,15 +442,18 @@
         "flakes"
       ];
 
-      # cache settings
+      # cache settings, changes only applies after build (to override [/add to it?] use: --option substituters "<binarycache>")
       substituters = [
-        "https://binarycache.${domain}"
-        "https://nix-community.cachix.org"
-        "https://cache.nixos.org/"
+        # default cache
+        "https://cache.nixos.org/?priority=1"
+        # community cache
+        "https://nix-community.cachix.org?priority=2"
+        # own cache
+        "https://binarycache.${domain}?priority=3"
       ];
       trusted-public-keys = [
-        "binarycache.${domain}:liR8oYwic0ybpff/qRfvuHJHhqxeFlF2Vz0Oxc/oXbs="
         "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+        "binarycache.${domain}:liR8oYwic0ybpff/qRfvuHJHhqxeFlF2Vz0Oxc/oXbs="
       ];
     };
     gc = {
@@ -584,6 +600,8 @@
           "docker"
           "jackaudiio"
           "networkmanager"
+          "tty"
+          "video"
           "wheel"
         ];
         packages = [ ];

@@ -1,15 +1,19 @@
 { config, lib, modulesPath, ... }: {
   imports = [ (modulesPath + "/installer/scan/not-detected.nix") ];
 
-  boot.initrd.availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" ];
-  boot.initrd.kernelModules = [ ];
-  boot.kernelModules = [ "kvm-amd" ];
-  boot.extraModulePackages = [ ];
+  boot = {
+    initrd = {
+      availableKernelModules = [ "nvme" "xhci_pci" "ahci" "usb_storage" "usbhid" "sd_mod" ];
+      kernelModules = [ ];
+      supportedFilesystems = [ "zfs" ];
+    # src: https://grahamc.com/blog/erase-your-darlings/
+      # postDeviceCommands = lib.mkAfter ''zfs rollback -r zroot/root@blank '';
+    };
+    kernelModules = [ "kvm-amd" ];
+    extraModulePackages = [ ];
+    zfs.forceImportRoot = false;
+  };
 
-  # src: 
-  #boot.initrd.postDeviceCommands = lib.mkAfter ''
-  #  zfs rollback -r zroot/root@blank
-  #'';
 
   fileSystems."/" = {
     device = "zroot/root";
@@ -34,6 +38,7 @@
     device = "zroot/persist";
     fsType = "zfs";
     options = [ "zfsutil" ];
+    neededForBoot = true;
   };
 
   fileSystems."/home" = {

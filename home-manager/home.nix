@@ -14,8 +14,10 @@
     inputs.sops-nix.homeManagerModules.sops
     ./hosts/${hostname}.nix
     ./apps/blender
+    ./apps/calibre
     ./apps/chromium
-    ./apps/discord
+    # TODO: (30.6.26) find out how and why vesktop still uses pnpm 10.29.2 although nixpkgs vesktkop uses a different version since 29.6.26 (probably fixed in a week, but I want to understand how this works)
+    # ./apps/discord
     ./apps/fzf
     ./apps/gammastep
     ./apps/git
@@ -59,12 +61,12 @@
     };
   };
 
-  programs.obs-studio = {
-    enable = true;
-    plugins = with pkgs.obs-studio-plugins; [
-      obs-shaderfilter
-    ];
-  };
+  # programs.obs-studio = {
+  #   enable = true;
+  #   plugins = with pkgs.obs-studio-plugins; [
+  #     obs-shaderfilter
+  #   ];
+  # };
 
   home = {
     username = user;
@@ -110,18 +112,17 @@
         killall
         lazygit
         libreoffice
-        libsForQt5.qt5.qtwayland
+        qt5.qtwayland
         lightburn
         localsend
         mplayer
         mpv
         nautilus
         ngspice
+        nixfmt
         obs-cmd
         openscad
         pastel
-        pulseaudio
-        pulsemixer
         qt6.qtwayland
         scooter
         songrec
@@ -156,7 +157,8 @@
 
   fonts.fontconfig.enable = true;
 
-  wayland.windowManager.sway.enable = true;
+  # TODO: why is this an evaluation warning when the following is missing, when I don't even use it?
+  wayland.windowManager.hyprland.configType = "lua"
 
   # src: https://github.com/gepbird/dotfiles/blob/82902d8e5681c42411ed6125f8e9a9322ac3c6c1/modules/gtk-qt.nix#L10 (there the colortheme also gets set, but lets use the default)
   gtk =
@@ -176,7 +178,6 @@
       gtk3.extraConfig = extraConfig;
       gtk4 = {
         extraConfig = extraConfig;
-        theme = null;
       };
     };
 

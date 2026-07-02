@@ -73,6 +73,10 @@
         #   };
         # };
         input = {
+          mouse = {
+            accel-speed = 0.1;
+          };
+
           keyboard = {
             repeat-delay = 200;
             repeat-rate = 100;
@@ -162,6 +166,7 @@
             matches = [ ];
             clip-to-geometry = true;
             open-maximized = true;
+            open-floating = false;
           }
           {
             matches = [
@@ -265,7 +270,6 @@
               "waybar"
             ];
           }
-          { command = [ "nsticky" ]; }
           { command = [ "xwayland-satellite" ]; }
         ];
 
@@ -497,7 +501,7 @@
               spawn [
                 "wezterm"
                 "start"
-                "${../waybar/repl.nu}"
+                "${../waybar/nix_cmd_repl.nu}"
                 "home-manager switch --flake ${local_flake}"
               ];
 
@@ -508,7 +512,7 @@
               spawn [
                 "wezterm"
                 "start"
-                "${../waybar/repl.nu}"
+                "${../waybar/nix_cmd_repl.nu}"
                 "sudo nixos-rebuild switch --flake ${local_flake}"
               ];
 
@@ -532,13 +536,6 @@
                 "mode_tile.label_color=#cccc"
                 "-o"
                 "mode_tile.label_symbols=abcdefghijklmnopqrstuvwxyz123"
-              ];
-            };
-
-            "Mod+E" = {
-              action = spawn [
-                "nsticky"
-                "toggle-active"
               ];
             };
 
@@ -741,7 +738,8 @@
 
   config.home.packages = with pkgs; [
     chafa
-    inputs.nsticky.packages.${system}.nsticky
+    libnotify
+    pwvucontrol
     wdisplays
     wev
     wl-kbptr
@@ -788,5 +786,8 @@
       enable = true;
       allowImages = true;
     };
+  };
+  config.systemd.user.services.cliphist.Service = {
+    ExecStop = "${config.services.cliphist.package}/bin/cliphist wipe";
   };
 }

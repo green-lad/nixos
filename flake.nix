@@ -4,6 +4,11 @@
   inputs = {
     nixpkgs.url = "github:nixos/nixpkgs?ref=nixos-unstable";
 
+    sops_secrets = {
+      url = "git+ssh://git@github.com/green-lad/sops_secrets?shallow=1";
+      flake = false;
+    };
+
     home-manager = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -13,10 +18,6 @@
       url = "gitlab:rycee/nur-expressions?dir=pkgs/firefox-addons";
       inputs.nixpkgs.follows = "nixpkgs";
     };
-
-    # linuxcnc-nix = {
-    #   url = "github:mattywillo/linuxcnc-nix";
-    # };
 
     disko = {
       url = "github:nix-community/disko";
@@ -28,37 +29,46 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    sops_secrets = {
-      url = "git+ssh://git@github.com/green-lad/sops_secrets?shallow=1";
-      flake = false;
-    };
-
     nix-your-shell = {
       url = "github:MercuryTechnologies/nix-your-shell";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    helix.url = "github:helix-editor/helix/master";
-    # wezterm.url = "github:wez/wezterm?dir=nix";
-    # niri.url = "github:yalter/niri";
+    helix = {
+      url = "github:helix-editor/helix/master";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     stylix = {
       url = "github:nix-community/stylix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    niri-flake.url = "github:sodiboo/niri-flake";
+    niri-flake = {
+      url = "github:sodiboo/niri-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    uwu-colors.url = "github:q60/uwu_colors";
+    uwu-colors = {
+      url = "github:q60/uwu_colors";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
 
     additional-fonts = {
       url = "github:green-lad/fonts";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nsticky.url = "github:lonerOrz/nsticky";
+    wrapper-manager = {
+      url = "github:viperML/wrapper-manager";
+      # warning for the following uncommented: "warning: input 'wrapper-manager' has an override for a non-existent input 'nixpkgs'"
+      # inputs.nixpkgs.follows = "nixpkgs";
+    };
 
-    wrapper-manager.url = "github:viperML/wrapper-manager";
+    impermanence = {
+      url = "github:nix-community/impermanence";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -68,6 +78,7 @@
       disko,
       sops-nix,
       stylix,
+      impermanence,
       additional-fonts,
       ...
     }@inputs:
@@ -139,6 +150,7 @@
               nixpkgs.config.allowUnfree = true;
               nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) v.unfreePackages;
             }
+            impermanence.nixosModules.impermanence
             stylix.nixosModules.stylix
             disko.nixosModules.disko
             sops-nix.nixosModules.sops
