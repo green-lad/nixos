@@ -158,9 +158,9 @@
   fonts.fontconfig.enable = true;
 
   # TODO: why is this an evaluation warning when the following is missing, when I don't even use it?
-  wayland.windowManager.hyprland.configType = "lua"
+  wayland.windowManager.hyprland.configType = "lua";
 
-  # src: https://github.com/gepbird/dotfiles/blob/82902d8e5681c42411ed6125f8e9a9322ac3c6c1/modules/gtk-qt.nix#L10 (there the colortheme also gets set, but lets use the default)
+  # NOTE: src: https://github.com/gepbird/dotfiles/blob/82902d8e5681c42411ed6125f8e9a9322ac3c6c1/modules/gtk-qt.nix#L10 (there the colortheme also gets set, but lets use the default)
   gtk =
     let
       extraConfig = {
