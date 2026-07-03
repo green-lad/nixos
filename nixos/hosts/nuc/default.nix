@@ -19,6 +19,7 @@
       "${domain}" = {
         domain = domain;
         extraDomainNames = [
+          "calibre.${domain}"
           "miniflux.${domain}"
           "binarycache.${domain}"
           "radicale.${domain}"
@@ -58,6 +59,14 @@
     extraParams = "--priority 99";
   };
 
+  services.calibre-server = {
+    enable = true;
+    port = 5012;
+    libraries = [
+      "/var/lib/calibre-server/default"
+    ];
+  };
+
   services.pihole-ftl =
     let
       ipv4_network_part = "192.168.50";
@@ -82,6 +91,7 @@
             "${ipv4_network_part}.79 nuc"
             "${ipv4_network_part}.79 task"
             "${ipv4_network_part}.79 miniflux"
+            "${ipv4_network_part}.79 calibre"
             "${ipv4_network_part}.79 radicale"
             "${ipv4_network_part}.79 fava"
             "${ipv4_network_part}.79 teddycloud"
@@ -204,6 +214,15 @@
       "fava.${domain}".locations = {
         "/" = {
           proxyPass = "http://127.0.0.1:5000";
+        };
+      };
+      "calibre.${domain}" = {
+        forceSSL = true;
+        useACMEHost = domain;
+        locations = {
+          "/" = {
+            proxyPass = "http://127.0.0.1:5012";
+          };
         };
       };
       "miniflux.${domain}" = {
