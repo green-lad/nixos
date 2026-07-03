@@ -1,7 +1,7 @@
-{ hostname, ... }:
+{ config, hostname, ... }:
 let
-  local_flake = ''$"path:($env.HOME)/config"'';
-  local_flake_with_host = ''${local_flake}#${hostname}"'';
+  local_flake = "path:${config.home.homeDirectory}/config";
+  local_flake_with_host = "${local_flake}#${hostname}";
   tmp_file_send_mail_indicator = "/tmp/waybar_mail_nix_build.tmp";
   tmp_file_override_cache_setting_indicator = "/tmp/waybar_override_cache_setting_nix_build.tmp";
 in
