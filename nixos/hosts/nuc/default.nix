@@ -98,7 +98,8 @@
             "82:88:91:D5:AE:5B,${ipv4_network_part}.80,Xperia-10-V"
             "10:F6:0A:DD:25:93,${ipv4_network_part}.81,x13"
             "60:67:20:2C:39:A8,${ipv4_network_part}.82,x230"
-            "60:67:20:2C:39:A8,${ipv4_network_part}.85,rad"
+            "D8:43:AE:BF:4C:A1,${ipv4_network_part}.85,rad"
+            "20:50:E7:C6:E4:C4,${ipv4_network_part}.87,remarkable"
             # "60:67:20:2C:39:A8,${ipv4_network_part}.83,pocketnc"
             # "60:67:20:2C:39:A8,${ipv4_network_part}.84,ruida_laser"
           ];
