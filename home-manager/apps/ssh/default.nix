@@ -31,6 +31,13 @@
           identitiesOnly = true;
           identityFile = [ config.sops.secrets."keys/${hostname}/private".path ];
         };
+        "remarkable" = {
+          host = "remarkable";
+          hostname = "remarkable";
+          user = "root";
+          identitiesOnly = true;
+          identityFile = [ config.sops.secrets."keys/${hostname}/private".path ];
+        };
       };
   };
 }
