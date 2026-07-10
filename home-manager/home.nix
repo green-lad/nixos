@@ -131,6 +131,9 @@
         swayimg
         termdown
         unzip
+        urlscan
+        # TODO: use known configuration
+        vim # for vimdiff and as backup
         wev
         wl-clipboard
         yt-dlp
@@ -219,4 +222,106 @@
       -----END CERTIFICATE-----
     '';
   };
+
+  services.shpool = {
+    enable = true;
+  };
+
+  programs.vdirsyncer = {
+    enable = true;
+    statusPath = "/home/${user}/.cache/vdirsyncer/status/";
+  };
+  services.vdirsyncer = {
+    enable = true;
+    frequency = "*:0/5";
+  };
+
+  programs.khard = {
+    enable = true;
+  };
+  programs.khal = {
+    enable = true;
+  };
+  programs.todoman = {
+    enable = true;
+  };
+  accounts =
+    let
+      passwordCommand = [
+        "awk"
+        "-F:"
+        "-v"
+        "u=${user}"
+        # TODO: somehow a space gets added to htpasswd secret which is not there in the secret which is why its +2
+        "$1==u{match($0,/:/);print substr($0,RSTART+2)}"
+        "${config.sops.secrets.vdirsyncer_htpasswd.path}"
+      ];
+    in
+    {
+      calendar = {
+        basePath = ".calendar";
+        accounts = {
+          synced = {
+            local = {
+              path = "/home/${user}/.calendar/";
+              type = "filesystem";
+              fileExt = ".ics";
+            };
+            remote = {
+              type = "caldav";
+              userName = "${user}";
+              passwordCommand = passwordCommand;
+              url = "https://radicale.greenlad.net/";
+            };
+            vdirsyncer = {
+              enable = true;
+              collections = [
+                "from a"
+                "from b"
+              ];
+              conflictResolution = [
+                "command"
+                "vimdiff"
+              ];
+              metadata = [ "displayname" ];
+            };
+            khal = {
+              enable = true;
+              type = "discover";
+            };
+          };
+        };
+      };
+      contact.accounts = {
+        synced = {
+          local = {
+            path = "/home/${user}/.contacts/";
+            type = "filesystem";
+            fileExt = ".vcf";
+          };
+          remote = {
+            type = "carddav";
+            userName = "${user}";
+            passwordCommand = passwordCommand;
+            url = "https://radicale.greenlad.net/";
+          };
+          vdirsyncer = {
+            enable = true;
+            collections = [
+              "from a"
+              "from b"
+            ];
+            conflictResolution = [
+              "command"
+              "vimdiff"
+            ];
+            metadata = [ "displayname" ];
+          };
+          khard = {
+            enable = true;
+            type = "discover";
+          };
+        };
+      };
+    };
 }
