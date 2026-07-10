@@ -25,6 +25,9 @@ in {
       wlan_password = { };
       taswarrior_encryption_secret = { };
       "keys/${hostname}/private" = { };
+      vdirsyncer_htpasswd = {
+        key = "radicale_htpasswd";
+      };
     };
 
     templates = {

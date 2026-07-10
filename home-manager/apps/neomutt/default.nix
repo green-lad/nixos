@@ -10,8 +10,6 @@
     };
   };
 
-  config.programs.abook = { enable = true; };
-
   config.programs.msmtp.enable = true;
   config.programs.mbsync.enable = true;
 
@@ -24,8 +22,7 @@
     address = "markus.schoetz@fau.de";
     realName = "Markus Schoetz";
     userName = "markus.schoetz@fau.de";
-    passwordCommand =
-      "${pkgs.coreutils}/bin/cat ${config.sops.secrets.imap_password.path}";
+    passwordCommand = "${pkgs.coreutils}/bin/cat ${config.sops.secrets.imap_password.path}";
 
     mbsync = {
       enable = true;
@@ -51,7 +48,12 @@
     neomutt = {
       enable = true;
       sendMailCommand = "${pkgs.msmtp}/bin/msmtp -a Personal";
-      extraMailboxes = [ "Archive" "Drafts" "Sent" "Trash" ];
+      extraMailboxes = [
+        "Archive"
+        "Drafts"
+        "Sent"
+        "Trash"
+      ];
 
       # extraConfig = ''
       #   set pgp_default_key = "${pgpKey}"
@@ -95,19 +97,28 @@
       {
         action = "group-reply";
         key = "R";
-        map = [ "index" "pager" ];
+        map = [
+          "index"
+          "pager"
+        ];
       }
     ];
     macros = [
       {
         action = "<sidebar-prev><sidebar-open>";
         key = "[";
-        map = [ "index" "pager" ];
+        map = [
+          "index"
+          "pager"
+        ];
       }
       {
         action = "<sidebar-next><sidebar-open>";
         key = "]";
-        map = [ "index" "pager" ];
+        map = [
+          "index"
+          "pager"
+        ];
       }
       {
         action = "!systemctl --user start mbsync &^M";
@@ -115,15 +126,25 @@
         map = [ "index" ];
       }
       {
-        action =
-          "<change-folder>${config.accounts.email.accounts.Personal.maildir.absPath}/INBOX<enter>";
+        action = "<change-folder>${config.accounts.email.accounts.Personal.maildir.absPath}/INBOX<enter>";
         key = "P";
         map = [ "index" ];
       }
       {
         action = "<save-message>+Archive<enter>";
         key = "A";
-        map = [ "index" "pager" ];
+        map = [
+          "index"
+          "pager"
+        ];
+      }
+      {
+        key = "a";
+        map = [
+          "index"
+          "pager"
+        ];
+        action = "<pipe-message>khard add-email<return> 'Add sender to address book'";
       }
       {
         action = "<save-message>?<tab>";
@@ -138,12 +159,32 @@
       {
         action = "<pipe-message>${pkgs.urlscan}/bin/urlscan -dc<Enter>";
         key = "\\Cl";
-        map = [ "index" "pager" ];
+        map = [
+          "attach"
+          "compose"
+          "index"
+          "pager"
+        ];
       }
       {
-        action = "<pipe-entry>${pkgs.urlscan}/bin/urlscan -dc<Enter>";
-        key = "\\Cl";
-        map = [ "attach" "compose" ];
+        key = "<Tab>";
+        action = "<complete-query>";
+        map = [ "editor" ];
+      }
+      {
+        key = "<return>";
+        action = "<display-message>";
+        map = [ "index" ];
+      }
+      {
+        key = "N";
+        action = "<toggle-new>";
+        map = [ "index" ];
+      }
+      {
+        key = "e";
+        action = "<pipe-entry>${pkgs.helix}/bin/hx<enter>";
+        map = [ "attach" ];
       }
     ];
 
@@ -156,66 +197,45 @@
 
     settings = {
       abort_key = "<Esc>";
-      # alias_file = aliasfile;
       allow_ansi = "yes";
       beep = "no";
       beep_new = "no"; # bell on new mails
       confirmappend = "no"; # don't ask, just do!
+      crypt_chars = ''"󰈡 "'';
+      date_format = ''"%d %h %H:%M"'';
       delete = "yes"; # don't ask, just do
       edit_headers = "yes"; # show headers when composing
       fast_reply = "yes"; # skip to compose when replying
       fcc_attach = "yes"; # save attachments with the body
+      flag_chars = ''"󰩹󰩺 󰇰󰇮 "'';
       folder = "${config.home.homeDirectory}/Mail";
       forward_quote = "yes"; # include message in forwards
+      imap_check_subscribed = "yes";
       include = "yes"; # include message in replies
       mail_check = "0"; # how often look for new mail
+      mail_check_stats = "yes";
       mailcap_path = "${config.xdg.configHome}/neomutt/mailcap";
       mark_old = "no"; # read/new is good enough for me
       markers = "no"; # show '+' at start of wrapped lines
       move = "no"; # gmail does that
       pager_context = "3";
+      pager_format = ''"[ %n ] [ %T %s ]%* [ 󰸗 %{!%Y %a %d %b %H:%M} ] %?X?[ 󰁦 %X ]? [  %P ]%|─"'';
       pager_index_lines = "10"; # shows 10 lines of index when pager is active
       pager_stop = "yes";
+      query_command = ''"${pkgs.khard}/bin/khard email --parsable %s"'';
       quit = "yes"; # don't ask, just do!!
       reply_to = "yes"; # reply to Reply to: field
       reverse_name = "yes"; # reply as whomever it was to
       sort = "threads";
       sort_aux = "reverse-last-date-received";
       sort_re = "yes";
+      status_chars = ''" 󰁦"'';
+      status_format = ''"[ %D ] %?r?[ 󰇰 %m ] ?%?n?[ 󰇮 %n ] ?%?d?[ 󰩹 %d ] ?%?t?[  %t ] ?%?F?[  %F ] ?%?p?[  %p ]?%|─"'';
       text_flowed = "yes";
       timeout = "0";
       tmpdir = "${config.xdg.configHome}/neomutt/tmp";
+      to_chars = ''" "'';
       wait_key = "no"; # don't ask "press key to continue"
-
-      imap_check_subscribed = "yes";
-      mail_check_stats = "yes";
     };
-
-    extraConfig = ''
-      # Use return to open message because I'm not a savage
-      unbind index <return>
-      bind index <return> display-message
-
-      # Use N to toggle new
-      unbind index N
-      bind index N toggle-new
-
-      lists .*@lists.sr.ht
-
-      # Theme formats
-      set date_format = "%d %h %H:%M";
-      set status_chars = " 󰁦";
-      set status_format = "[ %D ] %?r?[ 󰇰 %m ] ?%?n?[ 󰇮 %n ] ?%?d?[ 󰩹 %d ] ?%?t?[  %t ] ?%?F?[  %F ] ?%?p?[  %p ]?%|─";
-      set crypt_chars = "󰈡 ";
-      set flag_chars = "󰩹󰩺 󰇰󰇮 ";
-      set to_chars = " ";
-      set pager_format = "[ %n ] [ %T %s ]%* [ 󰸗 %{!%Y %a %d %b %H:%M} ] %?X?[ 󰁦 %X ]? [  %P ]%|─";
-      # set pager_format = "[ %n ]
-
-      # color index color0 default '~R'
-      set query_command= "abook --mutt-query '%s'"
-      macro index,pager  a "<pipe-message>abook --add-email-quiet<return>" "Add this sender to Abook"
-      bind editor        <Tab> complete-query
-    '';
   };
 }
