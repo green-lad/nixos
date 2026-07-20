@@ -8,11 +8,11 @@
         ]
       },
       "locked": {
-        "lastModified": 1754137621,
-        "narHash": "sha256-STlzB0oineLCRU0D1XtuoWwKYhBPzssY7QNnbjNJouA=",
+        "lastModified": 1784070981,
+        "narHash": "sha256-0grcG7bE9q3ShSExDxlFsW0/yMzRFNiEz9sYlgCFuaM=",
         "owner": "green-lad",
         "repo": "fonts",
-        "rev": "0b7222417d87c48f5075a1cbde6c55ea6c3a6e0a",
+        "rev": "272307692c94d92a0446fcbbc86d63db0f8246cc",
         "type": "github"
       },
       "original": {

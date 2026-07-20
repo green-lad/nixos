@@ -42,6 +42,7 @@
         home-manager
         input-remapper
         libinput
+        logseq
         nmap
         nodejs
         pciutils
@@ -246,7 +247,15 @@
       enable = true;
       user = "${user}";
       settings = {
+        port = 6600;
         music_directory = "/home/${user}/music/songs";
+        # TODO: not working
+        audio_output = [
+          {
+            type = "pipewire";
+            name = "MPD PipeWire Output";
+          }
+        ];
       };
       # TODO: separate data from structure and create this via function
       # settings = ''

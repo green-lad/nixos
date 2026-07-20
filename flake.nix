@@ -149,6 +149,9 @@
               nixpkgs.overlays = overlays;
               nixpkgs.config.allowUnfree = true;
               nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) v.unfreePackages;
+              nixpkgs.config.permittedInsecurePackages = [
+                "electron-39.8.10"
+              ];
             }
             impermanence.nixosModules.impermanence
             stylix.nixosModules.stylix

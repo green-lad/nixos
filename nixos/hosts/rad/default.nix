@@ -21,6 +21,40 @@
     };
   };
 
+  services.syncthing = {
+    enable = true;
+    guiAddress = "127.0.0.1:8384";
+    openDefaultPorts = true;
+    user = user;
+    dataDir = "/home/${user}/syncthing";
+    settings = {
+      gui = {
+        user = "markus";
+        password = "daedalus";
+      };
+      devices = {
+        "XQ-DC72" = {
+          id = "V2U6ZI4-4UGUZ6C-AWCTGGX-OYHPOPF-42LDVV4-R6PS6AU-IPGZJ73-4ZCJJQ5";
+        };
+        "nuc" = {
+          id = "5DEDXMW-FZ3XN7E-KAHFNEJ-SB76WZ6-UFNN6DH-NSZKR6G-OIZ7IZW-ZVG2AQ3";
+        };
+      };
+      folders = {
+        "logseq" = {
+          id = "uscr9-hyowx";
+          path = "/home/${user}/logseq";
+          devices = [ "XQ-DC72" "nuc" ];
+        };
+        "songs" = {
+          id = "uscr9-hyowz";
+          path = "/home/${user}/music/songs";
+          devices = [ "XQ-DC72" "nuc" ];
+        };
+      };
+    };
+  };
+
   # environment.persistence."/persist" = {
   #   enable = true;
   #   hideMounts = true;

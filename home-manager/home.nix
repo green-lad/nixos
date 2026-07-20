@@ -105,7 +105,9 @@
         htop
         inkscape
         inputs.additional-fonts.packages.${system}.astetica
+        inputs.additional-fonts.packages.${system}.audley-ipswitch
         inputs.additional-fonts.packages.${system}.leafery
+        inputs.additional-fonts.packages.${system}.lovely-home
         jq
         kdePackages.okular
         kicad
@@ -130,6 +132,7 @@
         supercollider
         swayimg
         termdown
+        translatelocally
         unzip
         urlscan
         # TODO: use known configuration
