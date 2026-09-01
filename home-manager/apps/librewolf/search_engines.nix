@@ -59,7 +59,7 @@ in
     definedAliases = [ "@rfc" ];
   };
 
-  "crows_supply" = {
+  "crowd_supply" = {
     urls = [
       {
         template = "https://www.crowdsupply.com/search?q={searchTerms}";

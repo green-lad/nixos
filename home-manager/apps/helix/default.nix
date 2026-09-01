@@ -13,6 +13,7 @@
       jq
       lazygit
       nil
+      rustledger
       nixfmt
       prettier
       (python3.withPackages (
@@ -39,6 +40,7 @@
             journal_file = "/var/lib/fava/ledger.bean";
           };
         };
+        rledger-lsp.command = "rledger-lsp";
         gopls = {
           command = "gopls";
           config = {
@@ -109,6 +111,11 @@
             ];
           };
           language-servers = [ "dot-language-server" ];
+        }
+        {
+          name = "beancount";
+          auto-format = true;
+          language-servers = [ "rledger-lsp" ];
         }
         {
           name = "json";

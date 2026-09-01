@@ -639,6 +639,7 @@ in
           reverse-scrolling = true;
           scroll-step = 0.5;
           on-click = "wezterm -e rmpc";
+          # TODO: does not open
           on-click-right = "pwvucontrol";
           on-click-middle = "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
         };

@@ -166,29 +166,16 @@
             matches = [ ];
             clip-to-geometry = true;
             open-maximized = true;
+          }
+          {
+            matches = [ ];
+            excludes = [ { app-id = "^org.freecad.FreeCAD$"; } ];
             open-floating = false;
           }
           {
             matches = [
               {
                 app-id = "^float_";
-              }
-            ];
-            open-floating = true;
-          }
-          # TODO: blender changes size after opening (maximized to edges) which is not wanted (following does not work)
-          # {
-          #   matches = [
-          #     {
-          #       app-id = "^blender$";
-          #     }
-          #   ];
-          #   open-maximized-to-edges = false;
-          # }
-          {
-            matches = [
-              {
-                title = "^Blender";
               }
             ];
             open-floating = true;

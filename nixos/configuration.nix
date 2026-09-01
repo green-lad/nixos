@@ -19,6 +19,7 @@
 
   # some modules only support stylix in nixos (for example chromium)
   stylix = (import ../stylix.nix) pkgs // {
+    autoEnable = true;
     targets = {
       qt.enable = true;
     };
@@ -35,22 +36,28 @@
       in
       [
         age
-        android-tools
         beancount
         dig
         ffmpeg_with_rubberband
         home-manager
         input-remapper
         libinput
+        livecaptions
         logseq
         nmap
         nodejs
         pciutils
+        qbittorrent
         rustdesk
         sops
+        rustfava
+        rustledger
         tk-safe
         usbutils
         zip
+
+        android-tools
+        scrcpy
       ];
     sessionVariables = {
       BROWSER = "librewolf";
@@ -100,6 +107,7 @@
   };
 
   programs = {
+    nix-ld.enable = true;
     obs-studio = {
       enable = true;
       enableVirtualCamera = true;

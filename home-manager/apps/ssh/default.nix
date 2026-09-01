@@ -17,6 +17,13 @@
         identityFile = [ config.sops.secrets."keys/${hostname}/private".path ];
       }) hosts
       // {
+        "codeberg" = {
+          host = "codeberg";
+          hostname = "codeberg.org";
+          user = "git";
+          identitiesOnly = true;
+          identityFile = [ config.sops.secrets."keys/${hostname}/private".path ];
+        };
         "github" = {
           host = "github";
           hostname = "github.com";

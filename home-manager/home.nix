@@ -45,6 +45,7 @@
   ];
 
   stylix = (import ../stylix.nix) pkgs // {
+    autoEnable = true;
     targets = {
       gtk.enable = true;
       qt.enable = true;
@@ -97,7 +98,48 @@
         brightnessctl
         cura-appimage
         delta
-        freecad
+        (inputs.freecad-daily.packages.${system}.freecad-daily.customize {
+          modules =
+            let
+              addonManager = fetchFromGitHub {
+                owner = "FreeCAD";
+                repo = "AddonManager";
+                rev = "6aeea2d01d36c026ef969a6e6d4d652386eccac3";
+                hash = "sha256-zKMOMJFPvT7JK8pcdLHmBHx8JNHbQ9kjaQzDFJLkzo4=";
+              };
+              fasteners = fetchFromGitHub {
+                owner = "shaise";
+                repo = "FreeCAD_FastenersWB";
+                rev = "4b7a71cf0782d61d42f36afe515b2880e49dea80";
+                hash = "sha256-4yCDz26gufpNzGfEj8CkGCToHznC7IUXEffLvlG+DXk=";
+              };
+              sheetMetal = fetchFromGitHub {
+                owner = "shaise";
+                repo = "FreeCAD_SheetMetal";
+                rev = "2a7710e27da3ff91852a8e678df2160d2a0dbe87";
+                hash = "sha256-nFc43p1E9v6nkd58tWcscF6soKh/3sZzZGeBaGQSU8s=";
+              };
+            in
+            [
+              addonManager
+              fasteners
+              sheetMetal
+            ];
+          pythons = [
+            (
+              ps: with ps; [
+                requests
+                pyjwt
+                tzlocal
+                defusedxml
+
+                # for gears
+                numpy
+                scipy
+              ]
+            )
+          ];
+        })
         gimp
         gnumake
         go
@@ -141,6 +183,7 @@
         wl-clipboard
         yt-dlp
         zathura
+        zenith
       ];
   };
 

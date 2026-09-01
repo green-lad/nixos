@@ -69,6 +69,21 @@
       url = "github:nix-community/impermanence";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    rustfava = {
+      url = "github:rustledger/rustfava";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    rustledger = {
+      url = "github:rustledger/rustledger";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    freecad-daily = {
+      url = "github:MohrJonas/FreeCADDaily.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -85,6 +100,10 @@
     let
       overlays = [
         inputs.nix-your-shell.overlays.default
+        (final: prev: {
+          rustfava = inputs.rustfava.packages.${final.system}.desktop;
+          rustledger = inputs.rustledger.packages.${final.system}.default;
+        })
         (import ./pkgs)
       ];
       hosts = {
