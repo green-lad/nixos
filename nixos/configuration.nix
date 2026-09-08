@@ -145,9 +145,6 @@
 
   systemd = {
     services = {
-      mpd.environment = {
-        XDG_RUNTIME_DIR = "/run/user/${toString config.users.users.${user}.uid}";
-      };
       ModemManager = {
         enable = lib.mkForce true;
         path = [ pkgs.libqmi ];
@@ -235,106 +232,9 @@
         };
       };
     };
-    # jack = {
-    #   jackd.enable = true;
-    #   # support ALSA only programs via ALSA JACK PCM plugin
-    #   alsa.enable = false;
-    #   # support ALSA only programs via loopback device (supports programs like Steam)
-    #   loopback = {
-    #     enable = true;
-    #     # buffering parameters for dmix device to work with ALSA only semi-professional sound programs
-    #     #dmixConfig = ''
-    #     #  period_size 2048
-    #     #'';
-    #   };
-    # };
 
     input-remapper.enable = true;
 
-    mpd = {
-      enable = true;
-      user = "${user}";
-      settings = {
-        port = 6600;
-        music_directory = "/home/${user}/music/songs";
-        # TODO: not working
-        audio_output = [
-          {
-            type = "pipewire";
-            name = "MPD PipeWire Output";
-          }
-        ];
-      };
-      # TODO: separate data from structure and create this via function
-      # settings = ''
-      #   filter {
-      #     plugin "ffmpeg"
-      #     name   "semitone+2"
-      #     graph  "rubberband=pitch=1.12246204829593419095:tempo=1.12246204829593419095"
-      #   }
-      #   filter {
-      #     plugin "ffmpeg"
-      #     name   "semitone+4"
-      #     graph  "rubberband=pitch=1.25992104986470410019:tempo=1.25992104986470410019"
-      #   }
-      #   filter {
-      #     plugin "ffmpeg"
-      #     name   "semitone+6"
-      #     graph  "rubberband=pitch=1.41421356232229960378:tempo=1.41421356232229960378"
-      #   }
-      #   filter {
-      #     plugin "ffmpeg"
-      #     name   "semitone-2"
-      #     graph  "rubberband=pitch=0.89089871814033931107:tempo=0.89089871814033931107"
-      #   }
-      #   filter {
-      #     plugin "ffmpeg"
-      #     name   "semitone-4"
-      #     graph  "rubberband=pitch=0.79370052598409974867:tempo=0.79370052598409974867"
-      #   }
-      #   filter {
-      #     plugin "ffmpeg"
-      #     name   "semitone-6"
-      #     graph  "rubberband=pitch=0.70710678118654753949:tempo=0.70710678118654753949"
-      #   }
-
-      #   audio_output {
-      #     type "pipewire"
-      #     name "Pipewire Output"
-      #     enabled "true"
-      #   }
-      #   audio_output {
-      #     type    "pipewire"
-      #     name    "pipewire (+2 semitone)"
-      #     filters "semitone+2"
-      #   }
-      #   audio_output {
-      #     type    "pipewire"
-      #     name    "pipewire (+4 semitone)"
-      #     filters "semitone+4"
-      #   }
-      #   audio_output {
-      #     type    "pipewire"
-      #     name    "pipewire (+6 semitone)"
-      #     filters "semitone+6"
-      #   }
-      #   audio_output {
-      #     type    "pipewire"
-      #     name    "pipewire (-2 semitone)"
-      #     filters "semitone-2"
-      #   }
-      #   audio_output {
-      #     type    "pipewire"
-      #     name    "pipewire (-4 semitone)"
-      #     filters "semitone-4"
-      #   }
-      #   audio_output {
-      #     type    "pipewire"
-      #     name    "pipewire (-6 semitone)"
-      #     filters "semitone-6"
-      #   }
-      # '';
-    };
     greetd = {
       enable = true;
       settings = {
