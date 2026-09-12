@@ -73,6 +73,7 @@ in {
 
     userDirs = {
       enable = true;
+      music = "${config.home.homeDirectory}/music/songs";
       setSessionVariables = true;
       # createDirectories = true;
       extraConfig = {

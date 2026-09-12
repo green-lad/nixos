@@ -178,6 +178,12 @@
                 app-id = "^float_";
               }
             ];
+            default-column-width = {
+              proportion = 0.75;
+            };
+            default-window-height = {
+              proportion = 0.75;
+            };
             open-floating = true;
           }
         ];
@@ -446,6 +452,27 @@
                 "set-volume"
                 "@DEFAULT_AUDIO_SINK@"
                 "0.05+"
+              ];
+            };
+            "Mod+Ctrl+Print" = {
+              allow-when-locked = true;
+              action = spawn [
+                "${./rmpc_control_speed_via_audio_outputs.nu}"
+                "-1"
+              ];
+            };
+            "Mod+Ctrl+Scroll_Lock" = {
+              allow-when-locked = true;
+              action = spawn [
+                "${./rmpc_control_speed_via_audio_outputs.nu}"
+                "0"
+              ];
+            };
+            "Mod+Ctrl+Pause" = {
+              allow-when-locked = true;
+              action = spawn [
+                "${./rmpc_control_speed_via_audio_outputs.nu}"
+                "1"
               ];
             };
             "XF86MonBrightnessUp" = {
