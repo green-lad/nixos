@@ -3,6 +3,7 @@
   pkgs,
   user,
   domain,
+  inputs,
   ...
 }:
 {
@@ -27,6 +28,8 @@
           "syncthing.${domain}"
           "immich.${domain}"
           "tandoor.${domain}"
+          "mindwtr-cloud.${domain}"
+          "mindwtr.${domain}"
         ];
         dnsProvider = "cloudflare";
         dnsPropagationCheck = true;
@@ -95,6 +98,8 @@
             "${ipv4_network_part}.79 radicale"
             "${ipv4_network_part}.79 syncthing"
             "${ipv4_network_part}.79 immich"
+            "${ipv4_network_part}.79 mindwtr-cloud"
+            "${ipv4_network_part}.79 mindwtr"
             "${ipv4_network_part}.79 tandoor"
             "${ipv4_network_part}.79 fava"
             "${ipv4_network_part}.79 pihole"
@@ -322,6 +327,34 @@
           };
         };
       };
+      "mindwtr.${domain}" = {
+        forceSSL = true;
+        useACMEHost = domain;
+        locations = {
+          "/" = {
+            proxyPass = "http://127.0.0.1:6940";
+            extraConfig = ''
+              proxy_set_header Host mindwtr-web.${domain};
+              proxy_set_header X-Forwarded-Proto https;
+              proxy_set_header X-Forwarded-Scheme https;
+            '';
+          };
+        };
+      };
+      "mindwtr-cloud.${domain}" = {
+        forceSSL = true;
+        useACMEHost = domain;
+        locations = {
+          "/" = {
+            proxyPass = "http://127.0.0.1:6941";
+            extraConfig = ''
+              proxy_set_header Host $host;
+              proxy_set_header X-Forwarded-Proto https;
+              proxy_set_header X-Forwarded-Scheme https;
+            '';
+          };
+        };
+      };
     };
   };
 
@@ -440,12 +473,18 @@
         "logseq" = {
           id = "uscr9-hyowx";
           path = "/home/${user}/logseq";
-          devices = [ "XQ-DC72" "rad" ];
+          devices = [
+            "XQ-DC72"
+            "rad"
+          ];
         };
         "songs" = {
           id = "uscr9-hyowz";
           path = "/home/${user}/music/songs";
-          devices = [ "XQ-DC72" "rad" ];
+          devices = [
+            "XQ-DC72"
+            "rad"
+          ];
         };
       };
     };
@@ -455,5 +494,42 @@
     enable = true;
     host = "127.0.0.1";
     port = 2283;
+  };
+
+  sops.secrets = {
+    mindwtr_cloud_auth_tokens = {
+      restartUnits = [ "mindwtr-cloud.service" ];
+      group = "mindwtr-cloud";
+      mode = "440";
+    };
+  };
+  services.mindwtr = {
+    web = {
+      enable = true;
+      package = inputs.mindwtr-flake.packages.x86_64-linux."mindwtr-web";
+      nginx = {
+        virtualHost = "mindwtr-web.${domain}";
+        listen = [
+          {
+            addr = "127.0.0.1";
+            port = 6940;
+          }
+        ];
+      };
+    };
+    cloud = {
+      enable = true;
+      package = inputs.mindwtr-flake.packages.x86_64-linux."mindwtr-cloud";
+      environment = {
+        MINDWTR_CLOUD_DATA_DIR = "/persist/services/mindwtr";
+        MINDWTR_CLOUD_AUTH_TOKENS_FILE = config.sops.secrets.mindwtr_cloud_auth_tokens.path;
+        MINDWTR_CLOUD_TRUST_PROXY_HEADERS = "true";
+        MINDWTR_CLOUD_TRUSTED_PROXY_IPS = [ "127.0.0.1" ];
+        MINDWTR_CLOUD_DOMAIN = "mindwtr-cloud.${domain}";
+        MINDWTR_CLOUD_CORS_ORIGIN = "https://mindwtr-cloud.${domain}";
+        HOST = "127.0.0.1";
+        PORT = 6941;
+      };
+    };
   };
 }

@@ -44,6 +44,7 @@
         libinput
         livecaptions
         logseq
+        inputs.mindwtr-flake.packages.x86_64-linux.mindwtr
         nmap
         nodejs
         pciutils
@@ -112,7 +113,7 @@
       enable = true;
       enableVirtualCamera = true;
       plugins = with pkgs.obs-studio-plugins; [
-        obs-shaderfilter
+        pkgs.obs-shaderfilter
         obs-pipewire-audio-capture
       ];
     };

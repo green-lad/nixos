@@ -84,6 +84,11 @@
       url = "github:MohrJonas/FreeCADDaily.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    mindwtr-flake = {
+      url = "github:therealgramdalf/mindwtr-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -94,6 +99,7 @@
       sops-nix,
       stylix,
       impermanence,
+      mindwtr-flake,
       additional-fonts,
       ...
     }@inputs:
@@ -176,6 +182,7 @@
             stylix.nixosModules.stylix
             disko.nixosModules.disko
             sops-nix.nixosModules.sops
+            mindwtr-flake.nixosModules.default
             ./nixos/configuration.nix
             home-manager.nixosModules.home-manager
             {
