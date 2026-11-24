@@ -4,5 +4,6 @@ final: prev: {
   logseq = final.callPackage ./logseq {};
   nu_plugin_highlight = final.callPackage ./nu_plugin_highlight {};
   obs-shaderfilter = final.callPackage ./obs-shaderfilter {};
+  overpass-api = final.callPackage ./overpass-api {};
   tine = final.callPackage ./tine {};
 }
