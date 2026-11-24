@@ -54,6 +54,7 @@
         rustfava
         rustledger
         tk-safe
+        tine
         usbutils
         zip
 
@@ -108,6 +109,11 @@
   };
 
   programs = {
+    appimage = {
+      enable = true;
+      binfmt = true;
+    };
+
     nix-ld.enable = true;
     obs-studio = {
       enable = true;
@@ -216,6 +222,8 @@
   virtualisation.docker.enable = true;
 
   services = {
+    pcscd.enable = true;
+    
     nginx = {
       enable = true;
       virtualHosts = {
@@ -515,6 +523,7 @@
         extraGroups = [
           "adbusers"
           "audio"
+          "dialout"
           "docker"
           "jackaudiio"
           "networkmanager"

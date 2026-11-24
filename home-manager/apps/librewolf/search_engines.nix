@@ -302,14 +302,22 @@ in
   };
 
   "package dhl" = {
-    urls = [ { template = "https://www.dhl.de/de/privatkunden/pakete-empfangen/verfolgen.html?piececode={searchTerms}"; } ];
+    urls = [
+      {
+        template = "https://www.dhl.de/de/privatkunden/pakete-empfangen/verfolgen.html?piececode={searchTerms}";
+      }
+    ];
     icon = "https://www.dhl.de/.resources/dhl/webresources/assets/icons/favicons/favicon-16x16.png";
     updateInterval = weekly;
     definedAliases = [ "@pd" ];
   };
 
   "package hermes" = {
-    urls = [ { template = "https://www.myhermes.de/empfangen/sendungsverfolgung/sendungsinformation#{searchTerms}"; } ];
+    urls = [
+      {
+        template = "https://www.myhermes.de/empfangen/sendungsverfolgung/sendungsinformation#{searchTerms}";
+      }
+    ];
     icon = "https://www.myhermes.de/assets/touchicons/favicon.ico";
     updateInterval = weekly;
     definedAliases = [ "@ph" ];
@@ -335,7 +343,11 @@ in
   };
 
   "rust book" = {
-    urls = [ { template = "https://doc.rust-lang.org/book/?search={searchTerms}"; } ];
+    urls = [
+      {
+        template = "https://doc.rust-lang.org/book/?search={searchTerms}";
+      }
+    ];
     icon = "https://www.rust-lang.org/static/images/favicon.svg";
     updateInterval = weekly;
     definedAliases = [ "@rb" ];
@@ -383,17 +395,6 @@ in
     icon = "https://www.rust-lang.org/static/images/favicon.svg";
     updateInterval = weekly;
     definedAliases = [ "@rs" ];
-  };
-
-  "rust themis" = {
-    urls = [
-      {
-        template = "file:///home/markus/themis/target/doc/bench_client/index.html?search={searchTerms}";
-      }
-    ];
-    icon = "https://www.rust-lang.org/static/images/favicon.svg";
-    updateInterval = weekly;
-    definedAliases = [ "@rt" ];
   };
 
   "steam" = {

@@ -121,7 +121,7 @@
         "type": "github"
       }
     },
-    "bun2nix-baseline": {
+    "bun2nix": {
       "inputs": {
         "flake-parts": "flake-parts",
         "nixpkgs": [
@@ -132,16 +132,17 @@
         "treefmt-nix": "treefmt-nix"
       },
       "locked": {
-        "lastModified": 1788213925,
-        "narHash": "sha256-cUuPITDMq9QzNgW+nxiAxxRsiXWbijFvS16Eex6eBeA=",
-        "owner": "therealgramdalf",
-        "repo": "bun2nix-baseline",
-        "rev": "39e476fab536eb718fe13b60a98e950fa8ea8eb1",
+        "lastModified": 1785027216,
+        "narHash": "sha256-m7edNgG9CDiQ6ykudWTN3LdHH3DsR+99x+yNP2neMoY=",
+        "owner": "nix-community",
+        "repo": "bun2nix",
+        "rev": "3489482505adf9eafd4498c8e53015b5da980e13",
         "type": "github"
       },
       "original": {
-        "owner": "therealgramdalf",
-        "repo": "bun2nix-baseline",
+        "owner": "nix-community",
+        "ref": "pull/103/head",
+        "repo": "bun2nix",
         "type": "github"
       }
     },
@@ -273,7 +274,7 @@
       "inputs": {
         "nixpkgs-lib": [
           "mindwtr-flake",
-          "bun2nix-baseline",
+          "bun2nix",
           "nixpkgs"
         ]
       },
@@ -507,17 +508,17 @@
     },
     "mindwtr-flake": {
       "inputs": {
-        "bun2nix-baseline": "bun2nix-baseline",
+        "bun2nix": "bun2nix",
         "nixpkgs": [
           "nixpkgs"
         ]
       },
       "locked": {
-        "lastModified": 1788234570,
-        "narHash": "sha256-Djh+IeVtbYkNMvysxAiRNtq32ME9ciVEkAa08+izSdQ=",
+        "lastModified": 1793992502,
+        "narHash": "sha256-P/yfj40gRpe5oMpoTMeJn4UoAFa7I7MKO0R2q137DQ8=",
         "owner": "therealgramdalf",
         "repo": "mindwtr-flake",
-        "rev": "10637840eb3d074a99fa189f8a8ac7a508b68259",
+        "rev": "34e72cb80200d0ceb62da246e25a7469b60a07dc",
         "type": "github"
       },
       "original": {
@@ -1016,7 +1017,7 @@
       "inputs": {
         "nixpkgs": [
           "mindwtr-flake",
-          "bun2nix-baseline",
+          "bun2nix",
           "nixpkgs"
         ]
       },

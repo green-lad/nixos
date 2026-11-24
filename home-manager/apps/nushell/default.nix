@@ -91,6 +91,7 @@
     carapace = {
       enable = true;
       enableNushellIntegration = true;
+      environment.CARAPACE_MATCH = 1;
     };
 
     # config info: config nu --doc | nu-highlight | less -R
@@ -195,9 +196,7 @@
       {
         # see: https://github.com/nix-community/home-manager/issues/4313
         shellAliases = config.home.shellAliases;
-        environmentVariables = config.home.sessionVariables // {
-          CARAPACE_MATCH = 1;
-        };
+        environmentVariables = config.home.sessionVariables;
         enable = true;
         plugins = with pkgs; [
           # TODO: update package
@@ -246,7 +245,7 @@
               ];
               event = {
                 send = "executehostcommand";
-                cmd = ''$env.PWD | wl-copy'';
+                cmd = "$env.PWD | wl-copy";
               };
             }
             {
@@ -260,7 +259,7 @@
               ];
               event = {
                 send = "executehostcommand";
-                cmd = ''commandline | wl-copy'';
+                cmd = "commandline | wl-copy";
               };
             }
             {

@@ -98,31 +98,44 @@
             max-scroll-amount = "0%";
           };
         };
-        outputs = {
-          "Dell Inc. DELL U2415 7MT0161P23KS" = {
-            scale = 1;
-            focus-at-startup = true;
-            position = {
-              x = 0;
-              y = 0;
+        # get names via: niri msg outputs
+        outputs =
+          {
+            "Dell Inc. DELL U2415 7MT0161P23KS" = {
+              scale = 1.5;
+              focus-at-startup = true;
+              position = {
+                x = 1600;
+                y = 0;
+              };
+              transform = {
+                rotation = 0;
+                flipped = false;
+              };
             };
-            transform = {
-              rotation = 0;
-              flipped = false;
+            "Dell Inc. DELL U2415 7MT0161P24NS" = {
+              scale = 1.5;
+              position = {
+                x = 0;
+                y = 1080;
+              };
+              transform = {
+                rotation = 0;
+                flipped = false;
+              };
+            };
+            "SKYDATA S.P.A. Skyworth TV 0x01010101" = {
+              scale = 2;
+              position = {
+                x = 1280;
+                y = 800;
+              };
+              transform = {
+                rotation = 0;
+                flipped = false;
+              };
             };
           };
-          "Dell Inc. DELL U2415 7MT0161P24NS" = {
-            scale = 1;
-            position = {
-              x = 0;
-              y = 1200;
-            };
-            transform = {
-              rotation = 0;
-              flipped = false;
-            };
-          };
-        };
 
         layer-rules = [
           {
@@ -164,13 +177,30 @@
           }
           {
             matches = [ ];
+            excludes = [
+              {
+                title = "Quick Capture";
+                app-id = "^page.tine.Tine$";
+              }
+            ];
             clip-to-geometry = true;
             open-maximized = true;
           }
           {
             matches = [ ];
-            excludes = [ { app-id = "^org.freecad.FreeCAD$"; } ];
+            excludes = [
+              { app-id = "^org.freecad.FreeCAD$"; }
+            ];
             open-floating = false;
+          }
+          {
+            matches = [
+              {
+                title = "Quick Capture";
+                app-id = "^page.tine.Tine$";
+              }
+            ];
+            open-floating = true;
           }
           {
             matches = [
@@ -705,6 +735,12 @@
                 "nu"
                 "-c"
                 ''random chars -l (fuzzel -d --prompt-only "length: " | into int) | wl-copy''
+              ];
+            };
+            "Mod+Semicolon".action = {
+              spawn = [
+                "tine"
+                "--capture"
               ];
             };
             "Mod+F".action = maximize-column;

@@ -174,6 +174,7 @@
               nixpkgs.overlays = overlays;
               nixpkgs.config.allowUnfree = true;
               nixpkgs.config.allowUnfreePredicate = pkg: builtins.elem (nixpkgs.lib.getName pkg) v.unfreePackages;
+              # TODO: remove this, currently needed by logseq (og) and vesktop
               nixpkgs.config.permittedInsecurePackages = [
                 "electron-39.8.10"
               ];

@@ -44,12 +44,73 @@
         "logseq" = {
           id = "uscr9-hyowx";
           path = "/home/${user}/logseq";
-          devices = [ "XQ-DC72" "nuc" ];
+          devices = [
+            "XQ-DC72"
+            "nuc"
+          ];
         };
         "songs" = {
           id = "uscr9-hyowz";
           path = "/home/${user}/music/songs";
-          devices = [ "XQ-DC72" "nuc" ];
+          devices = [
+            "XQ-DC72"
+            "nuc"
+          ];
+        };
+      };
+    };
+  };
+
+  users.users.octoprint.extraGroups = [
+    "dialout"
+    "video"
+  ];
+
+  services.octoprint = {
+    enable = true;
+    port = 5000;
+    host = "0.0.0.0";
+
+    plugins =
+      plugins: with plugins; [
+        # Add plugins here as needed, e.g.:
+        # themeify
+        # bedlevelvisualizer
+        # displaylayerprogress
+      ];
+
+    extraConfig = {
+      # Serial / printer connection
+      serial = {
+        port = "/dev/ttyACM0"; # SKR Mini E3 V2.0 typically uses ACM
+        baudrate = 115200;
+        autoconnect = true;
+        additionalPorts = [ "/dev/ttyUSB0" ]; # fallback
+      };
+
+      # Webcam (Logitech BRIO, mounted upside-down)
+      # webcam = {
+      #   stream = "http://127.0.0.1:8080/?action=stream";
+      #   snapshot = "http://127.0.0.1:8080/?action=snapshot";
+      #   flipV = true;   # Camera is upside-down
+      #   flipH = false;
+      # };
+
+      # Printer profile for Ender 3
+      printerProfiles = {
+        default = "ender3";
+      };
+
+      # Access control — first-run wizard will prompt for admin user
+      accessControl = {
+        enabled = true;
+      };
+
+      # Server settings
+      server = {
+        firstRun = true;
+        onlineCheck = {
+          enabled = true;
         };
       };
     };

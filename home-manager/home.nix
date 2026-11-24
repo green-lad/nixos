@@ -16,8 +16,7 @@
     ./apps/blender
     ./apps/calibre
     ./apps/chromium
-    # TODO: (30.6.26) find out how and why vesktop still uses pnpm 10.29.2 although nixpkgs vesktkop uses a different version since 29.6.26 (probably fixed in a week, but I want to understand how this works)
-    # ./apps/discord
+    ./apps/discord
     ./apps/fzf
     ./apps/gammastep
     ./apps/git
@@ -121,11 +120,18 @@
                   rev = "2a7710e27da3ff91852a8e678df2160d2a0dbe87";
                   hash = "sha256-nFc43p1E9v6nkd58tWcscF6soKh/3sZzZGeBaGQSU8s=";
                 };
+                history = fetchFromGitHub {
+                  owner = "eblanshey";
+                  repo = "HistoryWorkbench";
+                  rev = "ea22b20ca0af3a83524cb1fb8e0f677ee9bcd86a";
+                  hash = "sha256-DcVuVxsQBpU6zOwcblNCYl2F1xZZVsiPdFgH0GTIjnk=";
+                };
               in
               [
                 addonManager
                 fasteners
                 sheetMetal
+                history
               ];
             pythons = [
               (
@@ -169,6 +175,7 @@
         nixfmt
         obs-cmd
         openscad
+        orca-slicer
         pastel
         qt6.qtwayland
         scooter
