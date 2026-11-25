@@ -26,15 +26,15 @@ rustPlatform.buildRustPackage (finalAttrs: {
     owner = "martinkoutecky";
     repo = "tine";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-PdYmzac1i9xASa3fJlxadlgOFczjj4EPKFdHp8U45xc=";
+    hash = "sha256-aUjbN4LXT4HBi7/5zLUZyQHH7OAjK6rlVEccWQAbMlk=";
   };
 
-  cargoHash = "sha256-UjPk9szOnEU/KdNpL60SzVdREAoRn/KbAyh8R0Q0lzk=";
+  cargoHash = "sha256-EtDt8LvzFweS15t8GyH3VY54cQO9VxPHC55SA+5K2Dg=";
 
   npmDeps = fetchNpmDeps {
     name = "${finalAttrs.pname}-${finalAttrs.version}-npm-deps";
     inherit (finalAttrs) src;
-    hash = "sha256-fPwCBFmNYfCKjKn264HuURRtLMKeSF4Pv36t/JEmfDA=";
+    hash = "sha256-zQbe/TvMnUL3xltsM1D40JO7XWgnoM+BboVbqS72djY=";
   };
 
   nativeBuildInputs = [

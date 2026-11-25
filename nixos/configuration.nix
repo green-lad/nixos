@@ -54,7 +54,6 @@
         rustfava
         rustledger
         tk-safe
-        tine
         usbutils
         zip
 

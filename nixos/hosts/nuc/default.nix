@@ -30,6 +30,7 @@
           "tandoor.${domain}"
           "mindwtr-cloud.${domain}"
           "mindwtr.${domain}"
+          "overpass.${domain}"
         ];
         dnsProvider = "cloudflare";
         dnsPropagationCheck = true;
@@ -100,6 +101,7 @@
             "${ipv4_network_part}.79 immich"
             "${ipv4_network_part}.79 mindwtr-cloud"
             "${ipv4_network_part}.79 mindwtr"
+            "${ipv4_network_part}.79 overpass"
             "${ipv4_network_part}.79 tandoor"
             "${ipv4_network_part}.79 fava"
             "${ipv4_network_part}.79 pihole"
@@ -355,6 +357,14 @@
           };
         };
       };
+      "overpass.${domain}" = {
+        locations."= /api/interpreter".extraConfig = ''
+          include ${pkgs.nginx}/conf/fastcgi_params;
+          fastcgi_param SCRIPT_FILENAME ${pkgs.overpass-api}/cgi-bin/interpreter;
+          fastcgi_param DOCUMENT_ROOT ${pkgs.overpass-api}/cgi-bin;
+          fastcgi_pass unix:/run/fcgiwrap-overpass.sock;
+        '';
+      };
     };
   };
 
@@ -530,6 +540,92 @@
         HOST = "127.0.0.1";
         PORT = 6941;
       };
+    };
+  };
+
+  users.groups.overpass = { };
+  users.users.overpass = {
+    isSystemUser = true;
+    group = "overpass";
+    home = "/var/lib/overpass";
+    createHome = true;
+  };
+  systemd.services.overpass-db-setup = {
+    description = "Download and initialize Germany Overpass database";
+    before = [ "overpass.service" ];
+    requiredBy = [ "overpass.service" ];
+
+    serviceConfig = {
+      Type = "oneshot";
+      User = "overpass";
+      Group = "overpass";
+      StateDirectory = "overpass";
+      StateDirectoryMode = "0750";
+      RemainAfterExit = true;
+    };
+
+    path = [
+      pkgs.curl
+      pkgs.osmium-tool
+      pkgs.bzip2
+    ];
+
+    script = ''
+      set -eu
+
+      db=/var/lib/overpass/db
+      pbf=/var/lib/overpass/germany-latest.osm.pbf
+      bz2=/var/lib/overpass/germany-latest.osm.bz2
+      marker="$db/.initialized"
+
+      if [ -e "$marker" ]; then
+        echo "Overpass database already initialized."
+        exit 0
+      fi
+
+      mkdir -p "$db"
+
+      curl --fail --location --retry 5 \
+        --output "$pbf" \
+        https://download.geofabrik.de/europe/germany-latest.osm.pbf
+
+      osmium cat "$pbf" --output-format=osm.bz2 --output="$bz2"
+
+      ${pkgs.overpass-api}/bin/init_osm3s.sh \
+        "$bz2" \
+        "$db/" \
+        "${pkgs.overpass-api}"
+
+      touch "$marker"
+    '';
+  };
+  systemd.services.overpass = {
+    description = "Overpass API dispatcher";
+    wantedBy = [ "multi-user.target" ];
+    requires = [ "overpass-db-setup.service" ];
+    after = [ "overpass-db-setup.service" ];
+
+    serviceConfig = {
+      Type = "simple";
+      User = "overpass";
+      Group = "overpass";
+      ExecStart = "${pkgs.overpass-api}/bin/dispatcher --osm-base --db-dir=/var/lib/overpass/db";
+      ExecStop = "${pkgs.overpass-api}/bin/dispatcher --terminate --osm-base --db-dir=/var/lib/overpass/db";
+      Restart = "on-failure";
+      RestartSec = "5s";
+    };
+  };
+
+  services.fcgiwrap.instances.overpass = {
+    process.user = "overpass";
+    process.group = "overpass";
+
+    socket = {
+      type = "unix";
+      address = "/run/fcgiwrap-overpass.sock";
+      user = "nginx";
+      group = "nginx";
+      mode = "0660";
     };
   };
 }
